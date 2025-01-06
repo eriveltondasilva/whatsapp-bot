@@ -19,8 +19,10 @@
     "build": "npm run clean && tsc -b",
     "start": "[ -d dist ] && node --env-file=.env dist/index.js || npm run error",
     "dev": "node --import=tsx --env-file=.env src/index.ts",
-    "format": "npx @biomejs/biome format --write src",
-    "lint": "npx @biomejs/biome lint --write src",
+    "format": "npx @biomejs/biome format --write ./src",
+    "format:check": "npx @biomejs/biome format ./src",
+    "lint": "npx @biomejs/biome lint --write ./src",
+    "lint:check": "npx @biomejs/biome lint ./src",
     "error": "echo 'Error: dist folder not found. Please run npm run build'",
     "clean": "rm -rf dist",
     "test": ""
