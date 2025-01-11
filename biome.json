@@ -17,6 +17,9 @@
     "indentStyle": "space"
   },
   "javascript": {
+    "parser": {
+      "unsafeParameterDecoratorsEnabled": true
+    },
     "formatter": {
       "semicolons": "asNeeded",
       "quoteStyle": "single",
@@ -26,7 +29,10 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
     }
   }
 }

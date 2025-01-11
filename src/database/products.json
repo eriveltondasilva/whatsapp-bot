@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "name": "Pizza Margherita",
+    "description": "Molho de tomate, mussarela, manjericão fresco",
+    "price": 45.9,
+    "category": "food",
+    "createdAt": "2021-08-01T23:59:59.999Z",
+    "isAvailable": true
+  },
+  {
+    "id": 2,
+    "name": "Pizza Calabresa",
+    "description": "Molho de tomate, mussarela, calabresa, cebola",
+    "price": 49.9,
+    "category": "food",
+    "createdAt": "2021-08-01T23:59:59.999Z",
+    "isAvailable": true
+  },
+  {
+    "id": 3,
+    "name": "Coca-Cola 2L",
+    "description": "Refrigerante Coca-Cola 2 litros",
+    "price": 12.9,
+    "category": "drink",
+    "createdAt": "2021-08-01T23:59:59.999Z",
+    "isAvailable": true
+  },
+  {
+    "id": 4,
+    "name": "Pizza Quatro Queijos",
+    "description": "Molho de tomate, mussarela, provolone, gorgonzola, parmesão",
+    "price": 52.9,
+    "category": "food",
+    "createdAt": "2021-08-01T23:59:59.999Z",
+    "isAvailable": true
+  },
+  {
+    "id": 5,
+    "name": "Pizza Portuguesa",
+    "description": "Molho de tomate, mussarela, presunto, ovo, cebola, azeitona",
+    "price": 54.9,
+    "category": "food",
+    "createdAt": "2021-08-01T23:59:59.999Z",
+    "isAvailable": true
+  },
+  {
+    "id": 6,
+    "name": "Guaraná Antarctica 2L",
+    "description": "Refrigerante Guaraná Antarctica 2 litros",
+    "price": 11.9,
+    "category": "drink",
+    "createdAt": "2021-08-01T23:59:59.999Z",
+    "isAvailable": true
+  },
+  {
+    "id": 7,
+    "name": "Água Mineral 500ml",
+    "description": "Água mineral sem gás 500ml",
+    "price": 3.5,
+    "category": "drink",
+    "createdAt": "2021-08-01T23:59:59.999Z",
+    "isAvailable": true
+  },
+  {
+    "id": 8,
+    "name": "Pizza Frango com Catupiri",
+    "description": "Molho de tomate, mussarela, frango desfiado, catupiri",
+    "price": 55.9,
+    "category": "food",
+    "createdAt": "2021-08-01T23:59:59.999Z",
+    "isAvailable": true
+  }
+]
