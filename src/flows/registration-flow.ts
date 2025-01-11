@@ -14,6 +14,7 @@ export class RegistrationFlow {
     @inject(CustomerService) private customer: CustomerService,
   ) {}
 
+  // ###
   handle(phoneNumber: string, message: string, state: FlowState) {
     switch (state.step) {
       case FlowStep.AWAITING_NAME:
@@ -27,6 +28,7 @@ export class RegistrationFlow {
     }
   }
 
+  //*
   private handleNameInput(phoneNumber: string, name: string) {
     if (!isValidName(name)) {
       return RegistrationMessage.INVALID_NAME
@@ -52,4 +54,5 @@ export class RegistrationFlow {
     this.flowState.setState(phoneNumber, FlowStep.MENU)
     return MenuMessage.MAIN
   }
+  //
 }
