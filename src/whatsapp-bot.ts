@@ -5,7 +5,7 @@ import {
 } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
-import { PHONE_NUMBER, SESSION_NAME } from './config/constants.js'
+import { PHONE_NUMBER, SESSION_NAME } from './config/env.js'
 import { DialogManager } from './dialog-manager.js'
 import { LoggerService } from './services/logger-service.js'
 import { isValidMessage } from './utils/validations.js'

@@ -4,7 +4,7 @@ import {
   format,
   transports,
 } from 'winston'
-import { SESSION_NAME } from '../config/constants.js'
+import { SESSION_NAME } from '../config/env.js'
 
 export class LoggerService {
   private logger: WinstonLogger

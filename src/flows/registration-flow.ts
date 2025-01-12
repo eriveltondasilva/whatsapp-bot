@@ -1,11 +1,12 @@
 import { inject, injectable } from 'tsyringe'
-import { FlowStep } from '../config/enums.js'
-import { MenuMessage, RegistrationMessage } from '../config/messages.js'
-import { CustomerService } from '../services/customer-service.js'
-import { FlowStateManager } from '../states/flow-state-manager.js'
-import { isValidAddress, isValidName } from '../utils/validations.js'
 
-import type { FlowState } from '../types/index.js'
+import { FlowStep } from '@/config/enums.js'
+import { MenuMessage } from '@/config/messages.js'
+import { CustomerService } from '@/services/customer-service.js'
+import { FlowStateManager } from '@/states/flow-state-manager.js'
+import { isValidAddress, isValidName } from '@/utils/validations.js'
+
+import type { FlowState } from '@/types/index.js'
 
 @injectable()
 export class RegistrationFlow {
@@ -31,19 +32,19 @@ export class RegistrationFlow {
   //*
   private handleNameInput(phoneNumber: string, name: string) {
     if (!isValidName(name)) {
-      return RegistrationMessage.INVALID_NAME
+      return 'Por favor, digite um nome válido:'
     }
 
     this.flowState.setState(phoneNumber, FlowStep.AWAITING_ADDRESS, {
       name,
     })
 
-    return RegistrationMessage.ASK_FOR_ADDRESS
+    return 'Ótimo! Agora preciso do seu endereço completo para entrega:'
   }
 
   private handleAddressInput(phoneNumber: string, address: string, data: any) {
     if (!isValidAddress(address)) {
-      return RegistrationMessage.INVALID_ADDRESS
+      return 'Por favor, digite um endereço completo com rua, número e bairro:'
     }
 
     this.customer.createCustomer({

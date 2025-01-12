@@ -16,7 +16,7 @@ export function isValidAddress(address: string) {
 export function isValidQuantity(quantity: number) {
   return (
     Number.isFinite(quantity) &&
-    quantity > Validation.QUANTITY_MIN &&
+    quantity >= Validation.QUANTITY_MIN &&
     quantity <= Validation.QUANTITY_MAX
   )
 }
@@ -30,7 +30,7 @@ export function isValidMessage(message = '') {
   if (!message || typeof message !== 'string') return false
 
   return (
-    message.trim().length > Validation.MESSAGE_MIN_LENGTH &&
+    message.trim().length >= Validation.MESSAGE_MIN_LENGTH &&
     message.trim().length <= Validation.MESSAGE_MAX_LENGTH
   )
 }

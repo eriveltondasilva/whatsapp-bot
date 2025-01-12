@@ -33,7 +33,7 @@ export const Validation = {
   NAME_MIN_LENGTH: 3,
   ADDRESS_MIN_LENGTH: 10,
   //
-  MESSAGE_MIN_LENGTH: 0,
+  MESSAGE_MIN_LENGTH: 1,
   MESSAGE_MAX_LENGTH: 100,
   //
   QUANTITY_MIN: 1,
