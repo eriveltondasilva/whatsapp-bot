@@ -1,8 +1,13 @@
+import day from 'dayjs'
 import { PaymentMethod, Validation } from '../config/enums.js'
 
 export function isValidPhoneNumber(phoneNumber: string) {
   const regex = /^(\(?\d{2}\)?[\s]?)?(9?\d{4})[-\s]?(\d{4})$/
   return regex.test(phoneNumber.trim())
+}
+
+export function isValidBirthday(birthday: string) {
+  return day(birthday).isValid()
 }
 
 export function isValidName(name: string) {

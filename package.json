@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@wppconnect-team/wppconnect": "^1.35.2",
+    "dayjs": "^1.11.13",
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {

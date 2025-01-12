@@ -1,5 +1,5 @@
 import { FlowStep } from '../config/enums.js'
-import type { FlowState, StateData } from '../types/index.js'
+import type { FlowState } from '../types/index.js'
 
 export class FlowStateManager {
   private states: Map<string, FlowState> = new Map()
@@ -8,7 +8,7 @@ export class FlowStateManager {
     return this.states.get(phoneNumber) || { step: FlowStep.INITIAL, data: {} }
   }
 
-  setState(phoneNumber: string, step: FlowStep, data?: StateData) {
+  setState(phoneNumber: string, step: FlowStep, data?: any) {
     this.states.set(phoneNumber, { step, data })
     // TODO: verificar se o estado foi salvo com sucesso
   }

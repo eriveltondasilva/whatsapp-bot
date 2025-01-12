@@ -28,13 +28,20 @@ export class DialogManager {
     this.handlers.set('registration', container.resolve(RegistrationFlow))
   }
 
+  // ###
   async handleMessage(phoneNumber: string, message: string) {
     const state = this.flowState.getState(phoneNumber)
     const customer = this.customer.getCustomer(phoneNumber)
 
+    // TODO: remover
+    console.log('\nDialogManager.handleMessage')
+    console.log('message:', message)
+    console.log('state:', state)
+    console.log('customer:', customer)
+
     if (!customer && state.step === FlowStep.INITIAL) {
       this.flowState.setState(phoneNumber, FlowStep.AWAITING_NAME)
-      return 'Por favor, digite seu nome'
+      return 'Por favor, digite seu nome:'
     }
 
     return this.routeMessage(phoneNumber, message, state)
@@ -44,18 +51,13 @@ export class DialogManager {
     const handlerType = this.getHandlerType(state.step)
     const handler = this.handlers.get(handlerType)
 
-    if (!handler) {
-      throw new Error('Handler not found')
-    }
-
-    return handler.handle(phoneNumber, message, state)
+    return handler?.handle(phoneNumber, message, state)
   }
 
   private getHandlerType(step: FlowStep) {
-    if (step.includes('awaiting_')) return 'registration'
-    if (step === 'menu') return 'menu'
-    if (step.includes('selecting_')) return 'order'
-    if (step.includes('payment') || step.includes('change')) return 'payment'
+    if (step.startsWith('awaiting_')) return 'registration'
+    // if (step.includes('selecting_')) return 'order'
+    // if (step.includes('payment') || step.includes('change')) return 'payment'
 
     return 'menu'
   }

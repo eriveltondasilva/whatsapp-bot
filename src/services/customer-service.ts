@@ -8,9 +8,10 @@ export class CustomerService {
     return this.customers.get(phoneNumber) || null
   }
 
-  createCustomer(data: Omit<Customer, 'createdAt | id'>) {
-    const newCustomer: Customer = {
+  createCustomer(data: Omit<Customer, 'id' | 'createdAt'>) {
+    const newCustomer = {
       ...data,
+      id: this.customers.size + 1,
       createdAt: new Date().toISOString(),
     }
     this.customers.set(newCustomer.phone, newCustomer)

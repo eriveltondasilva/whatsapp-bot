@@ -45,6 +45,7 @@ export const FlowStep = {
   INITIAL: 'initial',
   AWAITING_NAME: 'awaiting_name',
   AWAITING_ADDRESS: 'awaiting_address',
+  AWAITING_BIRTHDAY: 'awaiting_birthday',
   MENU: 'menu',
   SELECTING_PIZZA: 'selecting_pizza',
   SELECTING_DRINK: 'selecting_drink',
@@ -56,31 +57,31 @@ export const FlowStep = {
 } as const
 export type FlowStep = (typeof FlowStep)[keyof typeof FlowStep]
 
-export const XxxFlowStep = {
-  INITIAL: 'initial',
-  //
-  COLLECT_NAME: 'collect_name',
-  COLLECT_ADDRESS: 'collect_address',
-  COLLECT_BIRTHDAY: 'collect_birthday',
-  //
-  MENU: 'menu',
-  //
-  SELECT_PIZZA_TYPE: 'select_pizza_type',
-  SELECT_FIRST_HALF: 'select_first_half',
-  SELECT_SECOND_HALF: 'select_second_half',
-  SELECT_PIZZA_FLAVOR: 'select_pizza_flavor',
-  SELECT_PIZZA_SIZE: 'select_pizza_size',
-  SELECTING_PIZZA_QUANTITY: 'selecting_pizza_quantity',
-  //
-  SELECTING_DRINK: 'selecting_drink',
-  SELECTING_DRINK_QUANTITY: 'selecting_drink_quantity',
-  //
-  SELECTING_PAYMENT: 'selecting_payment',
-  AWAITING_PAYMENT: 'awaiting_payment',
-  AWAITING_CHANGE: 'awaiting_change',
-  CONFIRMING_ORDER: 'confirming_order',
-  //
-  TRACK_ORDER: 'track_order',
-  //
-  ORDER_HISTORY: 'order_history',
-} as const
+// export const XxxFlowStep = {
+//   INITIAL: 'initial',
+//   //
+//   COLLECT_NAME: 'collect_name',
+//   COLLECT_ADDRESS: 'collect_address',
+//   COLLECT_BIRTHDAY: 'collect_birthday',
+//   //
+//   MENU: 'menu',
+//   //
+//   SELECT_PIZZA_TYPE: 'select_pizza_type',
+//   SELECT_FIRST_HALF: 'select_first_half',
+//   SELECT_SECOND_HALF: 'select_second_half',
+//   SELECT_PIZZA_FLAVOR: 'select_pizza_flavor',
+//   SELECT_PIZZA_SIZE: 'select_pizza_size',
+//   SELECTING_PIZZA_QUANTITY: 'selecting_pizza_quantity',
+//   //
+//   SELECTING_DRINK: 'selecting_drink',
+//   SELECTING_DRINK_QUANTITY: 'selecting_drink_quantity',
+//   //
+//   SELECTING_PAYMENT: 'selecting_payment',
+//   AWAITING_PAYMENT: 'awaiting_payment',
+//   AWAITING_CHANGE: 'awaiting_change',
+//   CONFIRMING_ORDER: 'confirming_order',
+//   //
+//   TRACK_ORDER: 'track_order',
+//   //
+//   ORDER_HISTORY: 'order_history',
+// } as const

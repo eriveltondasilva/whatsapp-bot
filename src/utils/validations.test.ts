@@ -1,6 +1,7 @@
 import { PaymentMethod, Validation } from '../config/enums.js'
 import {
   isValidAddress,
+  isValidBirthday,
   isValidMessage,
   isValidName,
   isValidPaymentMethod,
@@ -23,6 +24,27 @@ describe('isValidPhoneNumber:', () => {
     '(91)4748-0559',
   ])('should return true if phone number is valid (%s)', (phoneNumber) => {
     const result = isValidPhoneNumber(phoneNumber)
+    expect(result).toBe(true)
+  })
+})
+
+describe('isValidBirthdate:', () => {
+  // !!!
+  it('should return false for an empty string', () => {
+    const result = isValidBirthday('')
+    expect(result).toBe(false)
+  })
+  it('should return false if birth date is invalid', () => {
+    const result = isValidBirthday('not a date')
+    expect(result).toBe(false)
+  })
+  it('should return false for a malformed date', () => {
+    const result = isValidBirthday('32/01/2000')
+    expect(result).toBe(false)
+  })
+  // ###
+  it('should return true if birth date is valid', () => {
+    const result = isValidBirthday('01/01/2000')
     expect(result).toBe(true)
   })
 })

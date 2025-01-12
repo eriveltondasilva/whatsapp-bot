@@ -45,15 +45,7 @@ export type Order = {
   change?: number
 }
 
-export type StateData = Partial<{
-  name: string
-  orderId: number
-  productId: number
-  productName: string
-  productPrice: number
-}>
-
 export type FlowState = {
   step: FlowStep
-  data?: StateData
+  data: any
 }
