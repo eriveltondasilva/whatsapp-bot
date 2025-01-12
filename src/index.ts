@@ -1,7 +1,7 @@
+import { LoggerService } from '@/services/index.js'
+import { WhatsappBot } from '@/whatsapp-bot.js'
 import 'reflect-metadata'
 import { container } from 'tsyringe'
-import { WhatsappBot } from '@/whatsapp-bot.js'
-import { LoggerService } from '@/services/logger-service.js'
 
 async function main() {
   const logger = new LoggerService()
