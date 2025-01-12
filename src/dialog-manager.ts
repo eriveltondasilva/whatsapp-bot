@@ -1,14 +1,16 @@
 import { container, inject, injectable } from 'tsyringe'
 
-import { FlowStep } from './config/enums.js'
-import { MenuFlow } from './flows/menu-flow.js'
-import { OrderFlow } from './flows/order-flow.js'
-import { PaymentFlow } from './flows/payment-flow.js'
-import { RegistrationFlow } from './flows/registration-flow.js'
-import { CustomerService } from './services/customer-service.js'
-import { FlowStateManager } from './states/flow-state-manager.js'
+import { FlowStep } from '@/config/enums.js'
+import {
+  MenuFlow,
+  OrderFlow,
+  PaymentFlow,
+  RegistrationFlow,
+} from '@/flows/index.js'
+import { CustomerService } from '@/services/customer-service.js'
+import { FlowStateManager } from '@/states/flow-state-manager.js'
 
-import type { FlowState } from './types/index.js'
+import type { FlowState } from '@/types/index.js'
 
 type FlowHandler = {
   handle(phoneNumber: string, message: string, state: any): string

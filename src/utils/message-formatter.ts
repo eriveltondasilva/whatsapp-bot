@@ -15,8 +15,6 @@ function formatPaymentMethod(method?: PaymentMethod) {
   return 'Método de pagamento inválido'
 }
 
-console.log('teste:', formatPaymentMethod('teste' as PaymentMethod))
-
 function formatOrderStatus(status: OrderStatus): string {
   const statusDescriptions: Record<OrderStatus, string> = {
     [OrderStatus.PENDING]: '🕒 Pendente',

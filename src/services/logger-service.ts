@@ -17,7 +17,7 @@ export class LoggerService {
           format: 'YYYY-MM-DD HH:mm:ss',
         }),
         format.errors({ stack: true }),
-        format.splat(),
+        // format.splat(),
         format.json(),
       ),
       defaultMeta: { service: SESSION_NAME },

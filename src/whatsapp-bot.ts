@@ -35,23 +35,16 @@ export class WhatsappBot {
   }
 
   private async handleMessage(message: Message) {
-    try {
-      if (!this.client || !isValidMessage(message.body)) return
+    this.logger.debug('WhatsappBot.handleMessage')
+    this.logger.debug('📬 Mensagem recebida:', message)
 
-      const response = await this.dialogManager.handleMessage(
-        message.from,
-        message.body as string,
-      )
+    if (!this.client || !isValidMessage(message)) return
 
-      await this.client.sendText(message.from, response)
-    } catch (error) {
-      this.logger.error('Erro ao processar mensagem:', error)
-      if (!this.client) return
+    // const response = await this.dialogManager.handleMessage(
+    //   message.from,
+    //   message.body as string,
+    // )
 
-      await this.client.sendText(
-        message.from,
-        'Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente.',
-      )
-    }
+    await this.client.sendText(PHONE_NUMBER, '👋 Ola!')
   }
 }

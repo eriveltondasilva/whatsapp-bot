@@ -1,3 +1,4 @@
+import type { Message } from '@wppconnect-team/wppconnect'
 import day from 'dayjs'
 import { PaymentMethod, Validation } from '../config/enums.js'
 
@@ -31,11 +32,12 @@ export function isValidPaymentMethod(method: PaymentMethod) {
   return validMethods.includes(method)
 }
 
-export function isValidMessage(message = '') {
-  if (!message || typeof message !== 'string') return false
+export function isValidMessage(message: Message) {
+  const { body } = message
+  if (!body || typeof body !== 'string') return false
 
   return (
-    message.trim().length >= Validation.MESSAGE_MIN_LENGTH &&
-    message.trim().length <= Validation.MESSAGE_MAX_LENGTH
+    body.trim().length >= Validation.MESSAGE_MIN_LENGTH &&
+    body.trim().length <= Validation.MESSAGE_MAX_LENGTH
   )
 }
