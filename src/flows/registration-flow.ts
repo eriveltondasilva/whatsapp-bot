@@ -12,6 +12,9 @@ export class RegistrationFlow {
   // ###
   handle(phoneNumber: string, message: string, state: FlowState) {
     switch (state.step) {
+      case FlowStep.INITIAL:
+        return this.handleInitial(phoneNumber)
+
       case FlowStep.AWAITING_NAME:
         return this.handleNameInput(phoneNumber, message)
 
@@ -27,6 +30,11 @@ export class RegistrationFlow {
   }
 
   // ###
+  private handleInitial(phoneNumber: string) {
+    this.flowState.setState(phoneNumber, FlowStep.AWAITING_NAME)
+    return 'Qual seu nome?'
+  }
+
   private handleNameInput(phoneNumber: string, name: string) {
     this.flowState.setState(phoneNumber, FlowStep.AWAITING_ADDRESS, { name })
 

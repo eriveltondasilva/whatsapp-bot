@@ -27,8 +27,9 @@ export class DialogManager {
     const customer = this.customer.getCustomer(phoneNumber)
 
     if (!customer && state.step === FlowStep.INITIAL) {
-      this.flowState.setState(phoneNumber, FlowStep.AWAITING_NAME)
-      return 'Qual seu nome?'
+      return this.handlers
+        .get('registration')
+        ?.handle(phoneNumber, message, state)
     }
 
     return this.routeMessage(phoneNumber, message, state)
