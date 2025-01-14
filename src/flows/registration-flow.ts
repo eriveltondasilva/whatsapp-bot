@@ -29,7 +29,7 @@ export class RegistrationFlow {
   // ###
   private handleNameInput(phoneNumber: string, name: string) {
     this.flowState.setState(phoneNumber, FlowStep.AWAITING_ADDRESS, { name })
-    
+
     return 'Ótimo! Agora preciso do seu endereço completo para entrega:'
   }
 
