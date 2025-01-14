@@ -1,57 +1,66 @@
-import {
-  type Message,
-  type Whatsapp,
-  create,
-} from '@wppconnect-team/wppconnect'
+import type { Message } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
-import { Delay } from './config/enums.js'
-import { PHONE_NUMBER, SESSION_NAME } from './config/env.js'
-import { DialogManager } from './dialog-manager.js'
-import { LoggerService } from './services/logger-service.js'
-import { isValidMessage } from './utils/validations.js'
+import { ClientManager } from '@/client-manager.js'
+import { Delay } from '@/config/enums.js'
+import { PHONE_NUMBER } from '@/config/env.js'
+import { DialogManager } from '@/dialog-manager.js'
+import { LoggerService } from '@/services/logger-service.js'
+import { isValidMessage } from '@/utils/validations.js'
 
 @injectable()
 export class WhatsappBot {
   constructor(
-    private client: Whatsapp,
+    @inject(ClientManager) private clientManager: ClientManager,
     @inject(LoggerService) private logger: LoggerService,
-    @inject(DialogManager) private dialog: DialogManager,
+    @inject(DialogManager) private dialogManager: DialogManager,
   ) {}
 
-  async init() {
+  public async init(): Promise<void> {
     try {
-      this.client = await create({
-        session: SESSION_NAME,
-        phoneNumber: PHONE_NUMBER,
-      })
+      const client = await this.clientManager.getClient()
 
       // TODO: trocar para onMessage
-      this.client.onAnyMessage((message) => this.handleMessage(message))
+      client.onAnyMessage((message) => this.handleMessage(message))
 
-      // TODO: trocar para logger
-      console.log('🚀 Bot inicializado com sucesso!')
+      this.logger.info('🚀 Bot inicializado com sucesso!')
     } catch (error) {
-      this.logger.error('❌ Erro ao inicializar bot:', error)
+      this.logger.error('❌ Erro ao inicializar bot:')
+      this.logger.error(`${error}`)
       throw error
     }
   }
 
-  private async handleMessage(message: Message) {
-    // TODO: remover
-    console.log('\n▶️ WhatsappBot.handleMessage')
-    console.log('📬 Mensagem recebida:', message.body)
+  private async handleMessage(message: Message): Promise<void> {
+    this.logger.info('📬 Mensagem recebida:', message.body)
 
-    // TODO: remover if abaixo
+    // TODO: remover if abaixo, para testes
     if (message.body?.toLowerCase() !== 't') return
-    if (!this.client || !isValidMessage(message)) return
+    if (!isValidMessage(message)) {
+      this.logger.debug('📬 Mensagem inválida ignorada: %o', {
+        from: message.from,
+        body: message.body,
+      })
+      return
+    }
 
-    const response = await this.dialog.handleMessage(message.from, message.body)
-
+    this.logger.debug('📬 Enviando mensagem para o cliente...')
+    const response = await this.dialogManager.handleMessage(
+      message.from,
+      message.body,
+    )
     if (!response) return
 
-    await this.client.sendText(PHONE_NUMBER, response, {
+    await this.sendMessage(message.from, response)
+  }
+
+  private async sendMessage(to: string, message: string): Promise<void> {
+    const client = await this.clientManager.getClient()
+
+    // TODO: trocar PHONE_NUMBER para parâmetro "to"
+    await client.sendText(PHONE_NUMBER, message, {
       delay: Delay.DEFAULT,
     })
+    this.logger.info('📬 Mensagem enviada para o cliente:', to)
   }
 }
