@@ -49,3 +49,7 @@ export type FlowState = {
   step: FlowStep
   data: any
 }
+
+export type FlowHandler = {
+  handle(phoneNumber: string, message: string, state: any): string
+}

@@ -1,3 +1,4 @@
+import { type Message, MessageType } from '@wppconnect-team/wppconnect'
 import { PaymentMethod, Validation } from '../config/enums.js'
 import {
   isValidAddress,
@@ -111,27 +112,50 @@ describe('isValidPaymentMethod:', () => {
 })
 
 describe('isValidMessage:', () => {
+  const createMockMessage = (overrides?: Partial<Message>) => ({
+    body: 'Hello',
+    fromMe: false,
+    isGroupMsg: false,
+    type: MessageType.CHAT,
+    ...overrides,
+  })
+
   // !!!
-  it('should return false for an empty string', () => {
-    const result = isValidMessage('')
+  it.each([null, undefined])(
+    'should return false for invalid message %o',
+    (message) => {
+      const result = isValidMessage(message as unknown as Message)
+      expect(result).toBe(false)
+    },
+  )
+  it.each([
+    ['empty body', createMockMessage({ body: '   ' })],
+    ['invalid type', createMockMessage({ type: MessageType.IMAGE })],
+    // ['invalid fromMe', createMockMessage({ fromMe: true })],
+    ['invalid isGroupMsg', createMockMessage({ isGroupMsg: true })],
+  ])('should return false for %s', (_, message) => {
+    const result = isValidMessage(message as Message)
     expect(result).toBe(false)
   })
   it.each([
     Validation.MESSAGE_MIN_LENGTH - 1,
     Validation.MESSAGE_MAX_LENGTH + 1,
   ])('should return false for invalid message length (%i)', (length) => {
-    const result = isValidMessage('a'.repeat(length))
+    const message = createMockMessage({ body: 'a'.repeat(length) })
+    const result = isValidMessage(message as Message)
     expect(result).toBe(false)
   })
   // ###
   it('should return true if message is valid', () => {
-    const result = isValidMessage('Hello, world!')
+    const message = createMockMessage()
+    const result = isValidMessage(message as Message)
     expect(result).toBe(true)
   })
   it.each([Validation.MESSAGE_MIN_LENGTH, Validation.MESSAGE_MAX_LENGTH])(
     'should return true for valid message length (%i)',
     (length) => {
-      const result = isValidMessage('a'.repeat(length))
+      const message = createMockMessage({ body: 'a'.repeat(length) })
+      const result = isValidMessage(message as Message)
       expect(result).toBe(true)
     },
   )

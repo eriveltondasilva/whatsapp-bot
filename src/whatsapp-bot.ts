@@ -5,6 +5,7 @@ import {
 } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
+import { Delay } from './config/enums.js'
 import { PHONE_NUMBER, SESSION_NAME } from './config/env.js'
 import { DialogManager } from './dialog-manager.js'
 import { LoggerService } from './services/logger-service.js'
@@ -13,9 +14,9 @@ import { isValidMessage } from './utils/validations.js'
 @injectable()
 export class WhatsappBot {
   constructor(
-    private client: Whatsapp | null,
+    private client: Whatsapp,
     @inject(LoggerService) private logger: LoggerService,
-    @inject(DialogManager) private dialogManager: DialogManager,
+    @inject(DialogManager) private dialog: DialogManager,
   ) {}
 
   async init() {
@@ -25,9 +26,11 @@ export class WhatsappBot {
         phoneNumber: PHONE_NUMBER,
       })
 
-      this.client.onMessage((message) => this.handleMessage(message))
+      // TODO: trocar para onMessage
+      this.client.onAnyMessage((message) => this.handleMessage(message))
 
-      this.logger.info('🚀 Bot inicializado com sucesso!')
+      // TODO: trocar para logger
+      console.log('🚀 Bot inicializado com sucesso!')
     } catch (error) {
       this.logger.error('❌ Erro ao inicializar bot:', error)
       throw error
@@ -35,16 +38,20 @@ export class WhatsappBot {
   }
 
   private async handleMessage(message: Message) {
-    this.logger.debug('WhatsappBot.handleMessage')
-    this.logger.debug('📬 Mensagem recebida:', message)
+    // TODO: remover
+    console.log('\n▶️ WhatsappBot.handleMessage')
+    console.log('📬 Mensagem recebida:', message.body)
 
+    // TODO: remover if abaixo
+    if (message.body?.toLowerCase() !== 't') return
     if (!this.client || !isValidMessage(message)) return
 
-    // const response = await this.dialogManager.handleMessage(
-    //   message.from,
-    //   message.body as string,
-    // )
+    const response = await this.dialog.handleMessage(message.from, message.body)
 
-    await this.client.sendText(PHONE_NUMBER, '👋 Ola!')
+    if (!response) return
+
+    await this.client.sendText(PHONE_NUMBER, response, {
+      delay: Delay.DEFAULT,
+    })
   }
 }

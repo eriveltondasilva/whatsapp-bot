@@ -26,6 +26,7 @@ export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
 export const Delay = {
   PREPARATION: 2 * 60 * 1_000, // 2 minutes
   DELIVERY: 5 * 60 * 1_000, // 5 minutes
+  DEFAULT: 2 * 1_000, // 2 seconds
 } as const
 export type Delay = (typeof Delay)[keyof typeof Delay]
 
