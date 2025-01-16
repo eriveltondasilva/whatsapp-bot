@@ -1,5 +1,6 @@
 import type { Whatsapp } from '@wppconnect-team/wppconnect'
-import type { OrderStatus } from '../config/enums.js'
+
+import type { OrderStatus } from '@/config/enums.js'
 
 export class NotificationService {
   constructor(private client: Whatsapp) {}

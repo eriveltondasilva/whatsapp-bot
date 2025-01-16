@@ -3,7 +3,7 @@ import type {
   FlowStep,
   OrderStatus,
   PaymentMethod,
-} from '../config/enums.js'
+} from '@/config/enums.js'
 
 export type Customer = {
   id: number

@@ -1,5 +1,6 @@
 import { type Message, MessageType } from '@wppconnect-team/wppconnect'
-import { PaymentMethod, Validation } from '../config/enums.js'
+
+import { PaymentMethod, Validation } from '@/config/enums.js'
 import {
   isValidAddress,
   isValidBirthday,

@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe'
-import { FlowStep } from '../config/enums.js'
-import { OrderService } from '../services/order-service.js'
-import { ProductService } from '../services/product-service.js'
-import { FlowStateManager } from '../states/flow-state-manager.js'
-import type { FlowState, StateData } from '../types/index.js'
-import { isValidQuantity } from '../utils/validations.js'
+
+import { FlowStep } from '@/config/enums.js'
+import { OrderService, ProductService } from '@/services/index.js'
+import { FlowStateManager } from '@/states/flow-state-manager.js'
+import type { FlowState } from '@/types/index.js'
+import { isValidQuantity } from '@/utils/validations.js'
 
 @injectable()
 export class OrderFlow {
@@ -30,7 +30,7 @@ export class OrderFlow {
   private handlePizzaSelection(
     phoneNumber: string,
     message: string,
-    data?: StateData,
+    data: any,
   ) {
     const pizzaId = Number.parseInt(message)
     const pizzas = this.product.getProduct(pizzaId)
@@ -55,7 +55,7 @@ export class OrderFlow {
   private handleQuantitySelection(
     phoneNumber: string,
     message: string,
-    data?: StateData,
+    data: any,
   ) {
     const quantity = Number.parseInt(message)
 

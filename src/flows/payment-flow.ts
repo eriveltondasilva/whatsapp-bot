@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe'
-import { FlowStep, PaymentMethod } from '../config/enums.js'
-import { OrderService } from '../services/order-service.js'
-import { FlowStateManager } from '../states/flow-state-manager.js'
-import { formatCurrency } from '../utils/message-formatter.js'
 
-import type { FlowState } from '../types/index.js'
+import { FlowStep, PaymentMethod } from '@/config/enums.js'
+import { OrderService } from '@/services/order-service.js'
+import { FlowStateManager } from '@/states/flow-state-manager.js'
+import { formatCurrency } from '@/utils/message-formatter.js'
+import type { FlowState } from '@/types/index.js'
 
 @injectable()
 export class PaymentFlow {

@@ -1,5 +1,5 @@
-import { OrderStatus, type PaymentMethod } from '../config/enums.js'
-import type { Order, OrderItem } from '../types/index.js'
+import { OrderStatus, type PaymentMethod } from '@/config/enums.js'
+import type { Order, OrderItem } from '@/types/index.js'
 
 export class OrderService {
   private orders: Map<number, Order> = new Map()

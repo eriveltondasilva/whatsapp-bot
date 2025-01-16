@@ -2,7 +2,6 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/states/flow-state-manager.js'
-
 import type { FlowState } from '@/types/index.js'
 
 @injectable()

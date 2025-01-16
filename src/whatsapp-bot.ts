@@ -1,10 +1,9 @@
 import type { Message } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
-import { ClientManager } from '@/client-manager.js'
 import { Delay } from '@/config/enums.js'
 import { PHONE_NUMBER } from '@/config/env.js'
-import { DialogManager } from '@/dialog-manager.js'
+import { ClientManager, DialogManager } from '@/managers/index.js'
 import { LoggerService } from '@/services/logger-service.js'
 import { isValidMessage } from '@/utils/validations.js'
 

@@ -1,4 +1,4 @@
-import type { Customer } from '../types/index.js'
+import type { Customer } from '@/types/index.js'
 // import  from '../database/customers.json';
 
 export class CustomerService {

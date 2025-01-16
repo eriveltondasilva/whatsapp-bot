@@ -1,5 +1,5 @@
-import type { Category } from '../config/enums.js'
-import initialProducts from '../database/products.json' with { type: 'json' }
+import type { Category } from '@/config/enums.js'
+import initialProducts from '@/database/products.json' with { type: 'json' }
 
 export class ProductService {
   private products = initialProducts

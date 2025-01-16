@@ -1,5 +1,5 @@
-import { OrderStatus, PaymentMethod } from '../config/enums.js'
-import type { Customer, Order, OrderItem, Product } from '../types/index.js'
+import { OrderStatus, PaymentMethod } from '@/config/enums.js'
+import type { Customer, Order, OrderItem, Product } from '@/types/index.js'
 
 export function formatCurrency(value: number): string {
   return `R$ ${value.toFixed(2).replace('.', ',')}`
