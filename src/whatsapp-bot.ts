@@ -34,8 +34,8 @@ export class WhatsappBot {
     this.logger.info('📬 Mensagem recebida:', message.body)
 
     // TODO: remover if abaixo, para testes
-    if (message.body?.toLowerCase() !== 't') return
-    if (!isValidMessage(message)) {
+    // if (message.body?.toLowerCase() !== 't') return
+    if (!isValidMessage(message) || !message.body) {
       this.logger.debug('📬 Mensagem inválida ignorada: %o', {
         from: message.from,
         body: message.body,
