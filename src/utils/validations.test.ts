@@ -40,15 +40,21 @@ describe('isValidBirthdate:', () => {
     const result = isValidBirthday('not a date')
     expect(result).toBe(false)
   })
-  it('should return false for a malformed date', () => {
-    const result = isValidBirthday('32/01/2000')
-    expect(result).toBe(false)
-  })
+  it.each(['100/01/2000', '01/100/2000', '01-01-2000'])(
+    'should return false for a malformed date for %s',
+    (date) => {
+      const result = isValidBirthday(date)
+      expect(result).toBe(false)
+    },
+  )
   // ###
-  it('should return true if birth date is valid', () => {
-    const result = isValidBirthday('01/01/2000')
-    expect(result).toBe(true)
-  })
+  it.each(['01/01/2000', '31/12/2000'])(
+    'should return true if birth date is valid for %s',
+    (date) => {
+      const result = isValidBirthday(date)
+      expect(result).toBe(true)
+    },
+  )
 })
 
 describe('isValidName:', () => {
@@ -132,7 +138,7 @@ describe('isValidMessage:', () => {
   it.each([
     ['empty body', createMockMessage({ body: '   ' })],
     ['invalid type', createMockMessage({ type: MessageType.IMAGE })],
-    // ['invalid fromMe', createMockMessage({ fromMe: true })],
+    ['invalid fromMe', createMockMessage({ fromMe: true })],
     ['invalid isGroupMsg', createMockMessage({ isGroupMsg: true })],
   ])('should return false for %s', (_, message) => {
     const result = isValidMessage(message as Message)

@@ -1,15 +1,15 @@
 import type { Message } from '@wppconnect-team/wppconnect'
-import day from 'dayjs'
 
 import { PaymentMethod, Validation } from '@/config/enums.js'
+import { dayjs } from '@/utils/dayjs.js'
 
 export function isValidPhoneNumber(phoneNumber: string): boolean {
   const regex = /^(\(?\d{2}\)?[\s]?)?(9?\d{4})[-\s]?(\d{4})$/
   return regex.test(phoneNumber.trim())
 }
 
-export function isValidBirthday(birthday: string): boolean {
-  return day(birthday).isValid()
+export function isValidBirthday(date: string): boolean {
+  return dayjs(date, 'DD/MM/YYYY', true).isValid()
 }
 
 export function isValidName(name: string): boolean {
@@ -37,7 +37,7 @@ export function isValidMessage(message: Message): boolean {
   if (!message) return false
 
   // TODO: Add fromMe check
-  if (/* message.fromMe || */ message.isGroupMsg || message.type !== 'chat')
+  if (message.fromMe || message.isGroupMsg || message.type !== 'chat')
     return false
 
   if (!message.body?.trim()) return false

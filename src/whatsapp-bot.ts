@@ -1,49 +1,38 @@
-import type { Message } from '@wppconnect-team/wppconnect'
+import type { Message, Whatsapp } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
 import { Delay } from '@/config/enums.js'
-import { PHONE_NUMBER } from '@/config/env.js'
 import { ClientManager, DialogManager } from '@/managers/index.js'
 import { LoggerService } from '@/services/logger-service.js'
 import { isValidMessage } from '@/utils/validations.js'
 
 @injectable()
 export class WhatsappBot {
+  private client: Whatsapp | null = null
+
   constructor(
     @inject(ClientManager) private clientManager: ClientManager,
-    @inject(LoggerService) private logger: LoggerService,
     @inject(DialogManager) private dialogManager: DialogManager,
+    @inject(LoggerService) private logger: LoggerService,
   ) {}
 
-  public async init(): Promise<void> {
-    try {
-      const client = await this.clientManager.getClient()
-
-      // TODO: trocar para onMessage
-      client.onAnyMessage((message) => this.handleMessage(message))
-
-      this.logger.info('🚀 Bot inicializado com sucesso!')
-    } catch (error) {
-      this.logger.error('❌ Erro ao inicializar bot:')
-      this.logger.error(`${error}`)
-      throw error
-    }
+  public async initialize(): Promise<void> {
+    this.client = await this.clientManager.getClient()
+    this.client.onMessage((message) => this.handleMessage(message))
   }
 
   private async handleMessage(message: Message): Promise<void> {
-    this.logger.info('📬 Mensagem recebida:', message.body)
+    this.logger.info('📬 Received message:', message.body)
 
-    // TODO: remover if abaixo, para testes
-    // if (message.body?.toLowerCase() !== 't') return
-    if (!isValidMessage(message) || !message.body) {
-      this.logger.debug('📬 Mensagem inválida ignorada: %o', {
+    // TODO: remover a validação
+    if (!isValidMessage(message) || message.body?.toLowerCase() !== 'pizza') {
+      this.logger.debug('📬 Ignored invalid message:', {
         from: message.from,
         body: message.body,
       })
       return
     }
 
-    this.logger.debug('📬 Enviando mensagem para o cliente...')
     const response = await this.dialogManager.handleMessage(
       message.from,
       message.body,
@@ -54,12 +43,13 @@ export class WhatsappBot {
   }
 
   private async sendMessage(to: string, message: string): Promise<void> {
-    const client = await this.clientManager.getClient()
-
-    // TODO: trocar PHONE_NUMBER para parâmetro "to"
-    await client.sendText(PHONE_NUMBER, message, {
-      delay: Delay.DEFAULT,
-    })
-    this.logger.info('📬 Mensagem enviada para o cliente:', to)
+    try {
+      await this.client?.sendText(to, message, {
+        delay: Delay.DEFAULT,
+      })
+      this.logger.info('📬 Message sent to:', to)
+    } catch (error) {
+      this.logger.error(`❌ Failed to send message to ${to}:`, error)
+    }
   }
 }

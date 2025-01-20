@@ -4,16 +4,17 @@ import { container } from 'tsyringe'
 import { LoggerService } from '@/services/index.js'
 import { WhatsappBot } from '@/whatsapp-bot.js'
 
-async function main() {
+async function bootstrap(): Promise<void> {
   const logger = new LoggerService()
+  const whatsappBot = container.resolve(WhatsappBot)
 
   try {
-    const bot = container.resolve(WhatsappBot)
-    await bot.init()
+    await whatsappBot.initialize()
+    logger.info('🚀 Bot successfully initialized!')
   } catch (error) {
-    logger.error('Erro ao iniciar o bot:', error)
+    logger.error('❌ Bot initialization failed:', error)
     process.exitCode = 1
   }
 }
 
-main()
+bootstrap()

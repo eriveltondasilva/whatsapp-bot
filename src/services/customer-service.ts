@@ -1,6 +1,7 @@
 import type { Customer } from '@/types/index.js'
-// import  from '../database/customers.json';
+import { singleton } from 'tsyringe'
 
+@singleton()
 export class CustomerService {
   private customers: Map<string, Customer> = new Map()
 

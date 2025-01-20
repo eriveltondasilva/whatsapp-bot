@@ -1,55 +1,59 @@
-import { container, inject, injectable } from 'tsyringe'
+import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
-import { MenuFlow, RegistrationFlow } from '@/flows/index.js'
 import { CustomerService } from '@/services/customer-service.js'
 import { FlowStateManager } from '@/states/flow-state-manager.js'
-
-import type { FlowHandler, FlowState } from '@/types/index.js'
+import type { FlowState } from '@/types/index.js'
+import { HandlerManager } from './handler-manager.js'
 
 @injectable()
 export class DialogManager {
-  private handlers: Map<string, FlowHandler>
-
   constructor(
-    @inject(FlowStateManager) private flowState: FlowStateManager,
-    @inject(CustomerService) private customer: CustomerService,
-  ) {
-    this.handlers = new Map<string, FlowHandler>([
-      ['registration', container.resolve(RegistrationFlow)],
-      ['menu', container.resolve(MenuFlow)],
-    ])
-  }
+    @inject(FlowStateManager) private flowStateManager: FlowStateManager,
+    @inject(CustomerService) private customerService: CustomerService,
+    @inject(HandlerManager) private handlerManager: HandlerManager,
+  ) {}
 
   // ###
-  async handleMessage(phoneNumber: string, message: string) {
-    const state = this.flowState.getState(phoneNumber)
-    const customer = this.customer.getCustomer(phoneNumber)
+  public async handleMessage(
+    phoneNumber: string,
+    message: string,
+  ): Promise<string> {
+    const state = this.flowStateManager.getState(phoneNumber)
+    const customer = this.customerService.getCustomer(phoneNumber)
 
     if (!customer && state.step === FlowStep.INITIAL) {
-      return this.handlers
-        .get('registration')
-        ?.handle(phoneNumber, message, state)
+      return this.handleRegistration(phoneNumber, message, state)
     }
 
     return this.routeMessage(phoneNumber, message, state)
   }
 
-  private routeMessage(phoneNumber: string, message: string, state: FlowState) {
-    const currentFlow = this.getFlowForStep(state.step)
-    const handler = this.handlers.get(currentFlow)
+  private routeMessage(
+    phoneNumber: string,
+    message: string,
+    state: FlowState,
+  ): string {
+    const handler = this.handlerManager.getHandlerByStep(state.step)
 
-    if (!handler) {
-      return 'Ops! Ocorreu um erro ao processar sua mensagem. Tente novamente!'
-    }
+    if (!handler) return this.getErrorMessage()
 
     return handler.handle(phoneNumber, message, state)
   }
 
-  // ***
-  private getFlowForStep(step: FlowStep): string {
-    if (step.startsWith('awaiting_')) return 'registration'
+  private handleRegistration(
+    phoneNumber: string,
+    message: string,
+    state: FlowState,
+  ) {
+    const registrationHandler = this.handlerManager.getHandler('registration')
 
-    return 'menu'
+    if (!registrationHandler) return this.getErrorMessage()
+
+    return registrationHandler.handle(phoneNumber, message, state)
+  }
+
+  private getErrorMessage() {
+    return 'Ops! An error occurred while processing your message. Please try again!'
   }
 }

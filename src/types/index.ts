@@ -50,6 +50,6 @@ export type FlowState = {
   data: any
 }
 
-export type FlowHandler = {
+export interface FlowHandler {
   handle(phoneNumber: string, message: string, state: any): string
 }

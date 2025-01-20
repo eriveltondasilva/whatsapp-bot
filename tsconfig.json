@@ -7,17 +7,19 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "types": ["node", "vitest/globals"],
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
     //
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    // 
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
