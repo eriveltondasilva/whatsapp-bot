@@ -46,7 +46,7 @@ export class DialogManager {
     phoneNumber: string,
     message: string,
     state: FlowState,
-  ) {
+  ): string {
     const registrationHandler = this.handlerManager.getHandler('registration')
 
     if (!registrationHandler) return this.getErrorMessage()
@@ -54,6 +54,7 @@ export class DialogManager {
     return registrationHandler.handle(phoneNumber, message, state)
   }
 
+  // ###
   private getErrorMessage(): string {
     return 'Ops! An error occurred while processing your message. Please try again!'
   }

@@ -1,6 +1,6 @@
 import { dayjs } from './dayjs.js'
 
-export function getGreeting() {
+export function getGreeting(): string {
   const hour = dayjs().hour()
 
   if (hour >= 6 && hour < 12) return 'Bom dia!'

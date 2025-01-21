@@ -1,11 +1,14 @@
+import { singleton } from 'tsyringe'
+
 import { OrderStatus, type PaymentMethod } from '@/config/enums.js'
 import type { Order, OrderItem } from '@/types/index.js'
 
+@singleton()
 export class OrderService {
   private orders: Map<number, Order> = new Map()
   private currentOrderId = 1
 
-  createOrder(customerId: number) {
+  public createOrder(customerId: number) {
     const order: Order = {
       id: this.currentOrderId++,
       customerId,
@@ -19,11 +22,11 @@ export class OrderService {
     return order
   }
 
-  getOrder(orderId: number) {
+  public getOrder(orderId: number) {
     return this.orders.get(orderId) || null
   }
 
-  addItemToOrder(orderId: number, item: OrderItem) {
+  public addItemToOrder(orderId: number, item: OrderItem) {
     const order = this.getOrder(orderId)
     if (!order) return null
 
@@ -32,7 +35,7 @@ export class OrderService {
     return order
   }
 
-  updateOrderStatus(orderId: number, status: OrderStatus) {
+  public updateOrderStatus(orderId: number, status: OrderStatus) {
     const order = this.getOrder(orderId)
     if (!order) return null
 
@@ -40,7 +43,7 @@ export class OrderService {
     return order
   }
 
-  setPaymentMethod(orderId: number, method: PaymentMethod, change?: number) {
+  public setPaymentMethod(orderId: number, method: PaymentMethod, change?: number) {
     const order = this.getOrder(orderId)
     if (!order) return null
 
@@ -53,6 +56,7 @@ export class OrderService {
     return order
   }
 
+  // ###
   private calculateTotalPrice(items: OrderItem[]) {
     return items.reduce((total, item) => total + item.price * item.quantity, 0)
   }

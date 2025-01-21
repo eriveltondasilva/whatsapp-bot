@@ -10,7 +10,6 @@ export type Customer = {
   name: string
   phone: string
   address: string
-  birthday: string
   createdAt: string
 }
 

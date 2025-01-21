@@ -25,7 +25,8 @@ export class WhatsappBot {
     this.logger.info('📬 Received message:', message.body)
 
     // TODO: remover a validação
-    if (!isValidMessage(message) || message.body?.toLowerCase() !== 'pizza') {
+    // if (message.body?.toLowerCase() !== 'pizza') return
+    if (!isValidMessage(message) || !message.body) {
       this.logger.debug('📬 Ignored invalid message:', {
         from: message.from,
         body: message.body,

@@ -3,12 +3,7 @@ import { inject, injectable } from 'tsyringe'
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { CustomerService } from '@/services/customer-service.js'
-import {
-  getGreeting,
-  isValidAddress,
-  isValidBirthday,
-  isValidName,
-} from '@/utils/index.js'
+import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
 
 import type { FlowState } from '@/types/index.js'
 
@@ -20,10 +15,14 @@ export class RegistrationFlow {
   ) {}
 
   // ###
-  handle(phoneNumber: string, message: string, state: FlowState): string {
+  public handle(
+    phoneNumber: string,
+    message: string,
+    state: FlowState,
+  ): string {
     switch (state.step) {
       case FlowStep.INITIAL:
-        return this.handleInitial(phoneNumber)
+        return this.initiateRegistration(phoneNumber)
 
       case FlowStep.COLLECT_NAME:
         return this.handleNameInput(phoneNumber, message)
@@ -31,30 +30,28 @@ export class RegistrationFlow {
       case FlowStep.COLLECT_ADDRESS:
         return this.handleAddressInput(phoneNumber, message)
 
-      case FlowStep.COLLECT_BIRTHDAY:
-        return this.handleBirthdayInput(phoneNumber, message)
-
       default:
         return 'Ops! Algo deu errado. Por favor, tente novamente.'
     }
   }
 
   // ###
-  private handleInitial(phoneNumber: string): string {
+  private initiateRegistration(phoneNumber: string): string {
     this.flowState.setState(phoneNumber, FlowStep.COLLECT_NAME)
 
     return [
       '🍕 Olá! Bem-vindo(a) à *Pizzaria #####*!\n',
-      'Estamos prontos para transformar sua fome em felicidade. 😊',
-      'Antes de começar, precisamos fazer um rápido cadastro!\n',
-      '✍🏻 Qual o seu nome completo?',
+      'Estamos prontos para transformar a sua fome em felicidade. 😊',
+      'Antes de começar, precisamos fazer um rápido cadastro. 🏃🏻‍➡️\n',
+      '✍🏻 *Qual o seu nome completo?*',
+      '> Exemplo: _"João da Silva"_',
     ].join('\n')
   }
 
   private handleNameInput(phoneNumber: string, name: string): string {
     if (!isValidName(name)) {
       return [
-        '❌ *Nome inválido*',
+        '❌ *NOME INVÁLIDO*',
         'Por favor, informe um nome completo.\n',
         '> Exemplo: _"João da Silva"_',
       ].join('\n')
@@ -65,52 +62,39 @@ export class RegistrationFlow {
     return [
       this.getGreeting(name),
       'Agora me diga onde vamos entregar suas delícias?\n',
-      '✍🏻 Qual o seu endereço completo _(Rua, número, bairro)_?',
+      '✍🏻 *Qual o seu endereço completo?*',
+      '> Exemplo: _"Rua das Flores, 123, Centro"_',
     ].join('\n')
   }
 
   private handleAddressInput(phoneNumber: string, address: string): string {
     if (!isValidAddress(address)) {
       return [
-        '❌ *Endereço inválido*',
+        '❌ *ENDEREÇO INVÁLIDO*',
         'Por favor, informe um endereço completo.\n',
         '> Exemplo: _"Rua das Flores, 123, Centro"_',
       ].join('\n')
     }
 
-    this.flowState.setState(phoneNumber, FlowStep.COLLECT_BIRTHDAY, {
-      address,
-    })
-
-    return [
-      'Excelente, estamos quase terminando.\n',
-      '✍🏻 Qual a sua data de nascimento _(DD/MM/AAAA)_?',
-    ].join('\n')
+    return this.finalizeRegistration(phoneNumber)
   }
 
-  private handleBirthdayInput(phoneNumber: string, birthday: string): string {
-    if (!isValidBirthday(birthday)) {
-      return [
-        '❌ *Data inválida*',
-        'Por favor, informe uma data válida.\n',
-        '> Exemplo: _"01/01/2000"_',
-      ].join('\n')
-    }
+  // TODO: implementar data de nascimento, caso preciso
+  // private handleBirthdayInput(phoneNumber: string, birthday: string): string {}
 
+  private finalizeRegistration(phoneNumber: string): string {
     const { data } = this.flowState.getState(phoneNumber)
 
-    // this.customer.createCustomer({
-    //   phone: phoneNumber,
-    //   name: data.name,
-    //   address: data.address,
-    //   birthday,
-    // })
+    this.customer.createCustomer({
+      phone: phoneNumber,
+      name: data.name,
+      address: data.address,
+    })
 
     this.flowState.setState(phoneNumber, FlowStep.MENU)
 
     return [
-      `🎉 Pronto, *${this.getFirstName(data.name)}*!`,
-      'Seu cadastro está completo e já está salvo para as próximas vezes.',
+      `🎉 Cadastro concluído com sucesso, ${this.getFirstName(data.name)}!`,
       'Agora, vamos ao que interessa: escolher algo gostoso! 😋',
     ].join('\n')
   }

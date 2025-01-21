@@ -6,25 +6,26 @@ import type { Customer } from '@/types/index.js'
 export class CustomerService {
   private customers: Map<string, Customer> = new Map()
 
-  getCustomer(phoneNumber: string) {
+  public getCustomer(phoneNumber: string): Customer | null {
     return this.customers.get(phoneNumber) || null
   }
 
-  createCustomer(data: Omit<Customer, 'id' | 'createdAt'>) {
-    const newCustomer = {
+  public createCustomer(data: Omit<Customer, 'id' | 'createdAt'>): Customer {
+    const newCustomer: Customer = {
       ...data,
       id: this.customers.size + 1,
       createdAt: new Date().toISOString(),
     }
+
     this.customers.set(newCustomer.phone, newCustomer)
 
     return newCustomer
   }
 
-  updateCustomer(
+  public updateCustomer(
     phoneNumber: string,
-    data: Partial<Omit<Customer, 'createdAt' | 'id'>>,
-  ) {
+    data: Partial<Omit<Customer, 'id' | 'createdAt'>>,
+  ): Customer | null {
     const customer = this.getCustomer(phoneNumber)
     if (!customer) return null
 
@@ -32,5 +33,9 @@ export class CustomerService {
     this.customers.set(phoneNumber, updatedCustomer)
 
     return updatedCustomer
+  }
+
+  public deleteCustomer(phoneNumber: string): boolean {
+    return this.customers.delete(phoneNumber)
   }
 }

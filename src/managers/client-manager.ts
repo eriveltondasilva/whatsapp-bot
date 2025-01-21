@@ -7,7 +7,7 @@ import { PHONE_NUMBER, SESSION_NAME } from '@/config/env.js'
 export class ClientManager {
   private client: Whatsapp | null = null
 
-  async getClient(): Promise<Whatsapp> {
+  public async getClient(): Promise<Whatsapp> {
     if (!this.client) {
       this.client = await create({
         session: SESSION_NAME,
