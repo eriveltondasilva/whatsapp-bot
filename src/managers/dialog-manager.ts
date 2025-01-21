@@ -3,8 +3,9 @@ import { inject, injectable } from 'tsyringe'
 import { FlowStep } from '@/config/enums.js'
 import { CustomerService } from '@/services/customer-service.js'
 import { FlowStateManager } from '@/states/flow-state-manager.js'
-import type { FlowState } from '@/types/index.js'
 import { HandlerManager } from './handler-manager.js'
+
+import type { FlowState } from '@/types/index.js'
 
 @injectable()
 export class DialogManager {
@@ -53,7 +54,7 @@ export class DialogManager {
     return registrationHandler.handle(phoneNumber, message, state)
   }
 
-  private getErrorMessage() {
+  private getErrorMessage(): string {
     return 'Ops! An error occurred while processing your message. Please try again!'
   }
 }

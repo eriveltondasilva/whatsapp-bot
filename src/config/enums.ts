@@ -43,28 +43,28 @@ export const Validation = {
 export type Validation = (typeof Validation)[keyof typeof Validation]
 
 export const FlowStep = {
-  INITIAL: 'initial',
-  AWAITING_NAME: 'awaiting_name',
-  AWAITING_ADDRESS: 'awaiting_address',
-  AWAITING_BIRTHDAY: 'awaiting_birthday',
+  INITIAL: 'registration:initial',
+  COLLECT_NAME: 'registration:collect_name',
+  COLLECT_ADDRESS: 'registration:collect_address',
+  COLLECT_BIRTHDAY: 'registration:collect_birthday',
+  //
   MENU: 'menu',
+  //
   SELECTING_PIZZA: 'selecting_pizza',
   SELECTING_DRINK: 'selecting_drink',
   SELECTING_QUANTITY: 'selecting_quantity',
   SELECTING_PAYMENT: 'selecting_payment',
+  CONFIRMING_ORDER: 'confirming_order',
+  //
   AWAITING_PAYMENT: 'awaiting_payment',
   AWAITING_CHANGE: 'awaiting_change',
-  CONFIRMING_ORDER: 'confirming_order',
+  //
+  SEPARATOR: ':',
 } as const
 export type FlowStep = (typeof FlowStep)[keyof typeof FlowStep]
 
 // export const XxxFlowStep = {
-//   INITIAL: 'initial',
-//   //
-//   COLLECT_NAME: 'collect_name',
-//   COLLECT_ADDRESS: 'collect_address',
-//   COLLECT_BIRTHDAY: 'collect_birthday',
-//   //
+//
 //   MENU: 'menu',
 //   //
 //   SELECT_PIZZA_TYPE: 'select_pizza_type',

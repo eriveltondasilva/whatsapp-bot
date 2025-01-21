@@ -1,7 +1,12 @@
-import { MenuFlow, RegistrationFlow } from '@/flows/index.js'
 import { inject, injectable, singleton } from 'tsyringe'
 
-import type { FlowStep } from '@/config/enums.js'
+import { FlowStep } from '@/config/enums.js'
+import {
+  MenuFlow,
+  OrderFlow,
+  PaymentFlow,
+  RegistrationFlow,
+} from '@/flows/index.js'
 import type { FlowHandler } from '@/types/index.js'
 
 @injectable()
@@ -12,10 +17,14 @@ export class HandlerManager {
   constructor(
     @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
     @inject(MenuFlow) menuFlow: MenuFlow,
+    @inject(OrderFlow) orderFlow: OrderFlow,
+    @inject(PaymentFlow) paymentFlow: PaymentFlow,
   ) {
     this.handlers = new Map<string, FlowHandler>([
       ['registration', registrationFlow],
       ['menu', menuFlow],
+      ['order', orderFlow],
+      ['payment', paymentFlow],
     ])
   }
 
@@ -24,10 +33,7 @@ export class HandlerManager {
   }
 
   public getHandlerByStep(step: FlowStep): FlowHandler | undefined {
-    let flowName = 'menu'
-
-    if (step.startsWith('awaiting_')) flowName = 'registration'
-
-    return this.getHandler(flowName)
+    const flowName = step.split(FlowStep.SEPARATOR)[0].toLowerCase()
+    return this.getHandler(flowName || 'menu')
   }
 }
