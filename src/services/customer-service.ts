@@ -1,5 +1,6 @@
-import type { Customer } from '@/types/index.js'
 import { singleton } from 'tsyringe'
+
+import type { Customer } from '@/types/index.js'
 
 @singleton()
 export class CustomerService {

@@ -1,11 +1,16 @@
 import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
+import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { CustomerService } from '@/services/customer-service.js'
-import { FlowStateManager } from '@/states/flow-state-manager.js'
+import {
+  getGreeting,
+  isValidAddress,
+  isValidBirthday,
+  isValidName,
+} from '@/utils/index.js'
+
 import type { FlowState } from '@/types/index.js'
-import { getGreeting } from '@/utils/get-greeting.js'
-import { isValidName } from '@/utils/validations.js'
 
 @injectable()
 export class RegistrationFlow {
@@ -41,8 +46,7 @@ export class RegistrationFlow {
     return [
       '🍕 Olá! Bem-vindo(a) à *Pizzaria #####*!\n',
       'Estamos prontos para transformar sua fome em felicidade. 😊',
-      'Antes de começar, precisamos fazer um rápido cadastro!',
-      'Vamos lá?\n',
+      'Antes de começar, precisamos fazer um rápido cadastro!\n',
       '✍🏻 Qual o seu nome completo?',
     ].join('\n')
   }
@@ -50,7 +54,7 @@ export class RegistrationFlow {
   private handleNameInput(phoneNumber: string, name: string): string {
     if (!isValidName(name)) {
       return [
-        '❌ *Nome inválido.*',
+        '❌ *Nome inválido*',
         'Por favor, informe um nome completo.\n',
         '> Exemplo: _"João da Silva"_',
       ].join('\n')
@@ -61,14 +65,14 @@ export class RegistrationFlow {
     return [
       this.getGreeting(name),
       'Agora me diga onde vamos entregar suas delícias?\n',
-      '✍🏻 Informe o endereço completo _(Rua, número, bairro)_:',
+      '✍🏻 Qual o seu endereço completo _(Rua, número, bairro)_?',
     ].join('\n')
   }
 
   private handleAddressInput(phoneNumber: string, address: string): string {
-    if (!address) {
+    if (!isValidAddress(address)) {
       return [
-        '❌ *Endereço inválido*.',
+        '❌ *Endereço inválido*',
         'Por favor, informe um endereço completo.\n',
         '> Exemplo: _"Rua das Flores, 123, Centro"_',
       ].join('\n')
@@ -79,15 +83,15 @@ export class RegistrationFlow {
     })
 
     return [
-      'Excelente, muito bem!\n',
-      '✍🏻 Informe a sua data de nascimento _(DD/MM/AAAA)_:',
+      'Excelente, estamos quase terminando.\n',
+      '✍🏻 Qual a sua data de nascimento _(DD/MM/AAAA)_?',
     ].join('\n')
   }
 
   private handleBirthdayInput(phoneNumber: string, birthday: string): string {
-    if (!birthday) {
+    if (!isValidBirthday(birthday)) {
       return [
-        '❌ *Data inválida.*',
+        '❌ *Data inválida*',
         'Por favor, informe uma data válida.\n',
         '> Exemplo: _"01/01/2000"_',
       ].join('\n')

@@ -1,10 +1,11 @@
 import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
+import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { OrderService, ProductService } from '@/services/index.js'
-import { FlowStateManager } from '@/states/flow-state-manager.js'
-import type { FlowState } from '@/types/index.js'
 import { isValidQuantity } from '@/utils/validations.js'
+
+import type { FlowState } from '@/types/index.js'
 
 @injectable()
 export class OrderFlow {

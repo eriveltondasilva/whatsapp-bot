@@ -64,9 +64,6 @@ export const FlowStep = {
 export type FlowStep = (typeof FlowStep)[keyof typeof FlowStep]
 
 // export const XxxFlowStep = {
-//
-//   MENU: 'menu',
-//   //
 //   SELECT_PIZZA_TYPE: 'select_pizza_type',
 //   SELECT_FIRST_HALF: 'select_first_half',
 //   SELECT_SECOND_HALF: 'select_second_half',

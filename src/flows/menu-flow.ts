@@ -2,9 +2,10 @@ import { inject, injectable } from 'tsyringe'
 
 import { Category, FlowStep } from '@/config/enums.js'
 import { MenuMessage, Message } from '@/config/messages.js'
+import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { ProductService } from '@/services/product-service.js'
-import { FlowStateManager } from '@/states/flow-state-manager.js'
 import { formatProductList } from '@/utils/message-formatter.js'
+
 import type { Product } from '@/types/index.js'
 
 @injectable()
