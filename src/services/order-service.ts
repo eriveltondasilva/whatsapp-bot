@@ -1,7 +1,7 @@
 import { singleton } from 'tsyringe'
 
 import { OrderStatus, type PaymentMethod } from '@/config/enums.js'
-import type { Order, OrderItem } from '@/types/index.js'
+import type { Order, OrderItem } from '@/types.js'
 
 @singleton()
 export class OrderService {
@@ -43,7 +43,11 @@ export class OrderService {
     return order
   }
 
-  public setPaymentMethod(orderId: number, method: PaymentMethod, change?: number) {
+  public setPaymentMethod(
+    orderId: number,
+    method: PaymentMethod,
+    change?: number,
+  ) {
     const order = this.getOrder(orderId)
     if (!order) return null
 

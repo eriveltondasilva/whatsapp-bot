@@ -5,10 +5,11 @@ import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { CustomerService } from '@/services/customer-service.js'
 import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
 
-import type { FlowState } from '@/types/index.js'
+import { MainMenu } from '@/config/messages.js'
+import type { FlowHandler, FlowState } from '@/types.js'
 
 @injectable()
-export class RegistrationFlow {
+export class RegistrationFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowState: FlowStateManager,
     @inject(CustomerService) private customer: CustomerService,
@@ -19,7 +20,7 @@ export class RegistrationFlow {
     phoneNumber: string,
     message: string,
     state: FlowState,
-  ): string {
+  ): string[] {
     switch (state.step) {
       case FlowStep.INITIAL:
         return this.initiateRegistration(phoneNumber)
@@ -31,30 +32,30 @@ export class RegistrationFlow {
         return this.handleAddressInput(phoneNumber, message)
 
       default:
-        return 'Ops! Algo deu errado. Por favor, tente novamente.'
+        return ['Ops! Algo deu errado. Por favor, tente novamente.']
     }
   }
 
   // ###
-  private initiateRegistration(phoneNumber: string): string {
+  private initiateRegistration(phoneNumber: string): string[] {
     this.flowState.setState(phoneNumber, FlowStep.COLLECT_NAME)
 
     return [
-      '🍕 Olá! Bem-vindo(a) à *Pizzaria #####*!\n',
+      '🍕 Olá! Bem-vindo(a) à *Pizzaria [Nome da Pizzaria]*!\n',
       'Estamos prontos para transformar a sua fome em felicidade. 😊',
-      'Antes de começar, precisamos fazer um rápido cadastro. 🏃🏻‍➡️\n',
+      'Antes de começar, precisamos fazer um _rápido_ cadastro. 🏃🏻💨\n',
       '✍🏻 *Qual o seu nome completo?*',
       '> Exemplo: _"João da Silva"_',
-    ].join('\n')
+    ]
   }
 
-  private handleNameInput(phoneNumber: string, name: string): string {
+  private handleNameInput(phoneNumber: string, name: string): string[] {
     if (!isValidName(name)) {
       return [
-        '❌ *NOME INVÁLIDO*',
-        'Por favor, informe um nome completo.\n',
+        '❌ *NOME INVÁLIDO*\n',
+        'Por favor, informe seu nome completo:',
         '> Exemplo: _"João da Silva"_',
-      ].join('\n')
+      ]
     }
 
     this.flowState.setState(phoneNumber, FlowStep.COLLECT_ADDRESS, { name })
@@ -64,16 +65,16 @@ export class RegistrationFlow {
       'Agora me diga onde vamos entregar suas delícias?\n',
       '✍🏻 *Qual o seu endereço completo?*',
       '> Exemplo: _"Rua das Flores, 123, Centro"_',
-    ].join('\n')
+    ]
   }
 
-  private handleAddressInput(phoneNumber: string, address: string): string {
+  private handleAddressInput(phoneNumber: string, address: string): string[] {
     if (!isValidAddress(address)) {
       return [
-        '❌ *ENDEREÇO INVÁLIDO*',
-        'Por favor, informe um endereço completo.\n',
+        '❌ *ENDEREÇO INVÁLIDO*\n',
+        'Por favor, informe seu endereço completo:',
         '> Exemplo: _"Rua das Flores, 123, Centro"_',
-      ].join('\n')
+      ]
     }
 
     return this.finalizeRegistration(phoneNumber)
@@ -82,7 +83,7 @@ export class RegistrationFlow {
   // TODO: implementar data de nascimento, caso preciso
   // private handleBirthdayInput(phoneNumber: string, birthday: string): string {}
 
-  private finalizeRegistration(phoneNumber: string): string {
+  private finalizeRegistration(phoneNumber: string): string[] {
     const { data } = this.flowState.getState(phoneNumber)
 
     this.customer.createCustomer({
@@ -95,8 +96,9 @@ export class RegistrationFlow {
 
     return [
       `🎉 Cadastro concluído com sucesso, ${this.getFirstName(data.name)}!`,
-      'Agora, vamos ao que interessa: escolher algo gostoso! 😋',
-    ].join('\n')
+      'Agora, vamos ao que interessa: _escolher algo gostoso_! 😋\n',
+      ...MainMenu,
+    ]
   }
 
   // ###

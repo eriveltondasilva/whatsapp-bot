@@ -7,7 +7,7 @@ import {
   PaymentFlow,
   RegistrationFlow,
 } from '@/flows/index.js'
-import type { FlowHandler } from '@/types/index.js'
+import type { FlowHandler } from '@/types.js'
 
 @injectable()
 @singleton()
@@ -23,8 +23,8 @@ export class HandlerManager {
     this.handlers = new Map<string, FlowHandler>([
       ['registration', registrationFlow],
       ['menu', menuFlow],
-      ['order', orderFlow],
-      ['payment', paymentFlow],
+      // ['order', orderFlow],
+      // ['payment', paymentFlow],
     ])
   }
 

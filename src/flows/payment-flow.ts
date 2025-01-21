@@ -5,7 +5,7 @@ import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { OrderService } from '@/services/order-service.js'
 import { formatCurrency } from '@/utils/message-formatter.js'
 
-import type { FlowState } from '@/types/index.js'
+import type { FlowState } from '@/types.js'
 
 @injectable()
 export class PaymentFlow {

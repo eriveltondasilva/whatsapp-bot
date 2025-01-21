@@ -27,15 +27,25 @@ export const OrderMessage = {
   NO_AVAILABLE_PIZZAS: '❌ Nenhuma pizza disponível para essa quantidade.',
 } as const
 
-export const MenuMessage = {
-  MAIN: `
-  🍕 Menu Principal:
-  1 - Ver cardápio de pizzas
-  2 - Ver cardápio de bebidas
-  3 - Acompanhar pedido
-  4 - Falar com atendente
+export const MainMenu = [
+  '*MENU PRINCIPAL:*\n',
+  //
+  '1️⃣ - Fazer Pedido 🛒',
+  '2️⃣ - Acompanhar Pedido 🚚',
+  '3️⃣ - Histórico de Pedidos 📜',
+  '4️⃣ - Atualizar Cadastro 📝',
+  '5️⃣ - Falar com Atendente 👨‍💼',
+  '0️⃣ - Sair ❌',
+  //
+  '\n✍🏻 *Digite o número da opção desejada:*',
+] as const
 
-  Digite o número da opção desejada:`,
-  PIZZAS: '🍕 Cardápio de Pizzas',
-  DRINKS: '🍻 Cardápio de Bebidas',
-} as const
+//   1 - Ver cardápio de pizzas
+//   2 - Ver cardápio de bebidas
+//   3 - Acompanhar pedido
+//   4 - Falar com atendente
+
+//   Digite o número da opção desejada:`,
+//   PIZZAS: '🍕 Cardápio de Pizzas',
+//   DRINKS: '🍻 Cardápio de Bebidas',
+// } as const

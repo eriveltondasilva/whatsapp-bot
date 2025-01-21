@@ -5,7 +5,7 @@ import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { OrderService, ProductService } from '@/services/index.js'
 import { isValidQuantity } from '@/utils/validations.js'
 
-import type { FlowState } from '@/types/index.js'
+import type { FlowState } from '@/types.js'
 
 @injectable()
 export class OrderFlow {

@@ -1,56 +1,65 @@
 import { inject, injectable } from 'tsyringe'
 
-import { Category, FlowStep } from '@/config/enums.js'
-import { MenuMessage, Message } from '@/config/messages.js'
+import { MainMenu } from '@/config/messages.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { ProductService } from '@/services/product-service.js'
-import { formatProductList } from '@/utils/message-formatter.js'
 
-import type { Product } from '@/types/index.js'
+import type { FlowHandler } from '@/types.js'
 
 @injectable()
-export class MenuFlow {
+export class MenuFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowState: FlowStateManager,
-    @inject(ProductService) private product: ProductService,
+    @inject(ProductService) private productService: ProductService,
   ) {}
 
-  handle(phoneNumber: string, message: string) {
+  public handle(phoneNumber: string, message: string): string[] {
     switch (message) {
       case '1':
-        return this.showPizzaMenu(phoneNumber)
+        return this.showOrderMenu(phoneNumber)
+
       case '2':
-        return this.showDrinksMenu(phoneNumber)
+        return this.trackOrder(phoneNumber)
+
       case '3':
-        return this.trackOrder()
+        return this.showOrderHistory(phoneNumber)
+
       case '4':
-        return this.contactSupport()
+        return this.updateRegistration(phoneNumber)
+
+      case '5':
+        return this.contactSupport(phoneNumber)
+
+      case '0':
+        return this.goOut(phoneNumber)
+
       default:
-        return Message.INVALID_OPTION + MenuMessage.MAIN
+        return ['❌ Opção inválida. Por favor, tente novamente.\n', ...MainMenu]
     }
   }
 
-  private showPizzaMenu(phoneNumber: string) {
-    const pizzas = this.product.getProducts(Category.FOOD)
-    this.flowState.setState(phoneNumber, FlowStep.SELECTING_PIZZA)
-
-    return formatProductList(pizzas as Product[])
+  private showOrderMenu(phoneNumber: string): string[] {
+    return ['Funcionalidade em desenvolvimento: showOrderMenu']
   }
 
-  private showDrinksMenu(phoneNumber: string) {
-    const drinks = this.product.getProducts(Category.DRINK)
-    this.flowState.setState(phoneNumber, FlowStep.SELECTING_DRINK)
-
-    return formatProductList(drinks as Product[])
+  private trackOrder(phoneNumber: string): string[] {
+    return ['Funcionalidade em desenvolvimento: trackerOrder']
   }
 
-  private trackOrder() {
-    // TODO: Implementar lógica de rastreamento
-    return 'Funcionalidade em desenvolvimento: trackerOrder'
+  private showOrderHistory(phoneNumber: string): string[] {
+    return ['Funcionalidade em desenvolvimento: showOrderHistory']
   }
 
-  private contactSupport() {
-    // TODO: Implementar lógica de contato com o suporte
-    return 'Funcionalidade em desenvolvimento: contactSupport'
+  private updateRegistration(phoneNumber: string): string[] {
+    return ['Funcionalidade em desenvolvimento: updateRegistration']
+  }
+
+  private contactSupport(phoneNumber: string): string[] {
+    return ['Funcionalidade em desenvolvimento: contactSupport']
+  }
+
+  private goOut(phoneNumber: string): string[] {
+    this.flowState.clearState(phoneNumber)
+    return ['👋 Obrigado por utilizar nossos serviços!']
   }
 }

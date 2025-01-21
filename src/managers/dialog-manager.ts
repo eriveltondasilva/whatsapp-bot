@@ -5,7 +5,7 @@ import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { CustomerService } from '@/services/customer-service.js'
 import { HandlerManager } from './handler-manager.js'
 
-import type { FlowState } from '@/types/index.js'
+import type { FlowState } from '@/types.js'
 
 @injectable()
 export class DialogManager {
@@ -19,7 +19,7 @@ export class DialogManager {
   public async handleMessage(
     phoneNumber: string,
     message: string,
-  ): Promise<string> {
+  ): Promise<string[]> {
     const state = this.flowStateManager.getState(phoneNumber)
     const customer = this.customerService.getCustomer(phoneNumber)
 
@@ -34,7 +34,7 @@ export class DialogManager {
     phoneNumber: string,
     message: string,
     state: FlowState,
-  ): string {
+  ): string[] {
     const handler = this.handlerManager.getHandlerByStep(state.step)
 
     if (!handler) return this.getErrorMessage()
@@ -46,7 +46,7 @@ export class DialogManager {
     phoneNumber: string,
     message: string,
     state: FlowState,
-  ): string {
+  ): string[] {
     const registrationHandler = this.handlerManager.getHandler('registration')
 
     if (!registrationHandler) return this.getErrorMessage()
@@ -55,7 +55,9 @@ export class DialogManager {
   }
 
   // ###
-  private getErrorMessage(): string {
-    return 'Ops! An error occurred while processing your message. Please try again!'
+  private getErrorMessage(): string[] {
+    return [
+      'Ops! An error occurred while processing your message. Please try again!',
+    ]
   }
 }

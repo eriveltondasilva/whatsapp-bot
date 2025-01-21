@@ -1,7 +1,7 @@
 import { singleton } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
-import type { FlowState } from '@/types/index.js'
+import type { FlowState } from '@/types.js'
 
 @singleton()
 export class FlowStateManager {

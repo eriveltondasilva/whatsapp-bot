@@ -50,5 +50,5 @@ export type FlowState = {
 }
 
 export interface FlowHandler {
-  handle(phoneNumber: string, message: string, state: any): string
+  handle(phoneNumber: string, message: string, state: any): string[]
 }

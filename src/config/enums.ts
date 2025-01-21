@@ -50,6 +50,7 @@ export const FlowStep = {
   //
   MENU: 'menu',
   //
+  ORDER: 'order',
   SELECTING_PIZZA: 'selecting_pizza',
   SELECTING_DRINK: 'selecting_drink',
   SELECTING_QUANTITY: 'selecting_quantity',

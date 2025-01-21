@@ -22,7 +22,7 @@ export class WhatsappBot {
   }
 
   private async handleMessage(message: Message): Promise<void> {
-    this.logger.info('📬 Received message:', message.body)
+    this.logger.info(`📬 Received message: ${message.body}`)
 
     // TODO: remover a validação
     // if (message.body?.toLowerCase() !== 'pizza') return
@@ -43,12 +43,12 @@ export class WhatsappBot {
     await this.sendMessage(message.from, response)
   }
 
-  private async sendMessage(to: string, message: string): Promise<void> {
+  private async sendMessage(to: string, message: string[]): Promise<void> {
     try {
-      await this.client?.sendText(to, message, {
+      await this.client?.sendText(to, message.join('\n'), {
         delay: Delay.DEFAULT,
       })
-      this.logger.info('📬 Message sent to:', to)
+      this.logger.info(`📬 Message sent to: ${to}`)
     } catch (error) {
       this.logger.error(`❌ Failed to send message to ${to}:`, error)
     }
