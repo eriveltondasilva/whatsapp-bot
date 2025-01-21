@@ -5,6 +5,7 @@ import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { ProductService } from '@/services/product-service.js'
 
 import type { FlowHandler } from '@/types.js'
+import { FlowStep } from '@/config/enums.js'
 
 @injectable()
 export class MenuFlow implements FlowHandler {
@@ -15,6 +16,8 @@ export class MenuFlow implements FlowHandler {
 
   public handle(phoneNumber: string, message: string): string[] {
     switch (message) {
+      case FlowStep.MENU:
+        return ['👋 Bem-vindo ao nosso menu de opções!']
       case '1':
         return this.showOrderMenu(phoneNumber)
 
@@ -34,7 +37,11 @@ export class MenuFlow implements FlowHandler {
         return this.goOut(phoneNumber)
 
       default:
-        return ['❌ Opção inválida. Por favor, tente novamente.\n', ...MainMenu]
+        return [
+          '❌ OPÇÃO INVÁLIDA',
+          'Por favor, tente novamente.\n',
+          ...MainMenu,
+        ]
     }
   }
 

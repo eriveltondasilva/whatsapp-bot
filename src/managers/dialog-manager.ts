@@ -9,6 +9,9 @@ import type { FlowState } from '@/types.js'
 
 @injectable()
 export class DialogManager {
+  private errorMessage = [
+    'Ops! An error occurred while processing your message. Please try again!',
+  ]
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(CustomerService) private customerService: CustomerService,
@@ -23,8 +26,12 @@ export class DialogManager {
     const state = this.flowStateManager.getState(phoneNumber)
     const customer = this.customerService.getCustomer(phoneNumber)
 
-    if (!customer && state.step === FlowStep.INITIAL) {
-      return this.handleRegistration(phoneNumber, message, state)
+    if (!customer) {
+      return this.handleNewCustomer(phoneNumber, message, state)
+    }
+
+    if (state.step === FlowStep.INITIAL) {
+      return this.handleExistingCustomer(phoneNumber, message, state)
     }
 
     return this.routeMessage(phoneNumber, message, state)
@@ -37,27 +44,32 @@ export class DialogManager {
   ): string[] {
     const handler = this.handlerManager.getHandlerByStep(state.step)
 
-    if (!handler) return this.getErrorMessage()
+    if (!handler) return this.errorMessage
 
     return handler.handle(phoneNumber, message, state)
   }
 
-  private handleRegistration(
+  private handleNewCustomer(
     phoneNumber: string,
     message: string,
     state: FlowState,
   ): string[] {
     const registrationHandler = this.handlerManager.getHandler('registration')
 
-    if (!registrationHandler) return this.getErrorMessage()
+    if (!registrationHandler) return this.errorMessage
 
     return registrationHandler.handle(phoneNumber, message, state)
   }
 
-  // ###
-  private getErrorMessage(): string[] {
-    return [
-      'Ops! An error occurred while processing your message. Please try again!',
-    ]
+  private handleExistingCustomer(
+    phoneNumber: string,
+    message: string,
+    state: FlowState,
+  ): string[] {
+    const menuHandler = this.handlerManager.getHandler('menu')
+
+    if (!menuHandler) return this.errorMessage
+
+    return menuHandler.handle(phoneNumber, message, state)
   }
 }
