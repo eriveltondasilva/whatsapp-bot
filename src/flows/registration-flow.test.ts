@@ -45,11 +45,11 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(response).toEqual(RegistrationMessages.GENERIC_ERROR)
     expect(mockFlowState.clearState).toHaveBeenCalledWith(PHONE_NUMBER)
     expect(mockCustomerService.deleteCustomer).toHaveBeenCalledWith(
       PHONE_NUMBER,
     )
+    expect(response).toEqual(RegistrationMessages.GENERIC_ERROR)
   })
   it('should handle invalid name input', () => {
     const response = registrationFlow.handle(PHONE_NUMBER, '', {
@@ -57,8 +57,8 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(response).toEqual(RegistrationMessages.INVALID_NAME)
     expect(mockFlowState.setState).not.toHaveBeenCalled()
+    expect(response).toEqual(RegistrationMessages.INVALID_NAME)
   })
   it('should handle invalid address input', () => {
     const response = registrationFlow.handle(PHONE_NUMBER, '', {
@@ -66,8 +66,8 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(response).toEqual(RegistrationMessages.INVALID_ADDRESS)
     expect(mockFlowState.setState).not.toHaveBeenCalled()
+    expect(response).toEqual(RegistrationMessages.INVALID_ADDRESS)
   })
   // ###
   it('should initiate registration', () => {
@@ -76,11 +76,11 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(result).toEqual(RegistrationMessages.INITIAL)
     expect(mockFlowState.setState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.COLLECT_NAME,
     )
+    expect(result).toEqual(RegistrationMessages.INITIAL)
   })
   it('should handle valid name input and proceed to address step', () => {
     const response = registrationFlow.handle(PHONE_NUMBER, CUSTOMER_NAME, {
@@ -88,15 +88,15 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(response).toEqual([
-      expect.stringMatching(/^.*João.*$/),
-      ...RegistrationMessages.COLLECT_ADDRESS,
-    ])
     expect(mockFlowState.setState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.COLLECT_ADDRESS,
       { name: CUSTOMER_NAME },
     )
+    expect(response).toEqual([
+      expect.stringMatching(/^.*João.*$/),
+      ...RegistrationMessages.COLLECT_ADDRESS,
+    ])
   })
   it('should handle valid address input and finalize registration', () => {
     const response = registrationFlow.handle(PHONE_NUMBER, CUSTOMER_ADDRESS, {
@@ -106,17 +106,15 @@ describe('RegistrationFlow:', () => {
 
     const customerName = CUSTOMER_NAME.split(' ')[0]
 
-    expect(response).toEqual(RegistrationMessages.FINALIZE(customerName))
-
     expect(mockFlowState.setState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.MAIN_MENU,
     )
-
     expect(mockCustomerService.createCustomer).toHaveBeenCalledWith({
       phone: PHONE_NUMBER,
       name: CUSTOMER_NAME,
       address: CUSTOMER_ADDRESS,
     })
+    expect(response).toEqual(RegistrationMessages.FINALIZE(customerName))
   })
 })

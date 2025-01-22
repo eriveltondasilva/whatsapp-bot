@@ -1,65 +1,81 @@
-import { container } from 'tsyringe';
-
-import { FlowStep } from '@/config/enums.js';
-import { FlowStateManager } from '@/managers/flow-state-manager.js';
-import { WelcomeMessage } from '@/messages/welcome.js';
-import { CustomerService } from '@/services/customer-service.js';
-import { RegistrationFlow } from './registration-flow.js';
-import { WelcomeFlow } from './welcome-flow.js';
+import { FlowStep } from '@/config/enums.js'
+import type { FlowStateManager } from '@/managers/flow-state-manager.js'
+import { WelcomeMessage } from '@/messages/welcome.js'
+import type { CustomerService } from '@/services/customer-service.js'
+import type { RegistrationFlow } from './registration-flow.js'
+import { WelcomeFlow } from './welcome-flow.js'
 
 describe('WelcomeFlow', () => {
-  let flowStateManagerMock: FlowStateManager;
-  let customerServiceMock: CustomerService;
-  let registrationFlowMock: RegistrationFlow;
-  let welcomeFlow: WelcomeFlow;
-  
-  const PHONE_NUMBER = '123456789';
-  const MESSAGE = 'Hello';
+  const CUSTOMER_NAME = 'John Doe'
+  const CUSTOMER_ADDRESS = '123 Main St'
+  const PHONE_NUMBER = '123456789'
+  const MESSAGE = 'Hello'
+
+  let flowStateManagerMock: Partial<FlowStateManager>
+  let customerServiceMock: Partial<CustomerService>
+  let registrationFlowMock: Partial<RegistrationFlow>
+  let welcomeFlow: WelcomeFlow
 
   beforeEach(() => {
     flowStateManagerMock = {
       setState: vi.fn(),
-    } as unknown as FlowStateManager;
+    }
 
     customerServiceMock = {
-      getCustomer: vi.fn(),
-    } as unknown as CustomerService;
+      getCustomer: vi.fn(() => ({
+        id: 1,
+        name: CUSTOMER_NAME,
+        address: CUSTOMER_ADDRESS,
+        phone: PHONE_NUMBER,
+        createdAt: new Date().toISOString(),
+      })),
+    }
 
     registrationFlowMock = {
       handle: vi.fn(),
-    } as unknown as RegistrationFlow;
+    }
 
-    container.registerInstance(FlowStateManager, flowStateManagerMock);
-    container.registerInstance(CustomerService, customerServiceMock);
-    container.registerInstance(RegistrationFlow, registrationFlowMock);
+    welcomeFlow = new WelcomeFlow(
+      flowStateManagerMock as FlowStateManager,
+      customerServiceMock as CustomerService,
+      registrationFlowMock as RegistrationFlow,
+    )
+  })
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+  // !!!
+  it('should initiate registration if customer is not found', () => {
+    customerServiceMock.getCustomer = vi.fn(() => null)
 
-    welcomeFlow = container.resolve(WelcomeFlow);
-  });
+    const state = { step: FlowStep.INITIAL, data: {} }
+    const result = welcomeFlow.handle(PHONE_NUMBER, MESSAGE, state)
 
-  it('deve redirecionar para RegistrationFlow se o cliente não for encontrado', () => {
-    const state = { step: FlowStep.INITIAL };
+    expect(customerServiceMock.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
+    expect(flowStateManagerMock.setState).toHaveBeenCalledWith(
+      PHONE_NUMBER,
+      FlowStep.INITIAL,
+    )
+    expect(registrationFlowMock.handle).toHaveBeenCalledWith(
+      PHONE_NUMBER,
+      '',
+      state,
+    )
+    expect(result).toBeUndefined()
+  })
+  // ###
+  it('should display welcome message if customer is found', () => {
+    const result = welcomeFlow.handle(PHONE_NUMBER, MESSAGE, {
+      step: FlowStep.INITIAL,
+      data: {},
+    })
 
-    vi.spyOn(customerServiceMock, 'getCustomer').mockReturnValue(null);
-    vi.spyOn(registrationFlowMock, 'handle').mockReturnValue(['Registration Message']);
-
-    const result = welcomeFlow.handle(PHONE_NUMBER, MESSAGE, state);
-
-    expect(customerServiceMock.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER);
-    expect(flowStateManagerMock.setState).toHaveBeenCalledWith(PHONE_NUMBER, FlowStep.INITIAL);
-    expect(registrationFlowMock.handle).toHaveBeenCalledWith(PHONE_NUMBER, '', state);
-    expect(result).toEqual(['Registration Message']);
-  });
-
-  it('deve retornar mensagem de boas-vindas se o cliente for encontrado', () => {
-    const state = { step: FlowStep.INITIAL };
-    const customer = { name: 'John Doe' };
-
-    vi.spyOn(customerServiceMock, 'getCustomer').mockReturnValue(customer);
-
-    const result = welcomeFlow.handle(PHONE_NUMBER, MESSAGE, state);
-
-    expect(customerServiceMock.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER);
-    expect(flowStateManagerMock.setState).toHaveBeenCalledWith(PHONE_NUMBER, FlowStep.MAIN_MENU);
-    expect(result).toEqual(WelcomeMessage(customer.name));
-  });
-});
+    expect(customerServiceMock.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
+    expect(flowStateManagerMock.setState).toHaveBeenCalledWith(
+      PHONE_NUMBER,
+      FlowStep.MAIN_MENU,
+    )
+    expect(registrationFlowMock.handle).not.toHaveBeenCalled()
+    expect(result).toEqual(WelcomeMessage(CUSTOMER_NAME))
+  })
+})

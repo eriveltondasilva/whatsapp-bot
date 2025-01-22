@@ -43,7 +43,7 @@ export const RegistrationMessages = {
   FINALIZE: (name: string) => [
     `🎉 Cadastro concluído com sucesso, ${name}!`,
     'Agora, vamos ao que interessa: _escolher algo gostoso_! 😋\n',
-    // 
+    //
     ...MainMenu,
   ],
 }
