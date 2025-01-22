@@ -4,7 +4,7 @@ export const RegistrationMessages = {
   COLLECT_ADDRESS: [
     'Agora me diga onde vamos entregar suas delícias?\n',
     '✍🏻 *Qual o seu endereço completo?*',
-    '> Exemplo: _"Rua das Flores, 123, Centro"_',
+    '> Exemplo: _"Rua das Flores, n° 83, Centro"_',
   ],
   //
   INVALID_NAME: [
@@ -15,10 +15,10 @@ export const RegistrationMessages = {
   INVALID_ADDRESS: [
     '❌ *ENDEREÇO INVÁLIDO*\n',
     'Por favor, informe seu endereço completo:',
-    '> Exemplo: _"Rua das Flores, 123, Centro"_',
+    '> Exemplo: _"Rua das Flores, n° 83, Centro"_',
   ],
   GENERIC_ERROR: ['Ops! Algo deu errado. Por favor, tente novamente.'],
-  //
+  // TODO: remover
   INITIAL: [
     '🍕 Olá! Bem-vindo(a) à *Pizzaria [Nome da Pizzaria]*!\n',
     'Estamos prontos para transformar a sua fome em felicidade. 😊',

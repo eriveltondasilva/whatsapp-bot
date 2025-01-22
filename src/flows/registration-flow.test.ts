@@ -1,28 +1,42 @@
 import { FlowStep } from '@/config/enums.js'
-import type { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { RegistrationMessages } from '@/messages/registration.js'
-import type { CustomerService } from '@/services/customer-service.js'
 import { RegistrationFlow } from './registration-flow.js'
+
+import type { FlowStateManager } from '@/managers/flow-state-manager.js'
+import type { CustomerService } from '@/services/customer-service.js'
 
 const PHONE_NUMBER = '123456789'
 const CUSTOMER_NAME = 'João da Silva'
 const CUSTOMER_ADDRESS = 'Rua das Flores, n° 123, centro'
 
-const mockFlowState = {
-  setState: vi.fn(),
-  getState: vi.fn(() => ({
-    data: { name: CUSTOMER_NAME, address: CUSTOMER_ADDRESS },
-  })),
-}
+let mockFlowState: Partial<FlowStateManager>
+let mockCustomerService: Partial<CustomerService>
+let registrationFlow: RegistrationFlow
 
-const mockCustomerService = {
-  createCustomer: vi.fn(),
-}
+beforeEach(() => {
+  mockFlowState = {
+    setState: vi.fn(),
+    clearState: vi.fn(),
+    getState: vi.fn(() => ({
+      step: FlowStep.INITIAL,
+      data: { name: CUSTOMER_NAME, address: CUSTOMER_ADDRESS },
+    })),
+  }
 
-const registrationFlow = new RegistrationFlow(
-  mockFlowState as unknown as FlowStateManager,
-  mockCustomerService as unknown as CustomerService,
-)
+  mockCustomerService = {
+    createCustomer: vi.fn(),
+    deleteCustomer: vi.fn(),
+  }
+
+  registrationFlow = new RegistrationFlow(
+    mockFlowState as FlowStateManager,
+    mockCustomerService as CustomerService,
+  )
+})
+
+afterEach(() => {
+  vi.clearAllMocks()
+})
 
 describe('RegistrationFlow:', () => {
   // !!!
@@ -33,6 +47,10 @@ describe('RegistrationFlow:', () => {
     })
 
     expect(response).toEqual(RegistrationMessages.GENERIC_ERROR)
+    expect(mockFlowState.clearState).toHaveBeenCalledWith(PHONE_NUMBER)
+    expect(mockCustomerService.deleteCustomer).toHaveBeenCalledWith(
+      PHONE_NUMBER,
+    )
   })
   it('should handle invalid name input', () => {
     const response = registrationFlow.handle(PHONE_NUMBER, '', {
@@ -87,7 +105,9 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(response).toEqual(RegistrationMessages.FINALIZE(CUSTOMER_NAME))
+    const customerName = CUSTOMER_NAME.split(' ')[0]
+
+    expect(response).toEqual(RegistrationMessages.FINALIZE(customerName))
 
     expect(mockFlowState.setState).toHaveBeenCalledWith(
       PHONE_NUMBER,

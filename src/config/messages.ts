@@ -1,21 +1,3 @@
-export const Message = {
-  WELCOME: `
-    🍕 Bem-vindo à nossa Pizzaria!
-    Para fazer seu pedido, primeiro preciso de algumas informações.
-  `,
-  ASK_NAME: 'Qual é o seu nome?',
-  INVALID_OPTION: '❌ Opção inválida. Por favor, tente novamente.',
-  ERROR: '❌ Desculpe, ocorreu um erro. Por favor, tente novamente.',
-} as const
-
-export const RegistrationMessage = {
-  INVALID_NAME: 'Por favor, digite um nome válido:',
-  INVALID_ADDRESS:
-    'Por favor, digite um endereço completo com rua, número e bairro:',
-  ASK_FOR_ADDRESS:
-    'Ótimo! Agora preciso do seu endereço completo para entrega:',
-} as const
-
 export const OrderMessage = {
   PLACED: '🍕 Pedido realizado com sucesso!',
   CONFIRMED: '✅ Pedido confirmado com sucesso!',

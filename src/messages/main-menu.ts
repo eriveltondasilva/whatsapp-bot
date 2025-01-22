@@ -9,4 +9,4 @@ export const MainMenu = [
   '0️⃣ - Sair ❌',
   //
   '\n✍🏻 *Digite o número da opção desejada:*',
-] as const
+]

@@ -32,7 +32,7 @@ export class RegistrationFlow implements FlowHandler {
         return this.handleAddressInput(phoneNumber, message)
 
       default:
-        return RegistrationMessages.GENERIC_ERROR
+        return this.resetFlow(phoneNumber)
     }
   }
 
@@ -57,16 +57,12 @@ export class RegistrationFlow implements FlowHandler {
       return RegistrationMessages.INVALID_ADDRESS
     }
 
-    return this.finalizeRegistration(phoneNumber)
-  }
-
-  private finalizeRegistration(phoneNumber: string): string[] {
     const { data } = this.flowState.getState(phoneNumber)
 
     this.customerService.createCustomer({
       phone: phoneNumber,
       name: data.name,
-      address: data.address,
+      address,
     })
 
     this.flowState.setState(phoneNumber, FlowStep.MENU)
@@ -75,6 +71,12 @@ export class RegistrationFlow implements FlowHandler {
   }
 
   // ###
+  private resetFlow(phoneNumber: string): string[] {
+    this.flowState.clearState(phoneNumber)
+    this.customerService.deleteCustomer(phoneNumber)
+    return RegistrationMessages.GENERIC_ERROR
+  }
+
   private getFirstName(name: string): string {
     return name.split(' ')[0]
   }
