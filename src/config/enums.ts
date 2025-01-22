@@ -48,7 +48,7 @@ export const FlowStep = {
   COLLECT_ADDRESS: 'registration:collect_address',
   COLLECT_BIRTHDAY: 'registration:collect_birthday',
   //
-  MENU: 'menu',
+  MAIN_MENU: 'main_menu:index',
   //
   ORDER: 'order',
   SELECTING_PIZZA: 'selecting_pizza',

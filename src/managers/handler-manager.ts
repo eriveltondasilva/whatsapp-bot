@@ -6,6 +6,7 @@ import {
   OrderFlow,
   PaymentFlow,
   RegistrationFlow,
+  WelcomeFlow,
 } from '@/flows/index.js'
 import type { FlowHandler } from '@/types.js'
 
@@ -16,24 +17,22 @@ export class HandlerManager {
 
   constructor(
     @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
+    @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
     @inject(MenuFlow) menuFlow: MenuFlow,
     @inject(OrderFlow) orderFlow: OrderFlow,
     @inject(PaymentFlow) paymentFlow: PaymentFlow,
   ) {
     this.handlers = new Map<string, FlowHandler>([
       ['registration', registrationFlow],
+      ['welcome', welcomeFlow],
       ['menu', menuFlow],
-      // ['order', orderFlow],
-      // ['payment', paymentFlow],
+      ['order', orderFlow],
+      ['payment', paymentFlow],
     ])
   }
 
-  public getHandler(flowName: string): FlowHandler | undefined {
-    return this.handlers.get(flowName)
-  }
-
-  public getHandlerByStep(step: FlowStep): FlowHandler | undefined {
+  public getHandler(step: string): FlowHandler | undefined {
     const flowName = step.split(FlowStep.SEPARATOR)[0].toLowerCase()
-    return this.getHandler(flowName || 'menu')
+    return this.handlers.get(flowName || 'welcome')
   }
 }

@@ -5,26 +5,32 @@ import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { OrderService } from '@/services/order-service.js'
 import { formatCurrency } from '@/utils/message-formatter.js'
 
-import type { FlowState } from '@/types.js'
+import type { FlowHandler, FlowState } from '@/types.js'
 
 @injectable()
-export class PaymentFlow {
+export class PaymentFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowState: FlowStateManager,
     @inject(OrderService) private order: OrderService,
   ) {}
 
-  handle(phoneNumber: string, message: string, state: FlowState) {
+  public handle(
+    phoneNumber: string,
+    message: string,
+    state: FlowState,
+  ): string[] {
     switch (state.step) {
       case FlowStep.SELECTING_PAYMENT:
-        return this.handlePaymentSelection(phoneNumber, message, state.data)
-      case FlowStep.AWAITING_PAYMENT:
-        return this.handlePaymentInput(phoneNumber, message, state.data)
+        return ['']
+      // case FlowStep.AWAITING_PAYMENT:
+      // return this.handlePaymentInput(phoneNumber, message, state.data)
 
       // case FlowStep.CONFIRMING_PAYMENT:
       // return this.handlePaymentConfirmation(phoneNumber, message, state.data)
+      // default:
+      // throw new Error('Estado inválido para pagamento')
       default:
-        throw new Error('Estado inválido para pagamento')
+        return ['Estado inválido para pagamento']
     }
   }
 

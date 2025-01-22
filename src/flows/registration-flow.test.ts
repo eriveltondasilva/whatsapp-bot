@@ -16,7 +16,7 @@ let registrationFlow: RegistrationFlow
 beforeEach(() => {
   mockFlowState = {
     setState: vi.fn(),
-    clearState: vi.fn(),
+    clearState: vi.fn(() => true),
     getState: vi.fn(() => ({
       step: FlowStep.INITIAL,
       data: { name: CUSTOMER_NAME, address: CUSTOMER_ADDRESS },
@@ -25,7 +25,7 @@ beforeEach(() => {
 
   mockCustomerService = {
     createCustomer: vi.fn(),
-    deleteCustomer: vi.fn(),
+    deleteCustomer: vi.fn(() => true),
   }
 
   registrationFlow = new RegistrationFlow(
@@ -111,7 +111,7 @@ describe('RegistrationFlow:', () => {
 
     expect(mockFlowState.setState).toHaveBeenCalledWith(
       PHONE_NUMBER,
-      FlowStep.MENU,
+      FlowStep.MAIN_MENU,
     )
 
     expect(mockCustomerService.createCustomer).toHaveBeenCalledWith({

@@ -10,7 +10,7 @@ import type { FlowState } from '@/types.js'
 @injectable()
 export class DialogManager {
   private errorMessage = [
-    'Ops! An error occurred while processing your message. Please try again!',
+    'Ops! Ocorreu um erro ao processar sua mensagem. Por favor, tente novamente!',
   ]
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
@@ -27,49 +27,26 @@ export class DialogManager {
     const customer = this.customerService.getCustomer(phoneNumber)
 
     if (!customer) {
-      return this.handleNewCustomer(phoneNumber, message, state)
+      return this.handleWithHandler('registration', phoneNumber, message, state)
     }
 
     if (state.step === FlowStep.INITIAL) {
-      return this.handleExistingCustomer(phoneNumber, message, state)
+      return this.handleWithHandler('welcome', phoneNumber, message, state)
     }
 
-    return this.routeMessage(phoneNumber, message, state)
+    return this.handleWithHandler(state.step, phoneNumber, message, state)
   }
 
-  private routeMessage(
+  private handleWithHandler(
+    handlerName: string,
     phoneNumber: string,
     message: string,
     state: FlowState,
   ): string[] {
-    const handler = this.handlerManager.getHandlerByStep(state.step)
+    const handler = this.handlerManager.getHandler(handlerName)
 
     if (!handler) return this.errorMessage
 
     return handler.handle(phoneNumber, message, state)
-  }
-
-  private handleNewCustomer(
-    phoneNumber: string,
-    message: string,
-    state: FlowState,
-  ): string[] {
-    const registrationHandler = this.handlerManager.getHandler('registration')
-
-    if (!registrationHandler) return this.errorMessage
-
-    return registrationHandler.handle(phoneNumber, message, state)
-  }
-
-  private handleExistingCustomer(
-    phoneNumber: string,
-    message: string,
-    state: FlowState,
-  ): string[] {
-    const menuHandler = this.handlerManager.getHandler('menu')
-
-    if (!menuHandler) return this.errorMessage
-
-    return menuHandler.handle(phoneNumber, message, state)
   }
 }
