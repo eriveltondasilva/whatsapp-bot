@@ -1,6 +1,6 @@
 import { inject, injectable, singleton } from 'tsyringe'
 
-import { FlowStep } from '@/config/enums.js'
+import { FlowKeys, FlowStep } from '@/config/enums.js'
 import {
   MenuFlow,
   OrderFlow,
@@ -23,16 +23,16 @@ export class HandlerManager {
     @inject(PaymentFlow) paymentFlow: PaymentFlow,
   ) {
     this.handlers = new Map<string, FlowHandler>([
-      ['registration', registrationFlow],
-      ['welcome', welcomeFlow],
-      ['menu', menuFlow],
-      ['order', orderFlow],
-      ['payment', paymentFlow],
+      [FlowKeys.REGISTRATION, registrationFlow],
+      [FlowKeys.WELCOME, welcomeFlow],
+      [FlowKeys.MAIN_MENU, menuFlow],
+      [FlowKeys.ORDER, orderFlow],
+      [FlowKeys.PAYMENT, paymentFlow],
     ])
   }
 
   public getHandler(step: string): FlowHandler | undefined {
     const flowName = step.split(FlowStep.SEPARATOR)[0].toLowerCase()
-    return this.handlers.get(flowName || 'welcome')
+    return this.handlers.get(flowName) || this.handlers.get(FlowKeys.WELCOME)
   }
 }

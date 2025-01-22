@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStep } from '@/config/enums.js'
+import { FlowKeys, FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { CustomerService } from '@/services/customer-service.js'
 import { HandlerManager } from './handler-manager.js'
@@ -27,11 +27,11 @@ export class DialogManager {
     const customer = this.customerService.getCustomer(phoneNumber)
 
     if (!customer) {
-      return this.handleWithHandler('registration', phoneNumber, message, state)
+      return this.handleWithHandler(FlowKeys.REGISTRATION, phoneNumber, message, state)
     }
 
     if (state.step === FlowStep.INITIAL) {
-      return this.handleWithHandler('welcome', phoneNumber, message, state)
+      return this.handleWithHandler(FlowKeys.WELCOME, phoneNumber, message, state)
     }
 
     return this.handleWithHandler(state.step, phoneNumber, message, state)

@@ -64,6 +64,15 @@ export const FlowStep = {
 } as const
 export type FlowStep = (typeof FlowStep)[keyof typeof FlowStep]
 
+export const FlowKeys = {
+  REGISTRATION: 'registration',
+  WELCOME: 'welcome',
+  MAIN_MENU: 'main-menu',
+  ORDER: 'order',
+  PAYMENT: 'payment',
+} as const
+export type FlowKeys = (typeof FlowKeys)[keyof typeof FlowKeys]
+
 // export const XxxFlowStep = {
 //   SELECT_PIZZA_TYPE: 'select_pizza_type',
 //   SELECT_FIRST_HALF: 'select_first_half',

@@ -23,9 +23,10 @@ export class WhatsappBot {
 
   private async handleMessage(message: Message): Promise<void> {
     this.logger.info(`📬 Received message: ${message.body}`)
+    this.logger.debug(`📬 From: ${message.from}`)
 
     // TODO: remover a validação
-    if (message.from.includes(process.env.INGRID_NUMERO || '')) return
+    if (!message.from.includes(process.env.INGRID_NUMERO || '')) return
     if (!isValidMessage(message) || !message.body) {
       this.logger.debug('📬 Ignored invalid message:', {
         from: message.from,
