@@ -11,7 +11,7 @@ import type { FlowHandler, FlowState } from '@/types.js'
 @injectable()
 export class RegistrationFlow implements FlowHandler {
   constructor(
-    @inject(FlowStateManager) private flowStateManager: FlowStateManager,
+    @inject(FlowStateManager) private flowState: FlowStateManager,
     @inject(CustomerService) private customerService: CustomerService,
   ) {}
 
@@ -38,7 +38,7 @@ export class RegistrationFlow implements FlowHandler {
 
   // ###
   private initiateRegistration(phoneNumber: string): string[] {
-    this.flowStateManager.setState(phoneNumber, FlowStep.COLLECT_NAME)
+    this.flowState.setState(phoneNumber, FlowStep.COLLECT_NAME)
     return RegistrationMessages.INITIAL
   }
 
@@ -47,9 +47,7 @@ export class RegistrationFlow implements FlowHandler {
       return RegistrationMessages.INVALID_NAME
     }
 
-    this.flowStateManager.setState(phoneNumber, FlowStep.COLLECT_ADDRESS, {
-      name,
-    })
+    this.flowState.setState(phoneNumber, FlowStep.COLLECT_ADDRESS, { name })
 
     return [this.getGreeting(name), ...RegistrationMessages.COLLECT_ADDRESS]
   }
@@ -59,7 +57,7 @@ export class RegistrationFlow implements FlowHandler {
       return RegistrationMessages.INVALID_ADDRESS
     }
 
-    const { data } = this.flowStateManager.getState(phoneNumber)
+    const { data } = this.flowState.getState(phoneNumber)
 
     this.customerService.createCustomer({
       phone: phoneNumber,
@@ -67,14 +65,14 @@ export class RegistrationFlow implements FlowHandler {
       address,
     })
 
-    this.flowStateManager.setState(phoneNumber, FlowStep.MAIN_MENU)
+    this.flowState.setState(phoneNumber, FlowStep.MAIN_MENU)
 
     return RegistrationMessages.FINALIZE(this.getFirstName(data.name))
   }
 
   // ###
   private resetFlow(phoneNumber: string): string[] {
-    this.flowStateManager.clearState(phoneNumber)
+    this.flowState.clearState(phoneNumber)
     this.customerService.deleteCustomer(phoneNumber)
     return RegistrationMessages.GENERIC_ERROR
   }

@@ -5,40 +5,39 @@ import { RegistrationFlow } from './registration-flow.js'
 import type { FlowStateManager } from '@/managers/flow-state-manager.js'
 import type { CustomerService } from '@/services/customer-service.js'
 
-const PHONE_NUMBER = '123456789'
-const CUSTOMER_NAME = 'João da Silva'
-const CUSTOMER_ADDRESS = 'Rua das Flores, n° 123, centro'
-
-let mockFlowState: Partial<FlowStateManager>
-let mockCustomerService: Partial<CustomerService>
-let registrationFlow: RegistrationFlow
-
-beforeEach(() => {
-  mockFlowState = {
-    setState: vi.fn(),
-    clearState: vi.fn(() => true),
-    getState: vi.fn(() => ({
-      step: FlowStep.INITIAL,
-      data: { name: CUSTOMER_NAME, address: CUSTOMER_ADDRESS },
-    })),
-  }
-
-  mockCustomerService = {
-    createCustomer: vi.fn(),
-    deleteCustomer: vi.fn(() => true),
-  }
-
-  registrationFlow = new RegistrationFlow(
-    mockFlowState as FlowStateManager,
-    mockCustomerService as CustomerService,
-  )
-})
-
-afterEach(() => {
-  vi.clearAllMocks()
-})
-
 describe('RegistrationFlow:', () => {
+  const PHONE_NUMBER = '123456789'
+  const CUSTOMER_NAME = 'João da Silva'
+  const CUSTOMER_ADDRESS = 'Rua das Flores, n° 123, centro'
+
+  let mockFlowState: Partial<FlowStateManager>
+  let mockCustomerService: Partial<CustomerService>
+  let registrationFlow: RegistrationFlow
+
+  beforeEach(() => {
+    mockFlowState = {
+      setState: vi.fn(),
+      clearState: vi.fn(() => true),
+      getState: vi.fn(() => ({
+        step: FlowStep.INITIAL,
+        data: { name: CUSTOMER_NAME, address: CUSTOMER_ADDRESS },
+      })),
+    }
+
+    mockCustomerService = {
+      createCustomer: vi.fn(),
+      deleteCustomer: vi.fn(() => true),
+    }
+
+    registrationFlow = new RegistrationFlow(
+      mockFlowState as FlowStateManager,
+      mockCustomerService as CustomerService,
+    )
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
   // !!!
   it('should handle unknown step gracefully', () => {
     const response = registrationFlow.handle(PHONE_NUMBER, '', {
