@@ -8,6 +8,7 @@ import {
   RegistrationFlow,
   WelcomeFlow,
 } from '@/flows/index.js'
+import { LoggerService } from '@/services/logger-service.js'
 import type { FlowHandler } from '@/types.js'
 
 @injectable()
@@ -21,6 +22,7 @@ export class HandlerManager {
     @inject(MenuFlow) menuFlow: MenuFlow,
     @inject(OrderFlow) orderFlow: OrderFlow,
     @inject(PaymentFlow) paymentFlow: PaymentFlow,
+    @inject(LoggerService) private logger: LoggerService,
   ) {
     this.handlers = new Map<string, FlowHandler>([
       [FlowKeys.REGISTRATION, registrationFlow],
@@ -33,6 +35,7 @@ export class HandlerManager {
 
   public getHandler(step: string): FlowHandler | undefined {
     const flowName = step.split(FlowStep.SEPARATOR)[0].toLowerCase()
+    this.logger.debug('🔀 Flow name: %s', flowName)
     return this.handlers.get(flowName) || this.handlers.get(FlowKeys.WELCOME)
   }
 }

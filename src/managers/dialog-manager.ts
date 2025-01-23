@@ -12,6 +12,7 @@ export class DialogManager {
   private errorMessage = [
     'Ops! Ocorreu um erro ao processar sua mensagem. Por favor, tente novamente!',
   ]
+
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(CustomerService) private customerService: CustomerService,
@@ -27,11 +28,21 @@ export class DialogManager {
     const customer = this.customerService.getCustomer(phoneNumber)
 
     if (!customer) {
-      return this.handleWithHandler(FlowKeys.REGISTRATION, phoneNumber, message, state)
+      return this.handleWithHandler(
+        FlowKeys.REGISTRATION,
+        phoneNumber,
+        message,
+        state,
+      )
     }
 
     if (state.step === FlowStep.INITIAL) {
-      return this.handleWithHandler(FlowKeys.WELCOME, phoneNumber, message, state)
+      return this.handleWithHandler(
+        FlowKeys.WELCOME,
+        phoneNumber,
+        message,
+        state,
+      )
     }
 
     return this.handleWithHandler(state.step, phoneNumber, message, state)

@@ -3,7 +3,7 @@
   "description": "",
   "keywords": [],
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "type": "module",
   "license": "MIT",
   "private": true,

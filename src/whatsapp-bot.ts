@@ -22,13 +22,13 @@ export class WhatsappBot {
   }
 
   private async handleMessage(message: Message): Promise<void> {
-    this.logger.info(`📬 Received message: ${message.body}`)
-    this.logger.debug(`📬 From: ${message.from}`)
+    this.logger.debug('📬 Received message: %s', message.body)
+    this.logger.debug('📬 Received message from: %s', message.from)
 
     // TODO: remover a validação
     if (!message.from.includes(process.env.INGRID_NUMERO || '')) return
     if (!isValidMessage(message) || !message.body) {
-      this.logger.debug('📬 Ignored invalid message:', {
+      this.logger.debug('📬 Ignored invalid message: %o', {
         from: message.from,
         body: message.body,
       })
@@ -49,7 +49,7 @@ export class WhatsappBot {
       await this.client?.sendText(to, message.join('\n'), {
         delay: Delay.DEFAULT,
       })
-      this.logger.info(`📬 Message sent to: ${to}`)
+      this.logger.debug('📬 Message sent to: %s', to)
     } catch (error) {
       this.logger.error(`❌ Failed to send message to ${to}:`, error)
     }

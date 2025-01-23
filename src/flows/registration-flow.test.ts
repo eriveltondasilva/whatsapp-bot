@@ -3,7 +3,7 @@ import { RegistrationMessages } from '@/messages/registration.js'
 import { RegistrationFlow } from './registration-flow.js'
 
 import type { FlowStateManager } from '@/managers/flow-state-manager.js'
-import type { CustomerService } from '@/services/customer-service.js'
+import type { CustomerService, LoggerService } from '@/services/index.js'
 
 describe('RegistrationFlow:', () => {
   const PHONE_NUMBER = '123456789'
@@ -12,6 +12,7 @@ describe('RegistrationFlow:', () => {
 
   let mockFlowState: Partial<FlowStateManager>
   let mockCustomerService: Partial<CustomerService>
+  let mockLogger: Partial<LoggerService>
   let registrationFlow: RegistrationFlow
 
   beforeEach(() => {
@@ -29,9 +30,14 @@ describe('RegistrationFlow:', () => {
       deleteCustomer: vi.fn(() => true),
     }
 
+    mockLogger = {
+      debug: vi.fn(),
+    }
+
     registrationFlow = new RegistrationFlow(
       mockFlowState as FlowStateManager,
       mockCustomerService as CustomerService,
+      mockLogger as LoggerService,
     )
   })
 

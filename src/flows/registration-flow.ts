@@ -1,4 +1,5 @@
-import { inject, injectable } from 'tsyringe'
+import { LoggerService } from '@/services/logger-service.js'
+import { inject, injectable, singleton } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
@@ -9,10 +10,12 @@ import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
 import type { FlowHandler, FlowState } from '@/types.js'
 
 @injectable()
+@singleton()
 export class RegistrationFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowState: FlowStateManager,
     @inject(CustomerService) private customerService: CustomerService,
+    @inject(LoggerService) private logger: LoggerService,
   ) {}
 
   // ###
@@ -59,12 +62,14 @@ export class RegistrationFlow implements FlowHandler {
 
     const { data } = this.flowState.getState(phoneNumber)
 
-    this.customerService.createCustomer({
+    const newCustomer = this.customerService.createCustomer({
       phone: phoneNumber,
       name: data.name,
       address,
     })
+    this.logger.debug('📝 New customer registered: %o', newCustomer)
 
+    this.flowState.clearState(phoneNumber)
     this.flowState.setState(phoneNumber, FlowStep.MAIN_MENU)
 
     return RegistrationMessages.FINALIZE(this.getFirstName(data.name))

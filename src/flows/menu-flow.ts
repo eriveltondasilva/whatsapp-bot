@@ -1,23 +1,18 @@
-import { inject, injectable } from 'tsyringe'
-
-import { MainMenu } from '@/messages/main-menu.js'
-import { FlowStateManager } from '@/managers/flow-state-manager.js'
-import { ProductService } from '@/services/product-service.js'
+import { inject, injectable, singleton } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
+import { FlowStateManager } from '@/managers/flow-state-manager.js'
+import { MainMenu } from '@/messages/main-menu.js'
+
 import type { FlowHandler } from '@/types.js'
 
 @injectable()
+@singleton()
 export class MenuFlow implements FlowHandler {
-  constructor(
-    @inject(FlowStateManager) private flowState: FlowStateManager,
-    @inject(ProductService) private productService: ProductService,
-  ) {}
+  constructor(@inject(FlowStateManager) private flowState: FlowStateManager) {}
 
   public handle(phoneNumber: string, message: string): string[] {
     switch (message) {
-      case FlowStep.MAIN_MENU:
-        return ['👋 Bem-vindo ao nosso menu de opções!']
       case '1':
         return this.showOrderMenu(phoneNumber)
 
@@ -67,6 +62,7 @@ export class MenuFlow implements FlowHandler {
 
   private goOut(phoneNumber: string): string[] {
     this.flowState.clearState(phoneNumber)
+    this.flowState.setState(phoneNumber, FlowStep.INITIAL)
     return ['👋 Obrigado por utilizar nossos serviços!']
   }
 }

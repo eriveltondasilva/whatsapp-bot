@@ -1,9 +1,10 @@
 import { FlowStep } from '@/config/enums.js'
-import type { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { WelcomeMessage } from '@/messages/welcome.js'
-import type { CustomerService } from '@/services/customer-service.js'
 import type { RegistrationFlow } from './registration-flow.js'
 import { WelcomeFlow } from './welcome-flow.js'
+
+import type { FlowStateManager } from '@/managers/index.js'
+import type { CustomerService, LoggerService } from '@/services/index.js'
 
 describe('WelcomeFlow', () => {
   const CUSTOMER_NAME = 'John Doe'
@@ -11,17 +12,18 @@ describe('WelcomeFlow', () => {
   const PHONE_NUMBER = '123456789'
   const MESSAGE = 'Hello'
 
-  let flowStateManagerMock: Partial<FlowStateManager>
-  let customerServiceMock: Partial<CustomerService>
-  let registrationFlowMock: Partial<RegistrationFlow>
+  let mockFlowStateManager: Partial<FlowStateManager>
+  let mockCustomerService: Partial<CustomerService>
+  let mockRegistrationFlow: Partial<RegistrationFlow>
+  let mockLogger: Partial<LoggerService>
   let welcomeFlow: WelcomeFlow
 
   beforeEach(() => {
-    flowStateManagerMock = {
+    mockFlowStateManager = {
       setState: vi.fn(),
     }
 
-    customerServiceMock = {
+    mockCustomerService = {
       getCustomer: vi.fn(() => ({
         id: 1,
         name: CUSTOMER_NAME,
@@ -31,14 +33,19 @@ describe('WelcomeFlow', () => {
       })),
     }
 
-    registrationFlowMock = {
+    mockRegistrationFlow = {
       handle: vi.fn(),
     }
 
+    mockLogger = {
+      debug: vi.fn(),
+    }
+
     welcomeFlow = new WelcomeFlow(
-      flowStateManagerMock as FlowStateManager,
-      customerServiceMock as CustomerService,
-      registrationFlowMock as RegistrationFlow,
+      mockFlowStateManager as FlowStateManager,
+      mockCustomerService as CustomerService,
+      mockRegistrationFlow as RegistrationFlow,
+      mockLogger as LoggerService,
     )
   })
   afterEach(() => {
@@ -46,19 +53,19 @@ describe('WelcomeFlow', () => {
   })
   // !!!
   it('should initiate registration if customer is not found', () => {
-    customerServiceMock.getCustomer = vi.fn(() => null)
+    mockCustomerService.getCustomer = vi.fn(() => null)
 
     const state = { step: FlowStep.INITIAL, data: {} }
     const result = welcomeFlow.handle(PHONE_NUMBER, MESSAGE, state)
 
-    expect(customerServiceMock.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
-    expect(flowStateManagerMock.setState).toHaveBeenCalledWith(
+    expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
+    expect(mockFlowStateManager.setState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.INITIAL,
     )
-    expect(registrationFlowMock.handle).toHaveBeenCalledWith(
+    expect(mockRegistrationFlow.handle).toHaveBeenCalledWith(
       PHONE_NUMBER,
-      '',
+      MESSAGE,
       state,
     )
     expect(result).toBeUndefined()
@@ -70,12 +77,12 @@ describe('WelcomeFlow', () => {
       data: {},
     })
 
-    expect(customerServiceMock.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
-    expect(flowStateManagerMock.setState).toHaveBeenCalledWith(
+    expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
+    expect(mockFlowStateManager.setState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.MAIN_MENU,
     )
-    expect(registrationFlowMock.handle).not.toHaveBeenCalled()
+    expect(mockRegistrationFlow.handle).not.toHaveBeenCalled()
     expect(result).toEqual(WelcomeMessage(CUSTOMER_NAME))
   })
 })

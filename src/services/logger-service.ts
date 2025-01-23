@@ -12,11 +12,12 @@ export class LoggerService {
 
   constructor() {
     this.logger = createLogger({
-      level: 'info',
+      level: 'debug',
       format: format.combine(
         format.timestamp({
           format: 'YYYY-MM-DD HH:mm:ss',
         }),
+        format.colorize(),
         format.errors({ stack: true }),
         format.splat(),
         format.json(),
@@ -42,19 +43,19 @@ export class LoggerService {
     }
   }
 
-  public info(message: string, meta?: any): void {
+  public info(message: string, ...meta: any): void {
     this.logger.info(message, meta)
   }
 
-  public error(message: string, meta?: any): void {
-    this.logger.error(message, meta)
+  public error(message: string, ...meta: any): void {
+    this.logger.error(message, ...meta)
   }
 
-  public warn(message: string, meta?: any): void {
-    this.logger.warn(message, meta)
+  public warn(message: string, ...meta: any): void {
+    this.logger.warn(message, ...meta)
   }
 
-  public debug(message: string, meta?: any): void {
-    this.logger.debug(message, meta)
+  public debug(message: string, ...meta: any): void {
+    this.logger.debug(message, ...meta)
   }
 }
