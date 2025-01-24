@@ -7,7 +7,7 @@ import { RegistrationMessages } from '@/messages/registration.js'
 import { CustomerService } from '@/services/customer-service.js'
 import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
 
-import type { FlowHandler, FlowState } from '@/types.js'
+import type { FlowHandler } from '@/types.js'
 
 @injectable()
 @singleton()
@@ -19,12 +19,11 @@ export class RegistrationFlow implements FlowHandler {
   ) {}
 
   // ###
-  public handle(
-    phoneNumber: string,
-    message: string,
-    state: FlowState,
-  ): string[] {
-    switch (state.step) {
+  public handle(phoneNumber: string, message: string): string[] {
+    this.logger.debug('👋 RegistrationFlow:', { phoneNumber, message })
+    const { step } = this.flowState.getState(phoneNumber)
+
+    switch (step) {
       case FlowStep.INITIAL:
         return this.initiateRegistration(phoneNumber)
 
@@ -41,7 +40,7 @@ export class RegistrationFlow implements FlowHandler {
 
   // ###
   private initiateRegistration(phoneNumber: string): string[] {
-    this.flowState.setState(phoneNumber, FlowStep.COLLECT_NAME)
+    this.flowState.updateState(phoneNumber, { step: FlowStep.COLLECT_NAME })
     return RegistrationMessages.INITIAL
   }
 
@@ -50,7 +49,10 @@ export class RegistrationFlow implements FlowHandler {
       return RegistrationMessages.INVALID_NAME
     }
 
-    this.flowState.setState(phoneNumber, FlowStep.COLLECT_ADDRESS, { name })
+    this.flowState.updateState(phoneNumber, {
+      step: FlowStep.COLLECT_ADDRESS,
+      data: { name },
+    })
 
     return [this.getGreeting(name), ...RegistrationMessages.COLLECT_ADDRESS]
   }
@@ -70,7 +72,9 @@ export class RegistrationFlow implements FlowHandler {
     this.logger.debug('📝 New customer registered: %o', newCustomer)
 
     this.flowState.clearState(phoneNumber)
-    this.flowState.setState(phoneNumber, FlowStep.MAIN_MENU)
+    this.flowState.updateState(phoneNumber, {
+      step: FlowStep.MAIN_MENU,
+    })
 
     return RegistrationMessages.FINALIZE(this.getFirstName(data.name))
   }

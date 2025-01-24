@@ -1,4 +1,4 @@
-import { inject, injectable, singleton } from 'tsyringe'
+import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
@@ -6,10 +6,9 @@ import { WelcomeMessage } from '@/messages/welcome.js'
 import { CustomerService, LoggerService } from '@/services/index.js'
 import { RegistrationFlow } from './registration-flow.js'
 
-import type { FlowHandler, FlowState } from '@/types.js'
+import type { FlowHandler } from '@/types.js'
 
 @injectable()
-@singleton()
 export class WelcomeFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
@@ -18,20 +17,18 @@ export class WelcomeFlow implements FlowHandler {
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
-  public handle(
-    phoneNumber: string,
-    message: string,
-    state: FlowState,
-  ): string[] {
+  public handle(phoneNumber: string, message: string): string[] {
+    this.logger.debug('👋 WelcomeFlow: %o', { phoneNumber, message })
     const customer = this.customerService.getCustomer(phoneNumber)
 
     if (!customer) {
-      this.flowStateManager.setState(phoneNumber, FlowStep.INITIAL)
-      return this.registrationFlow.handle(phoneNumber, message, state)
+      this.flowStateManager.updateState(phoneNumber, { step: FlowStep.INITIAL })
+      return this.registrationFlow.handle(phoneNumber, message)
     }
 
-    this.logger.debug('👋 WelcomeFlow:', { phoneNumber, message, state })
-    this.flowStateManager.setState(phoneNumber, FlowStep.MAIN_MENU)
-    return WelcomeMessage(customer.name)
+    this.flowStateManager.updateState(phoneNumber, { step: FlowStep.MAIN_MENU })
+
+    const customerName = customer.name.split(' ')[0]
+    return WelcomeMessage(customerName)
   }
 }

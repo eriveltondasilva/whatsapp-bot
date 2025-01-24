@@ -1,11 +1,10 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { OrderService, ProductService } from '@/services/index.js'
 import { isValidQuantity } from '@/utils/validations.js'
 
-import type { FlowHandler, FlowState } from '@/types.js'
+import type { FlowHandler } from '@/types.js'
 
 @injectable()
 export class OrderFlow implements FlowHandler {
@@ -15,10 +14,10 @@ export class OrderFlow implements FlowHandler {
     @inject(OrderService) private order: OrderService,
   ) {}
 
-  handle(phoneNumber: string, message: string, state: FlowState) {
-    switch (state.step) {
-      case FlowStep.SELECTING_PIZZA:
-        return ['']
+  handle(phoneNumber: string, message: string) {
+    switch (message) {
+      case '1':
+        return ['teste']
 
       // case FlowStep.SELECTING_QUANTITY:
       // return this.handleQuantitySelection(phoneNumber, message, state.data)
@@ -43,12 +42,12 @@ export class OrderFlow implements FlowHandler {
       ? this.order.getOrder(data.orderId)
       : this.order.createOrder(Number.parseInt(phoneNumber))
 
-    this.flowState.setState(phoneNumber, FlowStep.SELECTING_QUANTITY, {
-      orderId: order?.id,
-      productId: pizzas.id,
-      productName: pizzas.name,
-      productPrice: pizzas.price,
-    })
+    // this.flowState.updateState(phoneNumber, FlowStep.SELECTING_QUANTITY, {
+    //   orderId: order?.id,
+    //   productId: pizzas.id,
+    //   productName: pizzas.name,
+    //   productPrice: pizzas.price,
+    // })
 
     return `Quantas unidades de ${pizzas.name} você gostaria?`
   }

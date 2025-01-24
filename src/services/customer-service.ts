@@ -6,6 +6,14 @@ import type { Customer } from '@/types.js'
 export class CustomerService {
   private customers: Map<string, Customer> = new Map()
 
+  constructor() {
+    this.createCustomer({
+      phone: '558298350441@c.us',
+      name: 'Ingrid Alves',
+      address: '123 Main St, Springfield',
+    })
+  }
+
   public getCustomer(phoneNumber: string): Customer | null {
     return this.customers.get(phoneNumber) || null
   }

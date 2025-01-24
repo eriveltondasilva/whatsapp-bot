@@ -13,26 +13,35 @@ export class FlowStateManager {
   constructor(@inject(LoggerService) private logger: LoggerService) {}
 
   public getState(phoneNumber: string): FlowState {
-    const state = this.states.get(phoneNumber) || {
-      step: FlowStep.INITIAL,
-      data: {},
+    let state = this.states.get(phoneNumber)
+
+    if (!state) {
+      state = {
+        step: FlowStep.WELCOME,
+        data: {},
+      }
+      this.states.set(phoneNumber, state)
     }
+
     this.logger.debug('📝 Flow state requested: %o', state)
     return state
   }
 
-  public setState(phoneNumber: string, step: FlowStep, data: any = {}): void {
+  public updateState(phoneNumber: string, newState: FlowState): void {
     const currentState = this.getState(phoneNumber)
     const updatedState: FlowState = {
-      step,
-      data: { ...currentState.data, ...data },
+      ...newState,
+      data: { ...currentState.data, ...newState.data },
     }
-    this.logger.debug('📝 Flow state updated: %o', updatedState)
     this.states.set(phoneNumber, updatedState)
+    this.logger.debug('🔄 Flow state updated: %o', {
+      phoneNumber,
+      updatedState,
+    })
   }
 
-  public clearState(phoneNumber: string): boolean {
-    this.logger.debug('📝 Flow state cleared: %s', phoneNumber)
-    return this.states.delete(phoneNumber)
+  public clearState(phoneNumber: string): void {
+    this.states.delete(phoneNumber)
+    this.logger.debug('🧹 Flow state cleared: %s', phoneNumber)
   }
 }

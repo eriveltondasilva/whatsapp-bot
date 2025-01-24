@@ -46,9 +46,9 @@ export type Order = {
 
 export type FlowState = {
   step: FlowStep
-  data: any
+  data?: any
 }
 
 export interface FlowHandler {
-  handle(phoneNumber: string, message: string, state: any): string[]
+  handle(phoneNumber: string, message: string): string[]
 }

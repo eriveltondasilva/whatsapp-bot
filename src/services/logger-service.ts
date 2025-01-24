@@ -17,30 +17,13 @@ export class LoggerService {
         format.timestamp({
           format: 'YYYY-MM-DD HH:mm:ss',
         }),
-        format.colorize(),
-        format.errors({ stack: true }),
         format.splat(),
-        format.json(),
+        format.cli(),
+        format.colorize(),
       ),
       defaultMeta: { service: SESSION_NAME },
-      transports: [
-        new transports.File({
-          filename: 'logs/error.log',
-          level: 'error',
-        }),
-        new transports.File({
-          filename: 'logs/combined.log',
-        }),
-      ],
+      transports: [new transports.Console()],
     })
-
-    if (process.env.NODE_ENV !== 'production') {
-      this.logger.add(
-        new transports.Console({
-          format: format.combine(format.colorize(), format.simple()),
-        }),
-      )
-    }
   }
 
   public info(message: string, ...meta: any): void {

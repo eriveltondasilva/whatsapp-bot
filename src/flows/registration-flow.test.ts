@@ -17,7 +17,7 @@ describe('RegistrationFlow:', () => {
 
   beforeEach(() => {
     mockFlowState = {
-      setState: vi.fn(),
+      updateState: vi.fn(),
       clearState: vi.fn(() => true),
       getState: vi.fn(() => ({
         step: FlowStep.INITIAL,
@@ -63,7 +63,7 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(mockFlowState.setState).not.toHaveBeenCalled()
+    expect(mockFlowState.updateState).not.toHaveBeenCalled()
     expect(response).toEqual(RegistrationMessages.INVALID_NAME)
   })
   it('should handle invalid address input', () => {
@@ -72,7 +72,7 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(mockFlowState.setState).not.toHaveBeenCalled()
+    expect(mockFlowState.updateState).not.toHaveBeenCalled()
     expect(response).toEqual(RegistrationMessages.INVALID_ADDRESS)
   })
   // ###
@@ -82,7 +82,7 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(mockFlowState.setState).toHaveBeenCalledWith(
+    expect(mockFlowState.updateState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.COLLECT_NAME,
     )
@@ -94,7 +94,7 @@ describe('RegistrationFlow:', () => {
       data: {},
     })
 
-    expect(mockFlowState.setState).toHaveBeenCalledWith(
+    expect(mockFlowState.updateState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.COLLECT_ADDRESS,
       { name: CUSTOMER_NAME },
@@ -112,7 +112,7 @@ describe('RegistrationFlow:', () => {
 
     const customerName = CUSTOMER_NAME.split(' ')[0]
 
-    expect(mockFlowState.setState).toHaveBeenCalledWith(
+    expect(mockFlowState.updateState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.MAIN_MENU,
     )

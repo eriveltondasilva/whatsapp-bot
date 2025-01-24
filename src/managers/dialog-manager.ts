@@ -1,22 +1,17 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowKeys, FlowStep } from '@/config/enums.js'
+import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
-import { CustomerService } from '@/services/customer-service.js'
+import { CustomerService, LoggerService } from '@/services/index.js'
 import { HandlerManager } from './handler-manager.js'
-
-import type { FlowState } from '@/types.js'
 
 @injectable()
 export class DialogManager {
-  private errorMessage = [
-    'Ops! Ocorreu um erro ao processar sua mensagem. Por favor, tente novamente!',
-  ]
-
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(CustomerService) private customerService: CustomerService,
     @inject(HandlerManager) private handlerManager: HandlerManager,
+    @inject(LoggerService) private logger: LoggerService,
   ) {}
 
   // ###
@@ -24,40 +19,31 @@ export class DialogManager {
     phoneNumber: string,
     message: string,
   ): Promise<string[]> {
-    const state = this.flowStateManager.getState(phoneNumber)
+    this.logger.debug('handling message', { phoneNumber, message })
     const customer = this.customerService.getCustomer(phoneNumber)
 
     if (!customer) {
-      return this.handleWithHandler(
-        FlowKeys.REGISTRATION,
-        phoneNumber,
-        message,
-        state,
-      )
+      this.flowStateManager.updateState(phoneNumber, { step: FlowStep.INITIAL })
     }
 
-    if (state.step === FlowStep.INITIAL) {
-      return this.handleWithHandler(
-        FlowKeys.WELCOME,
-        phoneNumber,
-        message,
-        state,
-      )
+    return this.processFlow(phoneNumber, message)
+  }
+
+  private processFlow(phoneNumber: string, message: string): string[] {
+    this.logger.debug('👋 processFlow: %o', {
+      phoneNumber,
+      message,
+    })
+    const { step } = this.flowStateManager.getState(phoneNumber)
+    const handler = this.handlerManager.getHandler(step)
+
+    if (!handler) {
+      return ['❌ Invalid flow step']
     }
 
-    return this.handleWithHandler(state.step, phoneNumber, message, state)
+    return handler.handle(phoneNumber, message)
   }
 
-  private handleWithHandler(
-    handlerName: string,
-    phoneNumber: string,
-    message: string,
-    state: FlowState,
-  ): string[] {
-    const handler = this.handlerManager.getHandler(handlerName)
+  // ###
 
-    if (!handler) return this.errorMessage
-
-    return handler.handle(phoneNumber, message, state)
-  }
 }

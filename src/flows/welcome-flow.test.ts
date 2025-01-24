@@ -20,7 +20,7 @@ describe('WelcomeFlow', () => {
 
   beforeEach(() => {
     mockFlowStateManager = {
-      setState: vi.fn(),
+      updateState: vi.fn(),
     }
 
     mockCustomerService = {
@@ -59,7 +59,7 @@ describe('WelcomeFlow', () => {
     const result = welcomeFlow.handle(PHONE_NUMBER, MESSAGE, state)
 
     expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
-    expect(mockFlowStateManager.setState).toHaveBeenCalledWith(
+    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.INITIAL,
     )
@@ -78,7 +78,7 @@ describe('WelcomeFlow', () => {
     })
 
     expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
-    expect(mockFlowStateManager.setState).toHaveBeenCalledWith(
+    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
       PHONE_NUMBER,
       FlowStep.MAIN_MENU,
     )

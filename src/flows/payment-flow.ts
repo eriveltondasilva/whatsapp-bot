@@ -5,7 +5,7 @@ import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { OrderService } from '@/services/order-service.js'
 import { formatCurrency } from '@/utils/message-formatter.js'
 
-import type { FlowHandler, FlowState } from '@/types.js'
+import type { FlowHandler } from '@/types.js'
 
 @injectable()
 export class PaymentFlow implements FlowHandler {
@@ -14,13 +14,10 @@ export class PaymentFlow implements FlowHandler {
     @inject(OrderService) private order: OrderService,
   ) {}
 
-  public handle(
-    phoneNumber: string,
-    message: string,
-    state: FlowState,
-  ): string[] {
+  public handle(phoneNumber: string, message: string): string[] {
+    const state = this.flowState.getState(phoneNumber)
     switch (state.step) {
-      case FlowStep.SELECTING_PAYMENT:
+      case FlowStep.SELECT_PAYMENT:
         return ['']
       // case FlowStep.AWAITING_PAYMENT:
       // return this.handlePaymentInput(phoneNumber, message, state.data)
@@ -61,9 +58,9 @@ export class PaymentFlow implements FlowHandler {
     }
 
     this.order.setPaymentMethod(data.orderId, method)
-    this.flowState.setState(phoneNumber, FlowStep.CONFIRMING_ORDER, {
-      orderId: data.orderId,
-    })
+    // this.flowState.updateState(phoneNumber, FlowStep.CONFIRMING_ORDER, {
+    //   orderId: data.orderId,
+    // })
 
     return `
     Confirme o pagamento:

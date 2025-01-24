@@ -33,9 +33,12 @@ export class HandlerManager {
     ])
   }
 
-  public getHandler(step: string): FlowHandler | undefined {
-    const flowName = step.split(FlowStep.SEPARATOR)[0].toLowerCase()
-    this.logger.debug('🔀 Flow name: %s', flowName)
-    return this.handlers.get(flowName) || this.handlers.get(FlowKeys.WELCOME)
+  public getHandler(step: FlowStep): FlowHandler | undefined {
+    const flowKey = this.extractFlowKey(step)
+    return this.handlers.get(flowKey)
+  }
+
+  private extractFlowKey(step: string): string {
+    return step.split(FlowStep.SEPARATOR)[0].toLowerCase()
   }
 }

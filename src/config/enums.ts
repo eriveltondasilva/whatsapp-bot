@@ -44,22 +44,21 @@ export type Validation = (typeof Validation)[keyof typeof Validation]
 
 export const FlowStep = {
   INITIAL: 'registration:initial',
-  COLLECT_NAME: 'registration:collect_name',
-  COLLECT_ADDRESS: 'registration:collect_address',
-  COLLECT_BIRTHDAY: 'registration:collect_birthday',
+  COLLECT_NAME: 'registration:collect-name',
+  COLLECT_ADDRESS: 'registration:collect-address',
+  COLLECT_BIRTHDAY: 'registration:collect-birthday',
   //
   WELCOME: 'welcome:index',
-  MAIN_MENU: 'main_menu:index',
+  MAIN_MENU: 'main-menu:index',
   //
-  ORDER: 'order',
-  SELECTING_PIZZA: 'selecting_pizza',
-  SELECTING_DRINK: 'selecting_drink',
-  SELECTING_QUANTITY: 'selecting_quantity',
-  SELECTING_PAYMENT: 'selecting_payment',
-  CONFIRMING_ORDER: 'confirming_order',
+  ORDER: 'order:index',
+  SELECT_PIZZA: 'order:select-pizza',
+  SELECT_DRINK: 'order:select-drink',
+  SELECT_QUANTITY: 'order:select-quantity',
+  CONFIRM_ORDER: 'order:confirm-order',
   //
-  AWAITING_PAYMENT: 'awaiting_payment',
-  AWAITING_CHANGE: 'awaiting_change',
+  SELECT_PAYMENT: 'payment:select-payment',
+  AWAITING_CHANGE: 'payment:await-change',
   //
   SEPARATOR: ':',
 } as const

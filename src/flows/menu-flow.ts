@@ -14,22 +14,12 @@ export class MenuFlow implements FlowHandler {
   public handle(phoneNumber: string, message: string): string[] {
     switch (message) {
       case '1':
-        return this.showOrderMenu(phoneNumber)
-
-      case '2':
-        return this.trackOrder(phoneNumber)
-
-      case '3':
-        return this.showOrderHistory(phoneNumber)
-
-      case '4':
-        return this.updateRegistration(phoneNumber)
-
-      case '5':
-        return this.contactSupport(phoneNumber)
+        return this.makeOrder(phoneNumber)
 
       case '0':
-        return this.goOut(phoneNumber)
+        this.flowState.clearState(phoneNumber)
+        this.flowState.updateState(phoneNumber, { step: FlowStep.INITIAL })
+        return ['👋 Obrigado por utilizar nossos serviços!']
 
       default:
         return [
@@ -40,29 +30,30 @@ export class MenuFlow implements FlowHandler {
     }
   }
 
-  private showOrderMenu(phoneNumber: string): string[] {
-    return ['Funcionalidade em desenvolvimento: showOrderMenu']
+  private makeOrder(phoneNumber: string): string[] {
+    this.flowState.updateState(phoneNumber, { step: FlowStep.ORDER })
+    return ['Funcionalidade em desenvolvimento: makeOrder']
   }
 
-  private trackOrder(phoneNumber: string): string[] {
-    return ['Funcionalidade em desenvolvimento: trackerOrder']
-  }
+  // private trackOrder(phoneNumber: string): string[] {
+  //   return ['Funcionalidade em desenvolvimento: trackerOrder']
+  // }
 
-  private showOrderHistory(phoneNumber: string): string[] {
-    return ['Funcionalidade em desenvolvimento: showOrderHistory']
-  }
+  // private showOrderHistory(phoneNumber: string): string[] {
+  //   return ['Funcionalidade em desenvolvimento: showOrderHistory']
+  // }
 
-  private updateRegistration(phoneNumber: string): string[] {
-    return ['Funcionalidade em desenvolvimento: updateRegistration']
-  }
+  // private updateRegistration(phoneNumber: string): string[] {
+  //   return ['Funcionalidade em desenvolvimento: updateRegistration']
+  // }
 
-  private contactSupport(phoneNumber: string): string[] {
-    return ['Funcionalidade em desenvolvimento: contactSupport']
-  }
+  // private contactSupport(phoneNumber: string): string[] {
+  //   return ['Funcionalidade em desenvolvimento: contactSupport']
+  // }
 
-  private goOut(phoneNumber: string): string[] {
-    this.flowState.clearState(phoneNumber)
-    this.flowState.setState(phoneNumber, FlowStep.INITIAL)
-    return ['👋 Obrigado por utilizar nossos serviços!']
-  }
+  // private goOut(phoneNumber: string): string[] {
+  //   this.flowState.clearState(phoneNumber)
+  //   this.flowState.setState(phoneNumber, FlowStep.INITIAL)
+  //   return ['👋 Obrigado por utilizar nossos serviços!']
+  // }
 }
