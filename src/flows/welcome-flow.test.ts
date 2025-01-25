@@ -1,16 +1,18 @@
 import { FlowStep } from '@/config/enums.js'
 import { WelcomeMessage } from '@/messages/welcome.js'
-import type { RegistrationFlow } from './registration-flow.js'
 import { WelcomeFlow } from './welcome-flow.js'
 
 import type { FlowStateManager } from '@/managers/index.js'
 import type { CustomerService, LoggerService } from '@/services/index.js'
+import type { RegistrationFlow } from './registration-flow.js'
 
 describe('WelcomeFlow', () => {
-  const CUSTOMER_NAME = 'John Doe'
-  const CUSTOMER_ADDRESS = '123 Main St'
-  const PHONE_NUMBER = '123456789'
-  const MESSAGE = 'Hello'
+  const customer = {
+    name: 'John Doe',
+    address: '123 Main St',
+    phone: '123456789',
+  }
+  const message = 'Hello'
 
   let mockFlowStateManager: Partial<FlowStateManager>
   let mockCustomerService: Partial<CustomerService>
@@ -26,9 +28,9 @@ describe('WelcomeFlow', () => {
     mockCustomerService = {
       getCustomer: vi.fn(() => ({
         id: 1,
-        name: CUSTOMER_NAME,
-        address: CUSTOMER_ADDRESS,
-        phone: PHONE_NUMBER,
+        name: customer.name,
+        address: customer.address,
+        phone: customer.phone,
         createdAt: new Date().toISOString(),
       })),
     }
@@ -55,34 +57,29 @@ describe('WelcomeFlow', () => {
   it('should initiate registration if customer is not found', () => {
     mockCustomerService.getCustomer = vi.fn(() => null)
 
-    const state = { step: FlowStep.INITIAL, data: {} }
-    const result = welcomeFlow.handle(PHONE_NUMBER, MESSAGE, state)
+    const result = welcomeFlow.handle(customer.phone, message)
 
-    expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
+    expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(customer.phone)
     expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
-      PHONE_NUMBER,
-      FlowStep.INITIAL,
+      customer.phone,
+      { step: FlowStep.INITIAL },
     )
     expect(mockRegistrationFlow.handle).toHaveBeenCalledWith(
-      PHONE_NUMBER,
-      MESSAGE,
-      state,
+      customer.phone,
+      message,
     )
     expect(result).toBeUndefined()
   })
   // ###
   it('should display welcome message if customer is found', () => {
-    const result = welcomeFlow.handle(PHONE_NUMBER, MESSAGE, {
-      step: FlowStep.INITIAL,
-      data: {},
-    })
+    const result = welcomeFlow.handle(customer.phone, message)
 
-    expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(PHONE_NUMBER)
+    expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(customer.phone)
     expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
-      PHONE_NUMBER,
-      FlowStep.MAIN_MENU,
+      customer.phone,
+      { step: FlowStep.MAIN_MENU },
     )
     expect(mockRegistrationFlow.handle).not.toHaveBeenCalled()
-    expect(result).toEqual(WelcomeMessage(CUSTOMER_NAME))
+    expect(result).toEqual(WelcomeMessage(customer.name.split(' ')[0]))
   })
 })

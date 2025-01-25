@@ -16,14 +16,17 @@ export class WhatsappBot {
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
+  // ###
   public async initialize(): Promise<void> {
     this.client = await this.clientManager.getClient()
     this.client.onMessage((message) => this.handleMessage(message))
   }
 
   private async handleMessage(message: Message): Promise<void> {
-    this.logger.debug('📬 Received message: %s', message.body)
-    this.logger.debug('📬 Received message from: %s', message.from)
+    this.logger.debug('📬 Received message: %o', {
+      from: message.from,
+      body: message.body,
+    })
 
     // TODO: remover a validação
     if (!message.from.includes(process.env.INGRID_NUMERO || '')) return
@@ -39,6 +42,7 @@ export class WhatsappBot {
       message.from,
       message.body,
     )
+
     if (!response) return
 
     await this.sendMessage(message.from, response)
@@ -51,7 +55,7 @@ export class WhatsappBot {
       })
       this.logger.debug('📬 Message sent to: %s', to)
     } catch (error) {
-      this.logger.error(`❌ Failed to send message to ${to}:`, error)
+      this.logger.error('❌ Failed to send message to %s: %o', to, error)
     }
   }
 }

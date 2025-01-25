@@ -1,10 +1,9 @@
-import { LoggerService } from '@/services/logger-service.js'
 import { inject, injectable, singleton } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { RegistrationMessages } from '@/messages/registration.js'
-import { CustomerService } from '@/services/customer-service.js'
+import { CustomerService, LoggerService } from '@/services/index.js'
 import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
 
 import type { FlowHandler } from '@/types.js'
@@ -13,15 +12,14 @@ import type { FlowHandler } from '@/types.js'
 @singleton()
 export class RegistrationFlow implements FlowHandler {
   constructor(
-    @inject(FlowStateManager) private flowState: FlowStateManager,
+    @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(CustomerService) private customerService: CustomerService,
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
   // ###
   public handle(phoneNumber: string, message: string): string[] {
-    this.logger.debug('👋 RegistrationFlow:', { phoneNumber, message })
-    const { step } = this.flowState.getState(phoneNumber)
+    const { step } = this.flowStateManager.getState(phoneNumber)
 
     switch (step) {
       case FlowStep.INITIAL:
@@ -40,7 +38,9 @@ export class RegistrationFlow implements FlowHandler {
 
   // ###
   private initiateRegistration(phoneNumber: string): string[] {
-    this.flowState.updateState(phoneNumber, { step: FlowStep.COLLECT_NAME })
+    this.flowStateManager.updateState(phoneNumber, {
+      step: FlowStep.COLLECT_NAME,
+    })
     return RegistrationMessages.INITIAL
   }
 
@@ -49,7 +49,7 @@ export class RegistrationFlow implements FlowHandler {
       return RegistrationMessages.INVALID_NAME
     }
 
-    this.flowState.updateState(phoneNumber, {
+    this.flowStateManager.updateState(phoneNumber, {
       step: FlowStep.COLLECT_ADDRESS,
       data: { name },
     })
@@ -62,7 +62,7 @@ export class RegistrationFlow implements FlowHandler {
       return RegistrationMessages.INVALID_ADDRESS
     }
 
-    const { data } = this.flowState.getState(phoneNumber)
+    const { data } = this.flowStateManager.getState(phoneNumber)
 
     const newCustomer = this.customerService.createCustomer({
       phone: phoneNumber,
@@ -71,17 +71,15 @@ export class RegistrationFlow implements FlowHandler {
     })
     this.logger.debug('📝 New customer registered: %o', newCustomer)
 
-    this.flowState.clearState(phoneNumber)
-    this.flowState.updateState(phoneNumber, {
-      step: FlowStep.MAIN_MENU,
-    })
+    this.flowStateManager.clearState(phoneNumber)
+    this.flowStateManager.updateState(phoneNumber, { step: FlowStep.MAIN_MENU })
 
     return RegistrationMessages.FINALIZE(this.getFirstName(data.name))
   }
 
   // ###
   private resetFlow(phoneNumber: string): string[] {
-    this.flowState.clearState(phoneNumber)
+    this.flowStateManager.clearState(phoneNumber)
     this.customerService.deleteCustomer(phoneNumber)
     return RegistrationMessages.GENERIC_ERROR
   }

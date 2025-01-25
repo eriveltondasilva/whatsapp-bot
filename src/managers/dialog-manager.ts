@@ -19,7 +19,7 @@ export class DialogManager {
     phoneNumber: string,
     message: string,
   ): Promise<string[]> {
-    this.logger.debug('handling message', { phoneNumber, message })
+    this.logger.debug('👋 handling message: %o', { phoneNumber, message })
     const customer = this.customerService.getCustomer(phoneNumber)
 
     if (!customer) {
@@ -43,7 +43,4 @@ export class DialogManager {
 
     return handler.handle(phoneNumber, message)
   }
-
-  // ###
-
 }
