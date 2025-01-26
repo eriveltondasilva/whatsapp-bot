@@ -73,7 +73,5 @@ export function formatProductList(items: Product[]) {
   ${formattedItems}
 
   Digite o número da item desejada para adicionar ao seu pedido.
-  Para ver mais detalhes de uma item específica,
-  digite "info" seguido do número (exemplo: "info 1").
 `
 }

@@ -18,7 +18,7 @@ export class WelcomeFlow implements FlowHandler {
   ) {}
 
   public handle(phoneNumber: string, message: string): string[] {
-    this.logger.debug('👋 WelcomeFlow: %o', { phoneNumber, message })
+    this.logger.debug('👋 Welcome Flow: %o', { phoneNumber, message })
     const customer = this.customerService.getCustomer(phoneNumber)
 
     if (!customer) {

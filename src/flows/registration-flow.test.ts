@@ -54,6 +54,9 @@ describe('RegistrationFlow:', () => {
 
     const response = registrationFlow.handle(customer.phone, '')
 
+    expect(mockFlowStateManager.getState).toReturnWith({
+      step: 'unknown',
+    })
     expect(mockFlowStateManager.clearState).toHaveBeenCalledWith(customer.phone)
     expect(mockCustomerService.deleteCustomer).toHaveBeenCalledWith(
       customer.phone,

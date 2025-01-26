@@ -19,6 +19,7 @@ export class RegistrationFlow implements FlowHandler {
 
   // ###
   public handle(phoneNumber: string, message: string): string[] {
+    this.logger.debug('👋 Registration Flow: %o', { phoneNumber, message })
     const { step } = this.flowStateManager.getState(phoneNumber)
 
     switch (step) {
@@ -77,13 +78,13 @@ export class RegistrationFlow implements FlowHandler {
     return RegistrationMessages.FINALIZE(this.getFirstName(data.name))
   }
 
-  // ###
   private resetFlow(phoneNumber: string): string[] {
     this.flowStateManager.clearState(phoneNumber)
     this.customerService.deleteCustomer(phoneNumber)
     return RegistrationMessages.GENERIC_ERROR
   }
 
+  // ###
   private getFirstName(name: string): string {
     return name.split(' ')[0]
   }

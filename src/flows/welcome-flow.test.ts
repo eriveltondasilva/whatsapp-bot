@@ -57,16 +57,18 @@ describe('WelcomeFlow', () => {
   it('should initiate registration if customer is not found', () => {
     mockCustomerService.getCustomer = vi.fn(() => null)
 
-    const result = welcomeFlow.handle(customer.phone, message)
+    const result = welcomeFlow.handle(customer.phone, '')
 
     expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(customer.phone)
+    expect(mockCustomerService.getCustomer).toHaveReturnedWith(null)
     expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
       customer.phone,
       { step: FlowStep.INITIAL },
     )
+    expect(mockFlowStateManager.updateState).toReturnTimes(1)
     expect(mockRegistrationFlow.handle).toHaveBeenCalledWith(
       customer.phone,
-      message,
+      '',
     )
     expect(result).toBeUndefined()
   })
@@ -79,6 +81,7 @@ describe('WelcomeFlow', () => {
       customer.phone,
       { step: FlowStep.MAIN_MENU },
     )
+    expect(mockFlowStateManager.updateState).toReturnTimes(1)
     expect(mockRegistrationFlow.handle).not.toHaveBeenCalled()
     expect(result).toEqual(WelcomeMessage(customer.name.split(' ')[0]))
   })

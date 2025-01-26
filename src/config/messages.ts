@@ -9,12 +9,3 @@ export const OrderMessage = {
   NO_AVAILABLE_PIZZAS: '❌ Nenhuma pizza disponível para essa quantidade.',
 } as const
 
-//   1 - Ver cardápio de pizzas
-//   2 - Ver cardápio de bebidas
-//   3 - Acompanhar pedido
-//   4 - Falar com atendente
-
-//   Digite o número da opção desejada:`,
-//   PIZZAS: '🍕 Cardápio de Pizzas',
-//   DRINKS: '🍻 Cardápio de Bebidas',
-// } as const
