@@ -20,7 +20,7 @@ describe('RegistrationFlow:', () => {
   beforeEach(() => {
     mockFlowStateManager = {
       getState: vi.fn(() => ({
-        step: FlowStep.INITIAL,
+        step: FlowStep.REGISTRATION,
         data: { name: customer.name, address: customer.address },
       })),
       updateState: vi.fn(),

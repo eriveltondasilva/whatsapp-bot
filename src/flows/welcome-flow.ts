@@ -22,7 +22,9 @@ export class WelcomeFlow implements FlowHandler {
     const customer = this.customerService.getCustomer(phoneNumber)
 
     if (!customer) {
-      this.flowStateManager.updateState(phoneNumber, { step: FlowStep.INITIAL })
+      this.flowStateManager.updateState(phoneNumber, {
+        step: FlowStep.REGISTRATION,
+      })
       return this.registrationFlow.handle(phoneNumber, message)
     }
 

@@ -1,3 +1,1 @@
-export const OrderMenu = [
- 
-]
+export const OrderMenu = []

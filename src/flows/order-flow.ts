@@ -7,7 +7,9 @@ import {
   ProductService,
 } from '@/services/index.js'
 
+import { FlowStep } from '@/config/enums.js'
 import type { FlowHandler } from '@/types.js'
+import { PizzaFlow } from './pizza-flow.js'
 
 @injectable()
 export class OrderFlow implements FlowHandler {
@@ -15,25 +17,62 @@ export class OrderFlow implements FlowHandler {
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(ProductService) private productService: ProductService,
     @inject(OrderService) private orderService: OrderService,
+    @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
-  handle(phoneNumber: string, message: string) {
+  handle(phoneNumber: string, message: string): string[] {
     this.logger.info('👋 Order Flow: %o', { phoneNumber, message })
 
-    switch (message) {
-      case '1':
-        return this.handlePizzaSelection(phoneNumber, message)
-
-      default:
-        return ['Estado inválido para pedido']
+    const actions: Record<string, () => string[]> = {
+      1: () => this.handlePizzaSelection(phoneNumber, message),
+      2: () => this.handlePizzaSelection(phoneNumber, message),
+      3: () => this.handleDrinkSelection(phoneNumber, message),
+      4: () => this.finalizeOrder(phoneNumber),
+      0: () => this.exitFlow(phoneNumber),
+      default: () => this.handleDefault(),
     }
+
+    return actions[message] ? actions[message]() : actions.default()
   }
 
   // ###
   private handlePizzaSelection(phoneNumber: string, message: string) {
+    this.flowStateManager.updateState(phoneNumber, {
+      step: FlowStep.PIZZA,
+    })
+
+    return this.pizzaFlow.handle(phoneNumber, message)
+  }
+
+  private handleDrinkSelection(phoneNumber: string, message: string) {
+    return ['🍕 Order Flow: select drink']
+  }
+
+  private finalizeOrder(phoneNumber: string) {
+    return ['🍕 Order Flow: finalize order']
+  }
+
+  private exitFlow(phoneNumber: string) {
+    this.flowStateManager.clearState(phoneNumber)
     return [
-      '🚧 Esta funcionalidade está em desenvolvimento. Por favor, aguarde novidades!',
+      '✨ Obrigado por utilizar nossos serviços!',
+      'Se precisar de algo, estamos aqui para ajudar.',
+      '👋 Até a próxima!',
+    ]
+  }
+
+  private handleDefault() {
+    return [
+      '❌ OPÇÃO INVÁLIDA:\n',
+      //
+      '1️⃣ - Pizza inteira 🍕',
+      '2️⃣ - Pizza dois sabores 🍕🍕',
+      '3️⃣ - Bebidas 🍺',
+      '4️⃣ - Finalizar pedido 🛒',
+      '0️⃣ - Cancelar pedido ❌',
+      //
+      '\n✍🏻 *Digite o número da opção desejada:*',
     ]
   }
 }

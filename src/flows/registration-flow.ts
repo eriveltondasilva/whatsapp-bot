@@ -22,26 +22,23 @@ export class RegistrationFlow implements FlowHandler {
     this.logger.debug('👋 Registration Flow: %o', { phoneNumber, message })
     const { step } = this.flowStateManager.getState(phoneNumber)
 
-    switch (step) {
-      case FlowStep.INITIAL:
-        return this.initiateRegistration(phoneNumber)
-
-      case FlowStep.COLLECT_NAME:
-        return this.handleNameInput(phoneNumber, message)
-
-      case FlowStep.COLLECT_ADDRESS:
-        return this.handleAddressInput(phoneNumber, message)
-
-      default:
-        return this.resetFlow(phoneNumber)
+    const actions: Record<string, () => string[]> = {
+      [FlowStep.REGISTRATION]: () => this.initializeFlow(phoneNumber),
+      [FlowStep.COLLECT_NAME]: () => this.handleNameInput(phoneNumber, message),
+      [FlowStep.COLLECT_ADDRESS]: () =>
+        this.handleAddressInput(phoneNumber, message),
+      default: () => this.resetFlow(phoneNumber),
     }
+
+    return actions[step] ? actions[step]() : actions.default()
   }
 
   // ###
-  private initiateRegistration(phoneNumber: string): string[] {
+  private initializeFlow(phoneNumber: string): string[] {
     this.flowStateManager.updateState(phoneNumber, {
       step: FlowStep.COLLECT_NAME,
     })
+
     return RegistrationMessages.INITIAL
   }
 

@@ -63,13 +63,10 @@ describe('WelcomeFlow', () => {
     expect(mockCustomerService.getCustomer).toHaveReturnedWith(null)
     expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
       customer.phone,
-      { step: FlowStep.INITIAL },
+      { step: FlowStep.REGISTRATION },
     )
     expect(mockFlowStateManager.updateState).toReturnTimes(1)
-    expect(mockRegistrationFlow.handle).toHaveBeenCalledWith(
-      customer.phone,
-      '',
-    )
+    expect(mockRegistrationFlow.handle).toHaveBeenCalledWith(customer.phone, '')
     expect(result).toBeUndefined()
   })
   // ###

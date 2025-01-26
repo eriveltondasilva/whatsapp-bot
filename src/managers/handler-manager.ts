@@ -7,6 +7,7 @@ import {
   PaymentFlow,
   RegistrationFlow,
   WelcomeFlow,
+  PizzaFlow,
 } from '@/flows/index.js'
 
 import type { FlowHandler } from '@/types.js'
@@ -22,12 +23,14 @@ export class HandlerManager {
     @inject(MenuFlow) menuFlow: MenuFlow,
     @inject(OrderFlow) orderFlow: OrderFlow,
     @inject(PaymentFlow) paymentFlow: PaymentFlow,
+    @inject(PizzaFlow) pizzaFlow: PizzaFlow,
   ) {
     this.handlers = new Map<string, FlowHandler>([
       [FlowKeys.REGISTRATION, registrationFlow],
       [FlowKeys.WELCOME, welcomeFlow],
       [FlowKeys.MAIN_MENU, menuFlow],
       [FlowKeys.ORDER, orderFlow],
+      [FlowKeys.PIZZA, pizzaFlow],
       [FlowKeys.PAYMENT, paymentFlow],
     ])
   }

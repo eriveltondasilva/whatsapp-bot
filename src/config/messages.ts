@@ -8,4 +8,3 @@ export const OrderMessage = {
   DELIVERY_TIME: '🕒 Tempo estimado de entrega:',
   NO_AVAILABLE_PIZZAS: '❌ Nenhuma pizza disponível para essa quantidade.',
 } as const
-

@@ -43,18 +43,27 @@ export const Validation = {
 export type Validation = (typeof Validation)[keyof typeof Validation]
 
 export const FlowStep = {
-  INITIAL: 'registration:initial',
+  REGISTRATION: 'registration:index',
   COLLECT_NAME: 'registration:collect-name',
   COLLECT_ADDRESS: 'registration:collect-address',
-  COLLECT_BIRTHDAY: 'registration:collect-birthday',
   //
   WELCOME: 'welcome:index',
   MAIN_MENU: 'main-menu:index',
   //
   ORDER: 'order:index',
-  SELECT_PIZZA: 'order:select-pizza',
-  SELECT_DRINK: 'order:select-drink',
-  SELECT_QUANTITY: 'order:select-quantity',
+  //
+  PIZZA: 'pizza:index',
+  PIZZA_TYPE: 'pizza:pizza-type',
+  FIRST_HALF: 'pizza:first-half',
+  SECOND_HALF: 'pizza:second-half',
+  PIZZA_FLAVOR: 'pizza:pizza-flavor',
+  PIZZA_SIZE: 'pizza:pizza-size',
+  PIZZA_QUANTITY: 'pizza:pizza-quantity',
+  //
+  DRINK: 'drink:index',
+  DRINK_TYPE: 'drink:drink-type',
+  DRINK_QUANTITY: 'drink:drink-quantity',
+  //
   CONFIRM_ORDER: 'order:confirm-order',
   //
   SELECT_PAYMENT: 'payment:select-payment',
@@ -69,6 +78,8 @@ export const FlowKeys = {
   WELCOME: 'welcome',
   MAIN_MENU: 'main-menu',
   ORDER: 'order',
+  PIZZA: 'pizza',
+  DRINK: 'drink',
   PAYMENT: 'payment',
 } as const
 export type FlowKeys = (typeof FlowKeys)[keyof typeof FlowKeys]
