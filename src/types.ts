@@ -1,9 +1,4 @@
-import type {
-  Category,
-  FlowStep,
-  OrderStatus,
-  PaymentMethod,
-} from '@/config/enums.js'
+import type { Category, FlowStep, OrderStatus, PaymentMethod } from '@/config/enums.js'
 
 export type Customer = {
   id: number
@@ -47,23 +42,25 @@ export type Order = {
   items: OrderItem[]
   status: OrderStatus
   totalPrice: number
-  createdAt: Date
+  createdAt: string
   observation?: string
   paymentMethod?: PaymentMethod
   change?: number
 }
 
-export type FlowState = {
-  step: FlowStep
-  data?: {
-    name?: string
-    address?: string
-    pizzaType?: 'full' | 'half'
-    selectedFlavors?: Pizza[]
-    quantity?: number
-  }
+type FlowData = {
+  name: string
+  address: string
+  pizzaType: 'full' | 'half'
+  selectedFlavors: Pizza[]
+  quantity: number
 }
 
-export interface FlowHandler {
+export type FlowState = {
+  step: FlowStep
+  data?: Partial<FlowData>
+}
+
+export type FlowHandler = {
   handle(phoneNumber: string, message: string): string[]
 }

@@ -25,12 +25,10 @@ export class RegistrationFlow implements FlowHandler {
     const actions: Record<string, () => string[]> = {
       [FlowStep.REGISTRATION]: () => this.initializeFlow(phoneNumber),
       [FlowStep.COLLECT_NAME]: () => this.handleNameInput(phoneNumber, message),
-      [FlowStep.COLLECT_ADDRESS]: () =>
-        this.handleAddressInput(phoneNumber, message),
-      default: () => this.resetFlow(phoneNumber),
+      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(phoneNumber, message),
     }
 
-    return actions[step] ? actions[step]() : actions.default()
+    return actions[step]?.() || this.resetFlow(phoneNumber)
   }
 
   // ###
@@ -64,7 +62,7 @@ export class RegistrationFlow implements FlowHandler {
 
     const newCustomer = this.customerService.createCustomer({
       phone: phoneNumber,
-      name: data.name,
+      name: data?.name || '',
       address,
     })
     this.logger.debug('📝 New customer registered: %o', newCustomer)
@@ -72,7 +70,7 @@ export class RegistrationFlow implements FlowHandler {
     this.flowStateManager.clearState(phoneNumber)
     this.flowStateManager.updateState(phoneNumber, { step: FlowStep.MAIN_MENU })
 
-    return RegistrationMessages.FINALIZE(this.getFirstName(data.name))
+    return RegistrationMessages.FINALIZE(this.getFirstName(data?.name || ''))
   }
 
   private resetFlow(phoneNumber: string): string[] {

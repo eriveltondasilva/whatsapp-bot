@@ -58,9 +58,7 @@ describe('RegistrationFlow:', () => {
       step: 'unknown',
     })
     expect(mockFlowStateManager.clearState).toHaveBeenCalledWith(customer.phone)
-    expect(mockCustomerService.deleteCustomer).toHaveBeenCalledWith(
-      customer.phone,
-    )
+    expect(mockCustomerService.deleteCustomer).toHaveBeenCalledWith(customer.phone)
     expect(response).toEqual(RegistrationMessages.GENERIC_ERROR)
   })
   it('should handle invalid name input', () => {
@@ -87,10 +85,9 @@ describe('RegistrationFlow:', () => {
   it('should initiate registration', () => {
     const result = registrationFlow.handle(customer.phone, '')
 
-    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
-      customer.phone,
-      { step: FlowStep.COLLECT_NAME },
-    )
+    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(customer.phone, {
+      step: FlowStep.COLLECT_NAME,
+    })
     expect(result).toEqual(RegistrationMessages.INITIAL)
   })
   it('should handle valid name input and proceed to address step', () => {
@@ -100,10 +97,10 @@ describe('RegistrationFlow:', () => {
 
     const response = registrationFlow.handle(customer.phone, customer.name)
 
-    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
-      customer.phone,
-      { step: FlowStep.COLLECT_ADDRESS, data: { name: customer.name } },
-    )
+    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(customer.phone, {
+      step: FlowStep.COLLECT_ADDRESS,
+      data: { name: customer.name },
+    })
     expect(response).toEqual([
       expect.stringMatching(/^.*John.*$/),
       ...RegistrationMessages.COLLECT_ADDRESS,
@@ -126,10 +123,9 @@ describe('RegistrationFlow:', () => {
       address: customer.address,
     })
     expect(mockFlowStateManager.clearState).toHaveBeenCalledWith(customer.phone)
-    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
-      customer.phone,
-      { step: FlowStep.MAIN_MENU },
-    )
+    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(customer.phone, {
+      step: FlowStep.MAIN_MENU,
+    })
     expect(response).toEqual(RegistrationMessages.FINALIZE(customerName))
   })
 })

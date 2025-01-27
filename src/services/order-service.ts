@@ -43,11 +43,7 @@ export class OrderService {
     return order
   }
 
-  public setPaymentMethod(
-    orderId: number,
-    method: PaymentMethod,
-    change?: number,
-  ) {
+  public setPaymentMethod(orderId: number, method: PaymentMethod, change?: number) {
     const order = this.getOrder(orderId)
     if (!order) return null
 

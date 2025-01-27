@@ -8,9 +8,7 @@ export const PizzaMessages = {
     '2️⃣ - Pizza dois sabores 🍕🍕',
   ],
 
-  NO_FLAVORS_AVAILABLE: [
-    '❌ Desculpe, não encontramos sabores disponíveis no momento.',
-  ],
+  NO_FLAVORS_AVAILABLE: ['❌ Desculpe, não encontramos sabores disponíveis no momento.'],
 
   INVALID_FLAVOR: [
     '❌ OPÇÃO INVÁLIDA!',
@@ -20,19 +18,15 @@ export const PizzaMessages = {
 
   SELECT_QUANTITY: ['🔢 Digite a quantidade desejada (1-5):'],
 
-  INVALID_QUANTITY: [
-    '❌ Quantidade inválida!',
-    'Por favor, digite um número entre 1 e 5.',
-  ],
+  INVALID_QUANTITY: ['❌ Quantidade inválida!', 'Por favor, digite um número entre 1 e 5.'],
 
   INVALID_STEP: ['❌ Ocorreu um erro no fluxo. Por favor, tente novamente.'],
 
   SELECT_FLAVOR_FULL: '🍕 *ESCOLHA O SABOR DA PIZZA:*\n',
-  SELECT_FLAVOR_HALF: '🍕 *ESCOLHA O PRIMEIRO SABOR DA PIZZA:*\n',
+  SELECT_FIRST_FLAVOR: '🍕 *ESCOLHA O PRIMEIRO SABOR DA PIZZA:*\n',
   SELECT_SECOND_FLAVOR: '🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA:*\n',
 
   TYPE_NUMBER: '\n✍️ *Digite o número da opção desejada:*',
-  TYPE_SECOND_FLAVOR: '\n✍️ *Digite o número do segundo sabor:*',
 
   ORDER_OPTIONS: [
     '1️⃣ - Pizza inteira 🍕',

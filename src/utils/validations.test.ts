@@ -18,16 +18,13 @@ describe('isValidPhoneNumber:', () => {
     expect(result).toBe(false)
   })
   // ###
-  it.each([
-    '2717-8150',
-    '90552-5282',
-    '82 5227-2670',
-    '(60) 0489 5710',
-    '(91)4748-0559',
-  ])('should return true if phone number is valid (%s)', (phoneNumber) => {
-    const result = isValidPhoneNumber(phoneNumber)
-    expect(result).toBe(true)
-  })
+  it.each(['2717-8150', '90552-5282', '82 5227-2670', '(60) 0489 5710', '(91)4748-0559'])(
+    'should return true if phone number is valid (%s)',
+    (phoneNumber) => {
+      const result = isValidPhoneNumber(phoneNumber)
+      expect(result).toBe(true)
+    },
+  )
 })
 
 describe('isValidBirthdate:', () => {
@@ -128,13 +125,10 @@ describe('isValidMessage:', () => {
   })
 
   // !!!
-  it.each([null, undefined])(
-    'should return false for invalid message %o',
-    (message) => {
-      const result = isValidMessage(message as unknown as Message)
-      expect(result).toBe(false)
-    },
-  )
+  it.each([null, undefined])('should return false for invalid message %o', (message) => {
+    const result = isValidMessage(message as unknown as Message)
+    expect(result).toBe(false)
+  })
   it.each([
     ['empty body', createMockMessage({ body: '   ' })],
     ['invalid type', createMockMessage({ type: MessageType.IMAGE })],
@@ -144,14 +138,14 @@ describe('isValidMessage:', () => {
     const result = isValidMessage(message as Message)
     expect(result).toBe(false)
   })
-  it.each([
-    Validation.MESSAGE_MIN_LENGTH - 1,
-    Validation.MESSAGE_MAX_LENGTH + 1,
-  ])('should return false for invalid message length (%i)', (length) => {
-    const message = createMockMessage({ body: 'a'.repeat(length) })
-    const result = isValidMessage(message as Message)
-    expect(result).toBe(false)
-  })
+  it.each([Validation.MESSAGE_MIN_LENGTH - 1, Validation.MESSAGE_MAX_LENGTH + 1])(
+    'should return false for invalid message length (%i)',
+    (length) => {
+      const message = createMockMessage({ body: 'a'.repeat(length) })
+      const result = isValidMessage(message as Message)
+      expect(result).toBe(false)
+    },
+  )
   // ###
   it('should return true if message is valid', () => {
     const message = createMockMessage()

@@ -24,10 +24,9 @@ export class OrderFlow implements FlowHandler {
       3: () => this.handleDrinkSelection(phoneNumber, message),
       4: () => this.finalizeOrder(phoneNumber),
       0: () => this.exitFlow(phoneNumber),
-      default: () => this.handleDefault(),
     }
 
-    return actions[message] ? actions[message]() : actions.default()
+    return actions[message]?.() || this.handleDefault()
   }
 
   // ###

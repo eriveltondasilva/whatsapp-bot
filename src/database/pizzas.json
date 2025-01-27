@@ -115,14 +115,7 @@
   {
     "id": 14,
     "name": "Americana",
-    "ingredients": [
-      "Mussarela",
-      "bacon",
-      "ovos",
-      "presunto",
-      "cebola",
-      "orégano"
-    ],
+    "ingredients": ["Mussarela", "bacon", "ovos", "presunto", "cebola", "orégano"],
     "price": 42.0,
     "category": "salgada",
     "isAvailable": true
@@ -170,13 +163,7 @@
   {
     "id": 20,
     "name": "Nordestina",
-    "ingredients": [
-      "Mussarela",
-      "carne de sol",
-      "queijo coalho",
-      "cebola",
-      "orégano"
-    ],
+    "ingredients": ["Mussarela", "carne de sol", "queijo coalho", "cebola", "orégano"],
     "price": 50.0,
     "category": "salgada",
     "isAvailable": true

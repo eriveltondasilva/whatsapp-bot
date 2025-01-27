@@ -37,8 +37,7 @@ export function isValidMessage(message: Message): boolean {
   if (!message) return false
 
   // TODO: Add fromMe check
-  if (message.fromMe || message.isGroupMsg || message.type !== 'chat')
-    return false
+  if (message.fromMe || message.isGroupMsg || message.type !== 'chat') return false
 
   if (!message.body?.trim()) return false
 

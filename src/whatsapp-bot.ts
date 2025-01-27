@@ -38,10 +38,7 @@ export class WhatsappBot {
       return
     }
 
-    const response = await this.dialogManager.handleMessage(
-      message.from,
-      message.body,
-    )
+    const response = await this.dialogManager.handleMessage(message.from, message.body)
 
     if (!response) return
 

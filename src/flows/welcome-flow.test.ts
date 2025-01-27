@@ -61,10 +61,9 @@ describe('WelcomeFlow', () => {
 
     expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(customer.phone)
     expect(mockCustomerService.getCustomer).toHaveReturnedWith(null)
-    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
-      customer.phone,
-      { step: FlowStep.REGISTRATION },
-    )
+    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(customer.phone, {
+      step: FlowStep.REGISTRATION,
+    })
     expect(mockFlowStateManager.updateState).toReturnTimes(1)
     expect(mockRegistrationFlow.handle).toHaveBeenCalledWith(customer.phone, '')
     expect(result).toBeUndefined()
@@ -74,10 +73,9 @@ describe('WelcomeFlow', () => {
     const result = welcomeFlow.handle(customer.phone, message)
 
     expect(mockCustomerService.getCustomer).toHaveBeenCalledWith(customer.phone)
-    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(
-      customer.phone,
-      { step: FlowStep.MAIN_MENU },
-    )
+    expect(mockFlowStateManager.updateState).toHaveBeenCalledWith(customer.phone, {
+      step: FlowStep.MAIN_MENU,
+    })
     expect(mockFlowStateManager.updateState).toReturnTimes(1)
     expect(mockRegistrationFlow.handle).not.toHaveBeenCalled()
     expect(result).toEqual(WelcomeMessage(customer.name.split(' ')[0]))

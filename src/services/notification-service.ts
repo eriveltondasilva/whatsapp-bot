@@ -5,11 +5,7 @@ import type { OrderStatus } from '@/config/enums.js'
 export class NotificationService {
   constructor(private client: Whatsapp) {}
 
-  async sendOrderStatusUpdate(
-    phoneNumber: string,
-    status: OrderStatus,
-    orderId: number,
-  ) {
+  async sendOrderStatusUpdate(phoneNumber: string, status: OrderStatus, orderId: number) {
     const statusMessages: Record<OrderStatus, string> = {
       pending: `Seu pedido #${orderId} chegou ao restaurante! 🍴`,
       confirmed: `Pedido #${orderId} confirmado! Iniciando o preparo. 👨‍🍳`,
@@ -25,11 +21,7 @@ export class NotificationService {
     }
   }
 
-  async sendDeliveryTime(
-    phoneNumber: string,
-    orderId: number,
-    deliveryTime: number,
-  ) {
+  async sendDeliveryTime(phoneNumber: string, orderId: number, deliveryTime: number) {
     const message = `
      🕒 Tempo estimado de entrega para o pedido #${orderId}:
     ${Math.round(deliveryTime / 60)} minutos.

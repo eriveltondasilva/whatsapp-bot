@@ -1,9 +1,4 @@
-import {
-  type Logger as WinstonLogger,
-  createLogger,
-  format,
-  transports,
-} from 'winston'
+import { type Logger as WinstonLogger, createLogger, format, transports } from 'winston'
 
 import { SESSION_NAME } from '@/config/env.js'
 

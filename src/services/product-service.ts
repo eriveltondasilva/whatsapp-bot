@@ -9,15 +9,11 @@ export class ProductService {
       return this.products.filter((item) => item.isAvailable)
     }
 
-    return this.products.filter(
-      (item) => item.category === category && item.isAvailable,
-    )
+    return this.products.filter((item) => item.category === category && item.isAvailable)
   }
 
   getProduct(id: number) {
-    return (
-      this.products.find((item) => item.id === id && item.isAvailable) || null
-    )
+    return this.products.find((item) => item.id === id && item.isAvailable) || null
   }
 
   // TODO: implement the method: createProduct, updateProduct, and deleteProduct

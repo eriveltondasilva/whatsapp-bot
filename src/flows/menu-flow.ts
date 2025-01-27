@@ -22,10 +22,9 @@ export class MenuFlow implements FlowHandler {
     const actions: Record<string, () => string[]> = {
       1: () => this.showOrderMenu(phoneNumber),
       0: () => this.exitFlow(phoneNumber),
-      default: () => this.handleInvalidOption(),
     }
 
-    return actions[message] ? actions[message]() : actions.default()
+    return actions[message]?.() || this.handleInvalidOption()
   }
 
   // ###
@@ -46,31 +45,19 @@ export class MenuFlow implements FlowHandler {
   }
 
   private tackOrder(phoneNumber: string): string[] {
-    return [
-      '🚧 Esta funcionalidade está em desenvolvimento.',
-      'Por favor, aguarde novidades!',
-    ]
+    return ['🚧 Esta funcionalidade está em desenvolvimento.', 'Por favor, aguarde novidades!']
   }
 
   private showOrderHistory(phoneNumber: string): string[] {
-    return [
-      '🚧 Esta funcionalidade está em desenvolvimento.',
-      'Por favor, aguarde novidades!',
-    ]
+    return ['🚧 Esta funcionalidade está em desenvolvimento.', 'Por favor, aguarde novidades!']
   }
 
   private updateProfile(phoneNumber: string): string[] {
-    return [
-      '🚧 Esta funcionalidade está em desenvolvimento.',
-      'Por favor, aguarde novidades!',
-    ]
+    return ['🚧 Esta funcionalidade está em desenvolvimento.', 'Por favor, aguarde novidades!']
   }
 
   private contactSupport(phoneNumber: string): string[] {
-    return [
-      '🚧 Esta funcionalidade está em desenvolvimento.',
-      'Por favor, aguarde novidades!',
-    ]
+    return ['🚧 Esta funcionalidade está em desenvolvimento.', 'Por favor, aguarde novidades!']
   }
 
   private exitFlow(phoneNumber: string): string[] {
