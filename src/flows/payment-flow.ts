@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe'
 import { FlowStep, PaymentMethod } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { OrderService } from '@/services/order-service.js'
-import { formatCurrency } from '@/utils/message-formatter.js'
+import { formatCurrency } from '@/utils/format-currency.js'
 
 import type { FlowHandler } from '@/types.js'
 

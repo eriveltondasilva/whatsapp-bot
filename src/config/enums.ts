@@ -26,7 +26,6 @@ export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
 export const Delay = {
   PREPARATION: 2 * 60 * 1_000, // 2 minutes
   DELIVERY: 5 * 60 * 1_000, // 5 minutes
-  DEFAULT: 2 * 1_000, // 2 seconds
 } as const
 export type Delay = (typeof Delay)[keyof typeof Delay]
 
@@ -43,26 +42,22 @@ export const Validation = {
 export type Validation = (typeof Validation)[keyof typeof Validation]
 
 export const FlowStep = {
-  REGISTRATION: 'registration:index',
+  REGISTRATION: 'registration',
   COLLECT_NAME: 'registration:collect-name',
   COLLECT_ADDRESS: 'registration:collect-address',
   //
-  WELCOME: 'welcome:index',
-  MAIN_MENU: 'main-menu:index',
+  WELCOME: 'welcome',
+  MAIN_MENU: 'main-menu',
   //
-  ORDER: 'order:index',
+  ORDER: 'order',
   //
-  PIZZA: 'pizza:index',
-  PIZZA_TYPE: 'pizza:pizza-type',
-  FIRST_HALF: 'pizza:first-half',
-  SECOND_HALF: 'pizza:second-half',
-  PIZZA_FLAVOR: 'pizza:pizza-flavor',
-  PIZZA_SIZE: 'pizza:pizza-size',
-  PIZZA_QUANTITY: 'pizza:pizza-quantity',
+  PIZZA_TYPE: 'pizza:type',
+  PIZZA_FLAVOR: 'pizza:flavor',
+  PIZZA_QUANTITY: 'pizza:quantity',
   //
-  DRINK: 'drink:index',
-  DRINK_TYPE: 'drink:drink-type',
-  DRINK_QUANTITY: 'drink:drink-quantity',
+  DRINK: 'drink',
+  DRINK_TYPE: 'drink:type',
+  DRINK_QUANTITY: 'drink:quantity',
   //
   CONFIRM_ORDER: 'order:confirm-order',
   //

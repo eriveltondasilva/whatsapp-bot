@@ -1,10 +1,10 @@
 import type { Message, Whatsapp } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
-import { Delay } from '@/config/enums.js'
 import { ClientManager, DialogManager } from '@/managers/index.js'
 import { LoggerService } from '@/services/logger-service.js'
 import { isValidMessage } from '@/utils/validations.js'
+import { getDelay } from './utils/get-delay.js'
 
 @injectable()
 export class WhatsappBot {
@@ -51,7 +51,7 @@ export class WhatsappBot {
   private async sendMessage(to: string, message: string[]): Promise<void> {
     try {
       await this.client?.sendText(to, message.join('\n'), {
-        delay: Delay.DEFAULT,
+        delay: getDelay(),
       })
       this.logger.debug('📬 Message sent to: %s', to)
     } catch (error) {

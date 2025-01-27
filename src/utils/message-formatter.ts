@@ -1,10 +1,6 @@
 import { OrderStatus, PaymentMethod } from '@/config/enums.js'
 import type { Customer, Order, OrderItem, Product } from '@/types.js'
 
-export function formatCurrency(value: number): string {
-  return `R$ ${value.toFixed(2).replace('.', ',')}`
-}
-
 function formatPaymentMethod(method?: PaymentMethod) {
   if (method === undefined) return 'Não definido'
 
@@ -51,27 +47,4 @@ export function formatOrderSummary(order: Order, customer: Customer) {
 
   Status: ${formatOrderStatus(order.status)}
   `
-}
-
-export function formatProductList(items: Product[]) {
-  const formattedItems = items
-    .map((item) => {
-      const description = item.description || 'Sem descrição'
-      const unavailable = !item.isAvailable ? '❌ Indisponível no momento' : ''
-
-      return `
-        ${item.id}. *${item.name}* - ${formatCurrency(item.price)}
-        ${description}
-        ${unavailable}
-      `
-    })
-    .join('\n')
-
-  return `
-  🍕 *Cardápio*:
-
-  ${formattedItems}
-
-  Digite o número da item desejada para adicionar ao seu pedido.
-`
 }

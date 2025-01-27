@@ -1,11 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
-import {
-  LoggerService,
-  OrderService,
-  ProductService,
-} from '@/services/index.js'
+import { LoggerService } from '@/services/index.js'
 
 import { FlowStep } from '@/config/enums.js'
 import type { FlowHandler } from '@/types.js'
@@ -15,8 +11,6 @@ import { PizzaFlow } from './pizza-flow.js'
 export class OrderFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
-    @inject(ProductService) private productService: ProductService,
-    @inject(OrderService) private orderService: OrderService,
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
     @inject(LoggerService) private logger: LoggerService,
   ) {}
@@ -39,7 +33,7 @@ export class OrderFlow implements FlowHandler {
   // ###
   private handlePizzaSelection(phoneNumber: string, message: string) {
     this.flowStateManager.updateState(phoneNumber, {
-      step: FlowStep.PIZZA,
+      step: FlowStep.PIZZA_TYPE,
     })
 
     return this.pizzaFlow.handle(phoneNumber, message)

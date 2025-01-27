@@ -13,6 +13,15 @@ export type Customer = {
   createdAt: string
 }
 
+export type Pizza = {
+  id: number
+  name: string
+  ingredients: string[]
+  price: number
+  category: string
+  isAvailable: boolean
+}
+
 export type Product = {
   id: number
   name: string
@@ -46,7 +55,13 @@ export type Order = {
 
 export type FlowState = {
   step: FlowStep
-  data?: any
+  data?: {
+    name?: string
+    address?: string
+    pizzaType?: 'full' | 'half'
+    selectedFlavors?: Pizza[]
+    quantity?: number
+  }
 }
 
 export interface FlowHandler {
