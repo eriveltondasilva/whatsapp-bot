@@ -1,6 +1,7 @@
 import { type Message, MessageType } from '@wppconnect-team/wppconnect'
+import { describe, it, expect } from 'vitest'
 
-import { PaymentMethod, Validation } from '@/config/enums.js'
+import { PaymentMethod, Validation } from '../../../src/config/enums.js'
 import {
   isValidAddress,
   isValidBirthday,
@@ -9,7 +10,7 @@ import {
   isValidPaymentMethod,
   isValidPhoneNumber,
   isValidQuantity,
-} from './validations.js'
+} from '../../../src/utils/index.js'
 
 describe('isValidPhoneNumber:', () => {
   // !!!

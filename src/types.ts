@@ -1,4 +1,4 @@
-import type { Category, FlowStep, OrderStatus, PaymentMethod } from '@/config/enums.js'
+import type { FlowStep, OrderStatus, PaymentMethod } from '@/config/enums.js'
 
 export type Customer = {
   id: number
@@ -14,16 +14,6 @@ export type Pizza = {
   ingredients: string[]
   price: number
   category: string
-  isAvailable: boolean
-}
-
-export type Product = {
-  id: number
-  name: string
-  description: string
-  price: number
-  category: Category
-  createdAt: string
   isAvailable: boolean
 }
 

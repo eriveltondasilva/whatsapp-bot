@@ -1,4 +1,6 @@
-import { getGreeting } from './get-greeting.js'
+import { describe, beforeEach, afterEach, vi, it, expect } from 'vitest'
+
+import { getGreeting } from '../../../src/utils/index.js'
 
 describe('getGreeting:', () => {
   beforeEach(() => {

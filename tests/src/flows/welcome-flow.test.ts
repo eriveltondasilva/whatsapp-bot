@@ -1,10 +1,12 @@
-import { FlowStep } from '@/config/enums.js'
-import { WelcomeMessage } from '@/messages/welcome.js'
-import { WelcomeFlow } from './welcome-flow.js'
+import { describe, vi, beforeEach, afterEach, it, expect } from 'vitest'
 
-import type { FlowStateManager } from '@/managers/index.js'
-import type { CustomerService, LoggerService } from '@/services/index.js'
-import type { RegistrationFlow } from './registration-flow.js'
+import { FlowStep } from '../../../src/config/enums.js'
+import { WelcomeMessage } from '../../../src/messages/welcome.js'
+import { WelcomeFlow } from '../../../src/flows/welcome-flow.js'
+
+import type { FlowStateManager } from '../../../src/managers/index.js'
+import type { CustomerService, LoggerService } from '../../../src/services/index.js'
+import type { RegistrationFlow } from '../../../src/flows/index.js'
 
 describe('WelcomeFlow', () => {
   const customer = {

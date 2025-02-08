@@ -1,5 +1,6 @@
 import { OrderStatus, PaymentMethod } from '@/config/enums.js'
-import type { Customer, Order, OrderItem, Product } from '@/types.js'
+import type { Customer, Order, OrderItem } from '@/types.js'
+import { formatCurrency } from './format-currency.js'
 
 function formatPaymentMethod(method?: PaymentMethod) {
   if (method === undefined) return 'Não definido'
