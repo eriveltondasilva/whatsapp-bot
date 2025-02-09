@@ -52,5 +52,7 @@ export type FlowState = {
 }
 
 export type FlowHandler = {
-  handle(phoneNumber: string, message: string): string[]
+  handle(phone: string, msg: string): string[]
 }
+
+export type FlowActions = Record<string, () => string[]>

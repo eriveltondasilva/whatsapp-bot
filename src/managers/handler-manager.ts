@@ -2,36 +2,38 @@ import { inject, injectable, singleton } from 'tsyringe'
 
 import { FlowKeys, FlowStep } from '@/config/enums.js'
 import {
-  MenuFlow,
+  DrinkFlow,
+  MainMenuFlow,
   OrderFlow,
   PaymentFlow,
+  PizzaFlow,
   RegistrationFlow,
   WelcomeFlow,
-  PizzaFlow,
 } from '@/flows/index.js'
 
 import type { FlowHandler } from '@/types.js'
 
-@injectable()
 @singleton()
 export class HandlerManager {
   private handlers: Map<string, FlowHandler>
 
   constructor(
-    @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
-    @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
-    @inject(MenuFlow) menuFlow: MenuFlow,
+    @inject(DrinkFlow) drinkFlow: DrinkFlow,
+    @inject(MainMenuFlow) menuFlow: MainMenuFlow,
     @inject(OrderFlow) orderFlow: OrderFlow,
     @inject(PaymentFlow) paymentFlow: PaymentFlow,
     @inject(PizzaFlow) pizzaFlow: PizzaFlow,
+    @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
+    @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
   ) {
     this.handlers = new Map<string, FlowHandler>([
-      [FlowKeys.REGISTRATION, registrationFlow],
-      [FlowKeys.WELCOME, welcomeFlow],
+      [FlowKeys.DRINK, drinkFlow],
       [FlowKeys.MAIN_MENU, menuFlow],
       [FlowKeys.ORDER, orderFlow],
-      [FlowKeys.PIZZA, pizzaFlow],
       [FlowKeys.PAYMENT, paymentFlow],
+      [FlowKeys.PIZZA, pizzaFlow],
+      [FlowKeys.REGISTRATION, registrationFlow],
+      [FlowKeys.WELCOME, welcomeFlow],
     ])
   }
 

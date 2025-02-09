@@ -17,20 +17,20 @@ export class WelcomeFlow implements FlowHandler {
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
-  public handle(phoneNumber: string, message: string): string[] {
-    this.logger.debug('👋 Welcome Flow: %o', { phoneNumber, message })
-    const customer = this.customerService.getCustomer(phoneNumber)
+  public handle(phone: string, message: string): string[] {
+    this.logger.debug('👋 Welcome Flow: %o', { phone, message })
+    const customer = this.customerService.getCustomer(phone)
 
     if (!customer) {
-      this.flowStateManager.updateState(phoneNumber, {
+      this.flowStateManager.updateState(phone, {
         step: FlowStep.REGISTRATION,
       })
-      return this.registrationFlow.handle(phoneNumber, message)
+      return this.registrationFlow.handle(phone, message)
     }
 
-    this.flowStateManager.updateState(phoneNumber, { step: FlowStep.MAIN_MENU })
-
+    this.flowStateManager.updateState(phone, { step: FlowStep.MAIN_MENU })
     const customerName = customer.name.split(' ')[0]
+
     return WelcomeMessage(customerName)
   }
 }

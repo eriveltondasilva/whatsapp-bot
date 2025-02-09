@@ -1,4 +1,4 @@
-import { inject, injectable, singleton } from 'tsyringe'
+import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
@@ -6,10 +6,9 @@ import { RegistrationMessages } from '@/messages/registration.js'
 import { CustomerService, LoggerService } from '@/services/index.js'
 import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
 
-import type { FlowHandler } from '@/types.js'
+import type { FlowActions, FlowHandler } from '@/types.js'
 
 @injectable()
-@singleton()
 export class RegistrationFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
@@ -18,34 +17,34 @@ export class RegistrationFlow implements FlowHandler {
   ) {}
 
   // ###
-  public handle(phoneNumber: string, message: string): string[] {
-    this.logger.debug('👋 Registration Flow: %o', { phoneNumber, message })
-    const { step } = this.flowStateManager.getState(phoneNumber)
+  public handle(phone: string, message: string): string[] {
+    this.logger.debug('👋 Registration Flow: %o', { phone, message })
+    const { step } = this.flowStateManager.getState(phone)
 
-    const actions: Record<string, () => string[]> = {
-      [FlowStep.REGISTRATION]: () => this.initializeFlow(phoneNumber),
-      [FlowStep.COLLECT_NAME]: () => this.handleNameInput(phoneNumber, message),
-      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(phoneNumber, message),
+    const actions: FlowActions = {
+      [FlowStep.REGISTRATION]: () => this.initializeFlow(phone),
+      [FlowStep.COLLECT_NAME]: () => this.handleNameInput(phone, message),
+      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(phone, message),
     }
 
-    return actions[step]?.() || this.resetFlow(phoneNumber)
+    return actions[step]?.() || this.resetFlow(phone)
   }
 
   // ###
-  private initializeFlow(phoneNumber: string): string[] {
-    this.flowStateManager.updateState(phoneNumber, {
+  private initializeFlow(phone: string): string[] {
+    this.flowStateManager.updateState(phone, {
       step: FlowStep.COLLECT_NAME,
     })
 
     return RegistrationMessages.INITIAL
   }
 
-  private handleNameInput(phoneNumber: string, name: string): string[] {
+  private handleNameInput(phone: string, name: string): string[] {
     if (!isValidName(name)) {
       return RegistrationMessages.INVALID_NAME
     }
 
-    this.flowStateManager.updateState(phoneNumber, {
+    this.flowStateManager.updateState(phone, {
       step: FlowStep.COLLECT_ADDRESS,
       data: { name },
     })
@@ -53,29 +52,31 @@ export class RegistrationFlow implements FlowHandler {
     return [this.getGreeting(name), ...RegistrationMessages.COLLECT_ADDRESS]
   }
 
-  private handleAddressInput(phoneNumber: string, address: string): string[] {
+  private handleAddressInput(phone: string, address: string): string[] {
     if (!isValidAddress(address)) {
       return RegistrationMessages.INVALID_ADDRESS
     }
 
-    const { data } = this.flowStateManager.getState(phoneNumber)
+    const { data } = this.flowStateManager.getState(phone)
 
     const newCustomer = this.customerService.createCustomer({
-      phone: phoneNumber,
+      phone: phone,
       name: data?.name || '',
       address,
     })
     this.logger.debug('📝 New customer registered: %o', newCustomer)
 
-    this.flowStateManager.clearState(phoneNumber)
-    this.flowStateManager.updateState(phoneNumber, { step: FlowStep.MAIN_MENU })
+    this.flowStateManager.clearState(phone)
+    this.flowStateManager.updateState(phone, { step: FlowStep.MAIN_MENU })
 
     return RegistrationMessages.FINALIZE(this.getFirstName(data?.name || ''))
   }
 
-  private resetFlow(phoneNumber: string): string[] {
-    this.flowStateManager.clearState(phoneNumber)
-    this.customerService.deleteCustomer(phoneNumber)
+  // ###
+  private resetFlow(phone: string): string[] {
+    this.flowStateManager.clearState(phone)
+    this.customerService.deleteCustomer(phone)
+
     return RegistrationMessages.GENERIC_ERROR
   }
 

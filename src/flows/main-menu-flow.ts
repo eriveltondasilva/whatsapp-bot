@@ -4,32 +4,30 @@ import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { LoggerService } from '@/services/logger-service.js'
 
-import type { FlowHandler } from '@/types.js'
-import { OrderFlow } from './order-flow.js'
+import type { FlowActions, FlowHandler } from '@/types.js'
 
 @injectable()
-export class MenuFlow implements FlowHandler {
+export class MainMenuFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
-    @inject(OrderFlow) private orderFlow: OrderFlow,
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
   // ###
-  public handle(phoneNumber: string, message: string): string[] {
-    this.logger.debug('👋 Menu Flow: %o', { phoneNumber, message })
+  public handle(phone: string, message: string): string[] {
+    this.logger.debug('👋 Menu Flow: %o', { phone, message })
 
-    const actions: Record<string, () => string[]> = {
-      1: () => this.showOrderMenu(phoneNumber),
-      0: () => this.exitFlow(phoneNumber),
+    const actions: FlowActions = {
+      1: () => this.showOrderMenu(phone),
+      0: () => this.exitFlow(phone),
     }
 
     return actions[message]?.() || this.handleInvalidOption()
   }
 
   // ###
-  private showOrderMenu(phoneNumber: string): string[] {
-    this.flowStateManager.updateState(phoneNumber, { step: FlowStep.ORDER })
+  private showOrderMenu(phone: string): string[] {
+    this.flowStateManager.updateState(phone, { step: FlowStep.ORDER })
 
     return [
       'Está com vontade de comer uma pizza?\n',
@@ -44,24 +42,24 @@ export class MenuFlow implements FlowHandler {
     ]
   }
 
-  private tackOrder(phoneNumber: string): string[] {
+  private tackOrder(phone: string): string[] {
     return ['🚧 Esta funcionalidade está em desenvolvimento.', 'Por favor, aguarde novidades!']
   }
 
-  private showOrderHistory(phoneNumber: string): string[] {
+  private showOrderHistory(phone: string): string[] {
     return ['🚧 Esta funcionalidade está em desenvolvimento.', 'Por favor, aguarde novidades!']
   }
 
-  private updateProfile(phoneNumber: string): string[] {
+  private updateProfile(phone: string): string[] {
     return ['🚧 Esta funcionalidade está em desenvolvimento.', 'Por favor, aguarde novidades!']
   }
 
-  private contactSupport(phoneNumber: string): string[] {
+  private contactSupport(phone: string): string[] {
     return ['🚧 Esta funcionalidade está em desenvolvimento.', 'Por favor, aguarde novidades!']
   }
 
-  private exitFlow(phoneNumber: string): string[] {
-    this.flowStateManager.clearState(phoneNumber)
+  private exitFlow(phone: string): string[] {
+    this.flowStateManager.clearState(phone)
     return [
       '✨ Obrigado por utilizar nossos serviços!',
       'Se precisar de algo, estamos aqui para ajudar.',

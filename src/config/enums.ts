@@ -43,7 +43,7 @@ export type Validation = (typeof Validation)[keyof typeof Validation]
 
 export const FlowStep = {
   REGISTRATION: 'registration',
-  COLLECT_NAME: 'registration:collect-name',
+  COLLECT_NAME: 'regiistration:collect-name',
   COLLECT_ADDRESS: 'registration:collect-address',
   //
   WELCOME: 'welcome',
@@ -54,8 +54,8 @@ export const FlowStep = {
   PIZZA_TYPE: 'pizza:type',
   PIZZA_FLAVOR: 'pizza:flavor',
   PIZZA_QUANTITY: 'pizza:quantity',
+  PIZZA_OBSERVATIONS: 'pizza:observations',
   //
-  DRINK: 'drink',
   DRINK_TYPE: 'drink:type',
   DRINK_QUANTITY: 'drink:quantity',
   //

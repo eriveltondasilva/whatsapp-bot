@@ -18,11 +18,10 @@
   "scripts": {
     "build": "tsup",
     "start": "node --env-file=.env dist/index.js",
-    "dev": "tsx --env-file=.env src/index.ts",
+    "dev": "tsx --env-file=.env -r tsconfig-paths/register src/index.ts",
+    "fix": "npm run fmt && npm run lint",
     "fmt": "biome format --write src tests",
-    "fmt:check": "biome format src tests",
     "lint": "biome lint --write src tests",
-    "lint:check": "biome lint src tests",
     "type:check": "tsc --noEmit",
     "clean": "rm -rf dist",
     "test": "vitest run tests"

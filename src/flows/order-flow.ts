@@ -1,53 +1,55 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStateManager } from '@/managers/flow-state-manager.js'
-import { LoggerService } from '@/services/index.js'
-
+import { FlowStateManager } from '@/managers/index.js'
 import { FlowStep } from '@/config/enums.js'
-import type { FlowHandler } from '@/types.js'
+import { LoggerService } from '@/services/index.js'
+import { DrinkFlow } from './drink-flow.js'
 import { PizzaFlow } from './pizza-flow.js'
+
+import type { FlowActions, FlowHandler } from '@/types.js'
 
 @injectable()
 export class OrderFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
+    @inject(DrinkFlow) private drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
-  handle(phoneNumber: string, message: string): string[] {
-    this.logger.info('👋 Order Flow: %o', { phoneNumber, message })
+  handle(phone: string, message: string): string[] {
+    this.logger.info('👋 Order Flow: %o', { phone, message })
 
-    const actions: Record<string, () => string[]> = {
-      1: () => this.handlePizzaSelection(phoneNumber, message),
-      2: () => this.handlePizzaSelection(phoneNumber, message),
-      3: () => this.handleDrinkSelection(phoneNumber, message),
-      4: () => this.finalizeOrder(phoneNumber),
-      0: () => this.exitFlow(phoneNumber),
+    const actions: FlowActions = {
+      1: () => this.handlePizzaSelection(phone, message),
+      2: () => this.handlePizzaSelection(phone, message),
+      3: () => this.handleDrinkSelection(phone, message),
+      4: () => this.finalizeOrder(phone),
+      0: () => this.cancelOrder(phone),
     }
 
-    return actions[message]?.() || this.handleDefault()
+    return actions[message]?.() || this.handleDefaultAction()
   }
 
   // ###
-  private handlePizzaSelection(phoneNumber: string, message: string) {
-    this.flowStateManager.updateState(phoneNumber, {
-      step: FlowStep.PIZZA_TYPE,
-    })
+  private handlePizzaSelection(phone: string, message: string) {
+    this.flowStateManager.updateState(phone, { step: FlowStep.PIZZA_TYPE })
 
-    return this.pizzaFlow.handle(phoneNumber, message)
+    return this.pizzaFlow.handle(phone, message)
   }
 
-  private handleDrinkSelection(phoneNumber: string, message: string) {
-    return ['🍕 Order Flow: select drink']
+  private handleDrinkSelection(phone: string, message: string) {
+    this.flowStateManager.updateState(phone, { step: FlowStep.DRINK_TYPE })
+
+    return this.drinkFlow.handle(phone, message)
   }
 
-  private finalizeOrder(phoneNumber: string) {
+  private finalizeOrder(phone: string) {
     return ['🍕 Order Flow: finalize order']
   }
 
-  private exitFlow(phoneNumber: string) {
-    this.flowStateManager.clearState(phoneNumber)
+  private cancelOrder(phone: string) {
+    this.flowStateManager.clearState(phone)
     return [
       '✨ Obrigado por utilizar nossos serviços!',
       'Se precisar de algo, estamos aqui para ajudar.',
@@ -55,7 +57,8 @@ export class OrderFlow implements FlowHandler {
     ]
   }
 
-  private handleDefault() {
+  // ###
+  private handleDefaultAction() {
     return [
       '❌ OPÇÃO INVÁLIDA:\n',
       //

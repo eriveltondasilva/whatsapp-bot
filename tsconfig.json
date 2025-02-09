@@ -24,5 +24,12 @@
     "rootDir": "src",
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist", "tests", "tokens"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "tests",
+    "tokens",
+    "logs",
+    "doc"
+  ]
 }
