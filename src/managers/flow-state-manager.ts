@@ -1,47 +1,46 @@
-import { inject, injectable, singleton } from 'tsyringe'
+import { inject, singleton } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { LoggerService } from '@/services/logger-service.js'
 
 import type { FlowState } from '@/types.js'
 
-@injectable()
 @singleton()
 export class FlowStateManager {
   private states: Map<string, FlowState> = new Map()
 
   constructor(@inject(LoggerService) private logger: LoggerService) {}
 
-  public getState(phoneNumber: string): FlowState {
-    let state = this.states.get(phoneNumber)
+  public getState(phone: string): FlowState {
+    let state = this.states.get(phone)
 
     if (!state) {
       state = {
         step: FlowStep.WELCOME,
         data: {},
       }
-      this.states.set(phoneNumber, state)
+      this.states.set(phone, state)
     }
 
     this.logger.debug('📝 Flow state requested: %o', state)
     return state
   }
 
-  public updateState(phoneNumber: string, newState: FlowState): void {
-    const currentState = this.getState(phoneNumber)
+  public updateState(phone: string, newState: FlowState): void {
+    const currentState = this.getState(phone)
     const updatedState: FlowState = {
       ...newState,
       data: { ...currentState.data, ...newState.data },
     }
-    this.states.set(phoneNumber, updatedState)
+    this.states.set(phone, updatedState)
     this.logger.debug('🔄 Flow state updated: %o', {
-      phoneNumber,
+      phone,
       updatedState,
     })
   }
 
-  public clearState(phoneNumber: string): void {
-    this.states.delete(phoneNumber)
-    this.logger.debug('🧹 Flow state cleared: %s', phoneNumber)
+  public clearState(phone: string): void {
+    this.states.delete(phone)
+    this.logger.debug('🧹 Flow state cleared: %s', phone)
   }
 }

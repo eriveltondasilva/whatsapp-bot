@@ -14,16 +14,16 @@ export class PaymentFlow implements FlowHandler {
     @inject(OrderService) private order: OrderService,
   ) {}
 
-  public handle(phoneNumber: string, message: string): string[] {
-    const state = this.flowState.getState(phoneNumber)
+  public handle(phone: string, message: string): string[] {
+    const state = this.flowState.getState(phone)
     switch (state.step) {
       case FlowStep.SELECT_PAYMENT:
         return ['']
       // case FlowStep.AWAITING_PAYMENT:
-      // return this.handlePaymentInput(phoneNumber, message, state.data)
+      // return this.handlePaymentInput(phone, message, state.data)
 
       // case FlowStep.CONFIRMING_PAYMENT:
-      // return this.handlePaymentConfirmation(phoneNumber, message, state.data)
+      // return this.handlePaymentConfirmation(phone, message, state.data)
       // default:
       // throw new Error('Estado inválido para pagamento')
       default:
@@ -31,7 +31,7 @@ export class PaymentFlow implements FlowHandler {
     }
   }
 
-  handlePaymentSelection(phoneNumber: string, message: string, data: any) {
+  handlePaymentSelection(phone: string, message: string, data: any) {
     const order = this.order.getOrder(data.orderId)
 
     return `
@@ -44,7 +44,7 @@ export class PaymentFlow implements FlowHandler {
   `
   }
 
-  handlePaymentInput(phoneNumber: string, message: string, data: any) {
+  handlePaymentInput(phone: string, message: string, data: any) {
     const paymentMethod: Record<number, PaymentMethod> = {
       1: PaymentMethod.CREDIT,
       2: PaymentMethod.DEBIT,
@@ -58,7 +58,7 @@ export class PaymentFlow implements FlowHandler {
     }
 
     this.order.setPaymentMethod(data.orderId, method)
-    // this.flowState.updateState(phoneNumber, FlowStep.CONFIRMING_ORDER, {
+    // this.flowState.updateState(phone, FlowStep.CONFIRMING_ORDER, {
     //   orderId: data.orderId,
     // })
 

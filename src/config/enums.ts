@@ -53,6 +53,7 @@ export const FlowStep = {
   //
   PIZZA_TYPE: 'pizza:type',
   PIZZA_FLAVOR: 'pizza:flavor',
+  PIZZA_EDGE: 'pizza:edge',
   PIZZA_QUANTITY: 'pizza:quantity',
   PIZZA_OBSERVATIONS: 'pizza:observations',
   //

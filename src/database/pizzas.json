@@ -2,186 +2,199 @@
   {
     "id": 1,
     "name": "Milho Verde",
-    "ingredients": ["Mussarela", "milho verde", "orégano"],
+    "ingredients": "Mussarela, milho verde, orégano",
     "price": 34.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 2,
     "name": "Calabresa",
-    "ingredients": ["Mussarela", "calabresa", "cebola", "orégano"],
+    "ingredients": "Mussarela, calabresa, cebola, orégano",
     "price": 34.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 3,
     "name": "Presunto",
-    "ingredients": ["Mussarela", "presunto", "orégano"],
+    "ingredients": "Mussarela, presunto, orégano",
     "price": 34.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 4,
     "name": "Frango Caipira",
-    "ingredients": ["Mussarela", "frango", "milho verde", "orégano"],
+    "ingredients": "Mussarela, frango, milho verde, orégano",
     "price": 36.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 5,
     "name": "Dois Queijos",
-    "ingredients": ["Mussarela", "catupiry", "orégano"],
+    "ingredients": "Mussarela, catupiry, orégano",
     "price": 34.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 6,
     "name": "Lombo",
-    "ingredients": ["Mussarela", "lombo", "cebola", "orégano"],
+    "ingredients": "Mussarela, lombo, cebola, orégano",
     "price": 36.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 7,
     "name": "Catupirela",
-    "ingredients": ["Mussarela", "calabresa", "catupiry", "orégano"],
+    "ingredients": "Mussarela, calabresa, catupiry, orégano",
     "price": 38.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 8,
     "name": "Portuguesa",
-    "ingredients": [
-      "Mussarela",
-      "presunto",
-      "tomate",
-      "cebola",
-      "pimentão",
-      "milho verde",
-      "ovos",
-      "orégano"
-    ],
+    "ingredients": "Mussarela, presunto, tomate, cebola, pimentão, milho verde, ovos, orégano",
     "price": 40.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 9,
     "name": "À Moda",
-    "ingredients": ["Mussarela", "calabresa", "presunto", "cebola"],
+    "ingredients": "Mussarela, calabresa, presunto, cebola",
     "price": 40.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 10,
     "name": "Frango Catupiry",
-    "ingredients": ["Mussarela", "frango", "catupiry", "orégano"],
+    "ingredients": "Mussarela, frango, catupiry, orégano",
     "price": 40.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 11,
     "name": "Quatro Queijos",
-    "ingredients": ["Mussarela", "prato", "provolone", "catupiry", "orégano"],
+    "ingredients": "Mussarela, prato, provolone, catupiry, orégano",
     "price": 40.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 12,
     "name": "Palharina",
-    "ingredients": ["Mussarela", "frango", "batata desfiada", "orégano"],
+    "ingredients": "Mussarela, frango, batata desfiada, orégano",
     "price": 40.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 13,
     "name": "Peperone",
-    "ingredients": ["Mussarela", "peperone", "cebola", "orégano"],
+    "ingredients": "Mussarela, peperone, cebola, orégano",
     "price": 42.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 14,
     "name": "Americana",
-    "ingredients": ["Mussarela", "bacon", "ovos", "presunto", "cebola", "orégano"],
+    "ingredients": "Mussarela, bacon, ovos, presunto, cebola, orégano",
     "price": 42.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 15,
     "name": "Mussarela",
-    "ingredients": ["Mussarela", "tomate", "orégano"],
+    "ingredients": "Mussarela, tomate, orégano",
     "price": 40.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 16,
     "name": "Atum",
-    "ingredients": ["Mussarela", "atum", "cebola", "orégano"],
+    "ingredients": "Mussarela, atum, cebola, orégano",
     "price": 42.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 17,
     "name": "Marguerita",
-    "ingredients": ["Mussarela", "manjericão", "tomate", "orégano"],
+    "ingredients": "Mussarela, manjericão, tomate, orégano",
     "price": 42.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 18,
     "name": "Carne de Sol",
-    "ingredients": ["Mussarela", "carne de sol", "cebola", "orégano"],
+    "ingredients": "Mussarela, carne de sol, cebola, orégano",
     "price": 44.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 19,
     "name": "Queijo do Reino",
-    "ingredients": ["Mussarela", "queijo do reino", "orégano"],
+    "ingredients": "Mussarela, queijo do reino, orégano",
     "price": 46.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 20,
     "name": "Nordestina",
-    "ingredients": ["Mussarela", "carne de sol", "queijo coalho", "cebola", "orégano"],
+    "ingredients": "Mussarela, carne de sol, queijo coalho, cebola, orégano",
     "price": 50.0,
-    "category": "salgada",
-    "isAvailable": true
+    "category": "savory",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 21,
     "name": "Brigadeiro",
-    "ingredients": ["Chocolate", "chocolate granulado"],
+    "ingredients": "Chocolate, chocolate granulado",
     "price": 38.0,
-    "category": "doce",
-    "isAvailable": true
+    "category": "sweet",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   },
   {
     "id": 22,
     "name": "Cartola",
-    "ingredients": ["Mussarela", "banana", "açúcar", "canela em pó"],
+    "ingredients": "Mussarela, banana, açúcar, canela em pó",
     "price": 38.0,
-    "category": "doce",
-    "isAvailable": true
+    "category": "sweet",
+    "isAvailable": true,
+    "createdAt": "2025-02-09T20:46:01.021492"
   }
 ]

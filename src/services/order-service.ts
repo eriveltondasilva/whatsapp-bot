@@ -6,16 +6,15 @@ import type { Order, OrderItem } from '@/types.js'
 @singleton()
 export class OrderService {
   private orders: Map<number, Order> = new Map()
-  private currentOrderId = 1
 
-  public createOrder(customerId: number) {
+  public createOrder(customerId: number): Order {
     const order: Order = {
-      id: this.currentOrderId++,
+      id: this.orders.size + 1,
       customerId,
       items: [],
       status: OrderStatus.PENDING,
       totalPrice: 0,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     }
 
     this.orders.set(order.id, order)

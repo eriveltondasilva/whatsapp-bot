@@ -14,8 +14,8 @@ export class CustomerService {
     })
   }
 
-  public getCustomer(phoneNumber: string): Customer | null {
-    return this.customers.get(phoneNumber) || null
+  public getCustomer(phone: string): Customer | null {
+    return this.customers.get(phone) || null
   }
 
   public createCustomer(data: Omit<Customer, 'id' | 'createdAt'>): Customer {
@@ -31,19 +31,19 @@ export class CustomerService {
   }
 
   public updateCustomer(
-    phoneNumber: string,
+    phone: string,
     data: Partial<Omit<Customer, 'id' | 'createdAt'>>,
   ): Customer | null {
-    const customer = this.getCustomer(phoneNumber)
+    const customer = this.getCustomer(phone)
     if (!customer) return null
 
     const updatedCustomer = { ...customer, ...data }
-    this.customers.set(phoneNumber, updatedCustomer)
+    this.customers.set(phone, updatedCustomer)
 
     return updatedCustomer
   }
 
-  public deleteCustomer(phoneNumber: string): boolean {
-    return this.customers.delete(phoneNumber)
+  public deleteCustomer(phone: string): boolean {
+    return this.customers.delete(phone)
   }
 }

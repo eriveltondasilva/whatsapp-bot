@@ -11,18 +11,18 @@ export type Customer = {
 export type Pizza = {
   id: number
   name: string
-  ingredients: string[]
+  ingredients: string
   price: number
   category: string
   isAvailable: boolean
 }
 
 export type OrderItem = {
-  id: number
+  id: string
   productId: number
   name: string
-  quantity: number
   price: number
+  quantity: number
   observation?: string
 }
 
@@ -38,12 +38,19 @@ export type Order = {
   change?: number
 }
 
+type PizzaEdge = {
+  id: number
+  name: string
+  price: number
+}
+
 type FlowData = {
   name: string
   address: string
   pizzaType: 'full' | 'half'
   selectedFlavors: Pizza[]
   quantity: number
+  edge: PizzaEdge
 }
 
 export type FlowState = {

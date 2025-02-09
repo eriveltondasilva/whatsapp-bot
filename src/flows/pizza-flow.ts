@@ -1,11 +1,11 @@
 import { inject, injectable } from 'tsyringe'
 
+import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/index.js'
 import { LoggerService, ProductService } from '@/services/index.js'
-import { FlowStep } from '@/config/enums.js'
-import { PizzaMessages } from '@/messages/pizza.js'
+import { formatCurrency } from '@/utils/format-currency.js'
 
-import type { FlowActions, FlowHandler } from '@/types.js'
+import type { FlowActions, FlowHandler, Pizza } from '@/types.js'
 
 @injectable()
 export class PizzaFlow implements FlowHandler {
@@ -30,13 +30,13 @@ export class PizzaFlow implements FlowHandler {
   }
 
   // ###
-  private handlePizzaType(phone: string, message: string) {
+  private handlePizzaType(phone: string, message: string): string[] {
     const pizzaType = message === '1' ? 'full' : 'half'
     const pizzas = this.productService.getProducts()
 
     if (!pizzas?.length) {
       this.flowStateManager.clearState(phone)
-      return PizzaMessages.NO_FLAVORS_AVAILABLE
+      return ['❌ Desculpe, não encontramos sabores disponíveis no momento.']
     }
 
     this.flowStateManager.updateState(phone, {
@@ -47,20 +47,30 @@ export class PizzaFlow implements FlowHandler {
     })
 
     return [
-      pizzaType === 'full' ? PizzaMessages.SELECT_FLAVOR_FULL : PizzaMessages.SELECT_FIRST_FLAVOR,
-      ...PizzaMessages.buildProductList(pizzas),
-      PizzaMessages.TYPE_NUMBER,
+      pizzaType === 'full'
+        ? '🍕 *ESCOLHA O SABOR DA PIZZA:*\n'
+        : '🍕 *ESCOLHA O PRIMEIRO SABOR DA PIZZA:*\n',
+      //
+      ...this.buildPizzaList(pizzas),
+      //
+      '\n> ✍️ Digite o número da opção desejada:',
     ]
   }
 
-  private handlePizzaFlavor(phone: string, message: string) {
+  //
+  private handlePizzaFlavor(phone: string, message: string): string[] {
     const { data } = this.flowStateManager.getState(phone)
     const pizzas = this.productService.getProducts()
 
     const selectedIndex = Number.parseInt(message) - 1
 
     if (Number.isNaN(selectedIndex) || !pizzas?.[selectedIndex]) {
-      return PizzaMessages.INVALID_FLAVOR
+      return [
+        '❌ *OPÇÃO INVÁLIDA!*',
+        'Por favor, digite um número válido da opção desejada.',
+        //
+        '\n> ✍️ Digite o número da opção desejada:',
+      ]
     }
 
     const selectedFlavors = [...(data?.selectedFlavors || []), pizzas[selectedIndex]]
@@ -74,51 +84,125 @@ export class PizzaFlow implements FlowHandler {
       })
 
       return [
-        PizzaMessages.SELECT_SECOND_FLAVOR,
-        ...PizzaMessages.buildProductList(pizzas),
-        PizzaMessages.TYPE_NUMBER,
+        '🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA:*\n',
+        //
+        ...this.buildPizzaList(pizzas),
+        //
+        '\n> ✍️ *Digite o número da opção desejada:*',
       ]
     }
 
     this.flowStateManager.updateState(phone, {
-      step: FlowStep.PIZZA_QUANTITY,
+      step: FlowStep.PIZZA_EDGE,
       data: {
         selectedFlavors,
       },
     })
 
-    return PizzaMessages.SELECT_QUANTITY
+    return [
+      '🔄 *ESCOLHA A BORDA DA PIZZA:*\n',
+      //
+      '1 - Tradicional (Grátis)',
+      '2 - Catupiry (+R$ 5,00)',
+      '3 - Cheddar (+R$ 5,00)',
+      '4 - Chocolate (+R$ 7,00)',
+      //
+      '\n> ✍️ Digite o número da borda desejada:',
+    ]
   }
 
+  //
+  private handlePizzaEdge(phoneNumber: string, message: string): string[] {
+    const edges = [
+      { id: 1, name: 'Tradicional', price: 0 },
+      { id: 2, name: 'Catupiry', price: 5.0 },
+      { id: 3, name: 'Cheddar', price: 5.0 },
+      { id: 4, name: 'Chocolate', price: 7.0 },
+    ]
+
+    const edge = edges[+message - 1]
+
+    if (!edge) {
+      return [
+        '❌ *BORDA INVÁLIDA!*',
+        'Por favor, escolha uma opção válida:\n',
+        //
+        '1 - Tradicional (Grátis)',
+        '2 - Catupiry (+R$ 5,00)',
+        '3 - Cheddar (+R$ 5,00)',
+        '4 - Chocolate (+R$ 7,00)',
+        //
+        '\n> ✍️ Digite o número da borda desejada:',
+      ]
+    }
+
+    this.flowStateManager.updateState(phoneNumber, {
+      step: FlowStep.PIZZA_QUANTITY,
+      data: {
+        edge,
+      },
+    })
+
+    return ['🔢 Digite a quantidade desejada (1-5):']
+  }
+
+  //
   private handlePizzaQuantity(phone: string, message: string) {
     const quantity = Number.parseInt(message)
 
     if (Number.isNaN(quantity) || quantity < 1 || quantity > 5) {
-      return PizzaMessages.INVALID_QUANTITY
+      return [
+        '❌ *QUANTIDADE INVÁLIDA!*',
+        'Por favor, digite um número entre 1 e 5.'
+      ]
     }
 
     this.flowStateManager.updateState(phone, {
-      step: FlowStep.ORDER,
+      step: FlowStep.PIZZA_EDGE,
       data: {
         quantity,
       },
     })
 
     return [
-      '✍🏻 Deseja adicionar alguma observação? (opcional)\n',
-      'Exemplo: retirar cebola, mais queijo, etc.\n',
+      '✍️ Deseja adicionar alguma observação? (opcional)',
+      '> Exemplo: retirar cebola, mais queijo, etc.\n',
       '0 - Não desejo adicionar observações',
     ]
   }
 
+  //
   private handlePizzaObservations(phone: string, message: string) {
+    const { data } = this.flowStateManager.getState(phone)
     const observations = message === '0' ? undefined : message
 
-    return PizzaMessages.ORDER_OPTIONS
+    this.flowStateManager.updateState(phone, {
+      step: FlowStep.ORDER,
+    })
+
+    return [
+      '✅ Pizza adicionada ao carrinho com sucesso!\n',
+      //
+      '1️⃣ - Pizza inteira 🍕',
+      '2️⃣ - Pizza dois sabores 🍕🍕',
+      '3️⃣ - Bebidas 🍺',
+      '4️⃣ - Finalizar pedido 🛒',
+      '0️⃣ - Cancelar pedido ❌',
+      //
+      '\n> ✍️ Digite o número da opção desejada:',
+    ]
   }
 
   // ###
   private handleDefaultAction() {
-    return PizzaMessages.INVALID_STEP
+    return ['❌ Ocorreu um erro no fluxo. Por favor, tente novamente.']
+  }
+
+  // ###
+  private buildPizzaList(pizzas: Pizza[]): string[] {
+    return pizzas.map((pizza, index) => {
+      const ingredients = pizza.ingredients || 'sem ingredientes'
+      return `${index + 1} - ${pizza.name} (${formatCurrency(pizza.price)}) - _${ingredients}_`
+    })
   }
 }

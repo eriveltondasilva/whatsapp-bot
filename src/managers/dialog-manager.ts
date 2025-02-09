@@ -12,19 +12,19 @@ export class DialogManager {
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
-  public async handleMessage(phoneNumber: string, message: string): Promise<string[]> {
-    this.logger.debug('👋 Handling Message: %o', { phoneNumber, message })
-    const { step } = this.flowStateManager.getState(phoneNumber)
+  public async handleMessage(phone: string, message: string): Promise<string[]> {
+    this.logger.debug('👋 Handling Message: %o', { phone, message })
+    const { step } = this.flowStateManager.getState(phone)
     const handler = this.handlerManager.getHandler(step)
 
     if (!handler) {
       this.logger.error('No handler found for current step: %o', {
-        phoneNumber,
+        phone,
         step,
       })
       return ['❌ Fluxo inválido']
     }
 
-    return handler.handle(phoneNumber, message)
+    return handler.handle(phone, message)
   }
 }

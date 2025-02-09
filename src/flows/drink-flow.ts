@@ -27,10 +27,14 @@ export class DrinkFlow implements FlowHandler {
 
   // ###
   private handleDrinkType(phone: string, message: string) {
+    this.flowStateManager.updateState(phone, { step: FlowStep.DRINK_QUANTITY })
+
     return ['��� Drink Flow: select drink type']
   }
 
   private handleDrinkQuantity(phone: string, message: string) {
+    this.flowStateManager.updateState(phone, { step: FlowStep.ORDER })
+
     return ['��� Drink Flow: select drink quantity']
   }
 

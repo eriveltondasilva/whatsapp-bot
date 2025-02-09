@@ -3,9 +3,9 @@ import type { Message } from '@wppconnect-team/wppconnect'
 import { PaymentMethod, Validation } from '@/config/enums.js'
 import { dayjs } from '@/utils/dayjs.js'
 
-export function isValidPhoneNumber(phoneNumber: string): boolean {
+export function isValidPhoneNumber(phone: string): boolean {
   const regex = /^(\(?\d{2}\)?[\s]?)?(9?\d{4})[-\s]?(\d{4})$/
-  return regex.test(phoneNumber.trim())
+  return regex.test(phone.trim())
 }
 
 export function isValidBirthday(date: string): boolean {

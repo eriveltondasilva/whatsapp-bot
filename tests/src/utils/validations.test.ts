@@ -1,5 +1,5 @@
 import { type Message, MessageType } from '@wppconnect-team/wppconnect'
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { PaymentMethod, Validation } from '../../../src/config/enums.js'
 import {
@@ -21,8 +21,8 @@ describe('isValidPhoneNumber:', () => {
   // ###
   it.each(['2717-8150', '90552-5282', '82 5227-2670', '(60) 0489 5710', '(91)4748-0559'])(
     'should return true if phone number is valid (%s)',
-    (phoneNumber) => {
-      const result = isValidPhoneNumber(phoneNumber)
+    (phone) => {
+      const result = isValidPhoneNumber(phone)
       expect(result).toBe(true)
     },
   )
