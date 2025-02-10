@@ -5,6 +5,8 @@ import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { LoggerService } from '@/services/logger-service.js'
 
 import type { FlowActions, FlowHandler } from '@/types.js'
+import { mainMenu } from '@/messages/main-menu.js'
+import { orderMenu } from '@/messages/order-menu.js'
 
 @injectable()
 export class MainMenuFlow implements FlowHandler {
@@ -32,13 +34,7 @@ export class MainMenuFlow implements FlowHandler {
     return [
       'Está com vontade de comer uma pizza?\n',
       //
-      '1️⃣ - Pizza inteira 🍕',
-      '2️⃣ - Pizza dois sabores 🍕🍕',
-      '3️⃣ - Bebidas 🍺',
-      '4️⃣ - Finalizar pedido 🛒',
-      '0️⃣ - Cancelar pedido ❌',
-      //
-      '\n✍🏻 *Digite o número da opção desejada:*',
+      ...orderMenu,
     ]
   }
 
@@ -71,16 +67,7 @@ export class MainMenuFlow implements FlowHandler {
     return [
       '❌ OPÇÃO INVÁLIDA:\n',
       //
-      '📝 *MENU PRINCIPAL:*\n',
-      //
-      '1️⃣ - Fazer Pedido 🛒',
-      '2️⃣ - Acompanhar Pedido 🚚',
-      '3️⃣ - Histórico de Pedidos 📜',
-      '4️⃣ - Atualizar Cadastro 📝',
-      '5️⃣ - Falar com Atendente 👨‍💼',
-      '0️⃣ - Sair ❌',
-      //
-      '\n✍🏻 *Digite o número da opção desejada:*',
+    ...mainMenu,
     ]
   }
 }

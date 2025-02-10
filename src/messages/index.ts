@@ -1,5 +1,0 @@
-export * from './main-menu.js'
-export * from './order.js'
-export * from './pizza.js'
-export * from './registration.js'
-export * from './welcome.js'

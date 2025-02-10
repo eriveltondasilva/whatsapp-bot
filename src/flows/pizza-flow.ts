@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/index.js'
+import { orderMenu } from '@/messages/order-menu.js'
 import { LoggerService, ProductService } from '@/services/index.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 
@@ -22,6 +23,7 @@ export class PizzaFlow implements FlowHandler {
     const actions: FlowActions = {
       [FlowStep.PIZZA_TYPE]: () => this.handlePizzaType(phone, message),
       [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(phone, message),
+      [FlowStep.PIZZA_EDGE]: () => this.handlePizzaEdge(phone, message),
       [FlowStep.PIZZA_QUANTITY]: () => this.handlePizzaQuantity(phone, message),
       [FlowStep.PIZZA_OBSERVATIONS]: () => this.handlePizzaObservations(phone, message),
     }
@@ -53,7 +55,7 @@ export class PizzaFlow implements FlowHandler {
       //
       ...this.buildPizzaList(pizzas),
       //
-      '\n> ✍️ Digite o número da opção desejada:',
+      '\n✍️ Digite o número da opção desejada:',
     ]
   }
 
@@ -69,7 +71,7 @@ export class PizzaFlow implements FlowHandler {
         '❌ *OPÇÃO INVÁLIDA!*',
         'Por favor, digite um número válido da opção desejada.',
         //
-        '\n> ✍️ Digite o número da opção desejada:',
+        '\n✍️ Digite o número da opção desejada:',
       ]
     }
 
@@ -88,7 +90,7 @@ export class PizzaFlow implements FlowHandler {
         //
         ...this.buildPizzaList(pizzas),
         //
-        '\n> ✍️ *Digite o número da opção desejada:*',
+        '\n✍️ *Digite o número da opção desejada:*',
       ]
     }
 
@@ -107,7 +109,7 @@ export class PizzaFlow implements FlowHandler {
       '3 - Cheddar (+R$ 5,00)',
       '4 - Chocolate (+R$ 7,00)',
       //
-      '\n> ✍️ Digite o número da borda desejada:',
+      '\n✍️ Digite o número da borda desejada:',
     ]
   }
 
@@ -132,7 +134,7 @@ export class PizzaFlow implements FlowHandler {
         '3 - Cheddar (+R$ 5,00)',
         '4 - Chocolate (+R$ 7,00)',
         //
-        '\n> ✍️ Digite o número da borda desejada:',
+        '\n✍️ Digite o número da borda desejada:',
       ]
     }
 
@@ -183,13 +185,7 @@ export class PizzaFlow implements FlowHandler {
     return [
       '✅ Pizza adicionada ao carrinho com sucesso!\n',
       //
-      '1️⃣ - Pizza inteira 🍕',
-      '2️⃣ - Pizza dois sabores 🍕🍕',
-      '3️⃣ - Bebidas 🍺',
-      '4️⃣ - Finalizar pedido 🛒',
-      '0️⃣ - Cancelar pedido ❌',
-      //
-      '\n> ✍️ Digite o número da opção desejada:',
+      ...orderMenu,
     ]
   }
 

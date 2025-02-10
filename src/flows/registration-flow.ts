@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
-import { RegistrationMessages } from '@/messages/registration.js'
+import { mainMenu } from '@/messages/main-menu.js'
 import { CustomerService, LoggerService } from '@/services/index.js'
 import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
 
@@ -36,12 +36,26 @@ export class RegistrationFlow implements FlowHandler {
       step: FlowStep.COLLECT_NAME,
     })
 
-    return RegistrationMessages.INITIAL
+    return [
+      '🍕 Olá! Bem-vindo(a) à *Pizzaria [Nome da Pizzaria]*!\n',
+      //
+      'Estamos prontos para transformar a sua fome em felicidade. 😊',
+      'Antes de começar, precisamos fazer um _rápido_ cadastro. 🏃💨\n',
+      //
+      '✍️ Qual o seu nome completo?',
+      '> Exemplo: _"João da Silva"_',
+    ]
   }
 
+  //
   private handleNameInput(phone: string, name: string): string[] {
     if (!isValidName(name)) {
-      return RegistrationMessages.INVALID_NAME
+      return [
+        '❌ *NOME INVÁLIDO*\n',
+        //
+        '✍️ Por favor, informe seu nome completo:',
+        '> Exemplo: _"João da Silva"_',
+      ]
     }
 
     this.flowStateManager.updateState(phone, {
@@ -49,12 +63,23 @@ export class RegistrationFlow implements FlowHandler {
       data: { name },
     })
 
-    return [this.getGreeting(name), ...RegistrationMessages.COLLECT_ADDRESS]
+    return [
+      `${getGreeting()}, ${this.getFirstName(name)}!`, // Bom dia, nome do usuário
+      'Agora me diga onde vamos entregar suas delícias?\n',
+      //
+      '✍️ Qual o seu endereço completo?',
+      '> Exemplo: _"Rua das Flores, n° 83, Centro"_',
+    ]
   }
 
   private handleAddressInput(phone: string, address: string): string[] {
     if (!isValidAddress(address)) {
-      return RegistrationMessages.INVALID_ADDRESS
+      return [
+        '❌ *ENDEREÇO INVÁLIDO*\n',
+        //
+        '✍️ Por favor, informe seu endereço completo:',
+        '> Exemplo: _"Rua das Flores, n° 83, Centro"_',
+      ]
     }
 
     const { data } = this.flowStateManager.getState(phone)
@@ -69,7 +94,12 @@ export class RegistrationFlow implements FlowHandler {
     this.flowStateManager.clearState(phone)
     this.flowStateManager.updateState(phone, { step: FlowStep.MAIN_MENU })
 
-    return RegistrationMessages.FINALIZE(this.getFirstName(data?.name || ''))
+    return [
+      `🎉 Cadastro concluído com sucesso, ${this.getFirstName(data?.name || 'cliente')}!`,
+      'Agora, vamos ao que interessa: _escolher algo gostoso_! 😋\n',
+      //
+      ...mainMenu
+    ]
   }
 
   // ###
@@ -77,15 +107,11 @@ export class RegistrationFlow implements FlowHandler {
     this.flowStateManager.clearState(phone)
     this.customerService.deleteCustomer(phone)
 
-    return RegistrationMessages.GENERIC_ERROR
+    return ['❌ Ops! Algo deu errado. Por favor, tente novamente.']
   }
 
   // ###
   private getFirstName(name: string): string {
     return name.split(' ')[0]
-  }
-
-  private getGreeting(name: string): string {
-    return `${getGreeting()}, ${this.getFirstName(name)}!`
   }
 }

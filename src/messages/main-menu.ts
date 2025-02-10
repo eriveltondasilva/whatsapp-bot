@@ -1,5 +1,5 @@
-export const MainMenu = [
-  '📝 *MENU PRINCIPAL:*\n',
+export const mainMenu = [
+  '📝 *MENU PRINCIPAL*\n',
   //
   '1️⃣ - Fazer Pedido 🛒',
   '2️⃣ - Acompanhar Pedido 🚚',
@@ -8,5 +8,5 @@ export const MainMenu = [
   '5️⃣ - Falar com Atendente 👨‍💼',
   '0️⃣ - Sair ❌',
   //
-  '\n✍🏻 *Digite o número da opção desejada:*',
-]
+  '\n🔢 Digite o número da opção desejada:',
+] as const

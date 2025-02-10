@@ -6,6 +6,7 @@ import { LoggerService } from '@/services/index.js'
 import { DrinkFlow } from './drink-flow.js'
 import { PizzaFlow } from './pizza-flow.js'
 
+import { orderMenu } from '@/messages/order-menu.js'
 import type { FlowActions, FlowHandler } from '@/types.js'
 
 @injectable()
@@ -15,7 +16,7 @@ export class OrderFlow implements FlowHandler {
     @inject(DrinkFlow) private drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
     @inject(LoggerService) private logger: LoggerService,
-  ) {}
+  ) { }
 
   handle(phone: string, message: string): string[] {
     this.logger.info('👋 Order Flow: %o', { phone, message })
@@ -53,7 +54,7 @@ export class OrderFlow implements FlowHandler {
     return [
       '✨ Obrigado por utilizar nossos serviços!',
       'Se precisar de algo, estamos aqui para ajudar.',
-      '👋 Até a próxima!',
+      '\n👋 Até a próxima!',
     ]
   }
 
@@ -62,13 +63,7 @@ export class OrderFlow implements FlowHandler {
     return [
       '❌ OPÇÃO INVÁLIDA:\n',
       //
-      '1️⃣ - Pizza inteira 🍕',
-      '2️⃣ - Pizza dois sabores 🍕🍕',
-      '3️⃣ - Bebidas 🍺',
-      '4️⃣ - Finalizar pedido 🛒',
-      '0️⃣ - Cancelar pedido ❌',
-      //
-      '\n✍🏻 *Digite o número da opção desejada:*',
+      ...orderMenu,
     ]
   }
 }
