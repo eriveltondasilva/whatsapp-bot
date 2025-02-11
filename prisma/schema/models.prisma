@@ -1,0 +1,34 @@
+model PizzaFlavor {
+    id          Int      @id @default(autoincrement())
+    name        String   @unique
+    price       Float
+    ingredients String[]
+    pizzas      Pizza[]
+}
+
+model Pizza {
+    id      Int           @id @default(autoincrement())
+    price   Float
+    flavors PizzaFlavor[]
+    order   Order         @relation(fields: [orderId], references: [id])
+    orderId String
+}
+
+model Order {
+    id            String      @id @default(uuid())
+    customerPhone String
+    address       String
+    total         Float
+    status        OrderStatus @default(PENDING)
+    createdAt     DateTime    @default(now())
+    items         Pizza[]
+}
+
+enum OrderStatus {
+    PENDING
+    CONFIRMED
+    PREPARING
+    DELIVERING
+    DELIVERED
+    CANCELLED
+}

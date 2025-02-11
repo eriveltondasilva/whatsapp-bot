@@ -67,7 +67,7 @@ export class MainMenuFlow implements FlowHandler {
     return [
       '❌ OPÇÃO INVÁLIDA:\n',
       //
-    ...mainMenu,
+      ...mainMenu,
     ]
   }
 }

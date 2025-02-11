@@ -98,7 +98,7 @@ export class RegistrationFlow implements FlowHandler {
       `🎉 Cadastro concluído com sucesso, ${this.getFirstName(data?.name || 'cliente')}!`,
       'Agora, vamos ao que interessa: _escolher algo gostoso_! 😋\n',
       //
-      ...mainMenu
+      ...mainMenu,
     ]
   }
 

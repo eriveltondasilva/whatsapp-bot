@@ -153,10 +153,7 @@ export class PizzaFlow implements FlowHandler {
     const quantity = Number.parseInt(message)
 
     if (Number.isNaN(quantity) || quantity < 1 || quantity > 5) {
-      return [
-        '❌ *QUANTIDADE INVÁLIDA!*',
-        'Por favor, digite um número entre 1 e 5.'
-      ]
+      return ['❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.']
     }
 
     this.flowStateManager.updateState(phone, {
