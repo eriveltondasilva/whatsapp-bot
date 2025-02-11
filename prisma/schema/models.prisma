@@ -1,34 +1,157 @@
-model PizzaFlavor {
-    id          Int      @id @default(autoincrement())
-    name        String   @unique
-    price       Float
-    ingredients String[]
-    pizzas      Pizza[]
+// Enums
+enum OrderStatus {
+    pending
+    preparing
+    delivering
+    completed
+    cancelled
 }
 
-model Pizza {
-    id      Int           @id @default(autoincrement())
-    price   Float
-    flavors PizzaFlavor[]
-    order   Order         @relation(fields: [orderId], references: [id])
-    orderId String
+enum FlavorCategory {
+    sweet
+    savory
+}
+
+enum PaymentMethod {
+    cash
+    credit
+    debit
+    pix
+}
+
+enum ItemType {
+    pizza
+    drink
+}
+
+// # Models
+model Customer {
+    id        Int      @id @default(autoincrement())
+    name      String   @db.VarChar(100)
+    phone     String   @unique @db.VarChar(20)
+    address   String   @db.Text
+    active    Boolean  @default(true)
+    createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    //
+    orders    Order[]
+
+    @@map("customers")
+}
+
+model Flavor {
+    id           Int            @id @default(autoincrement())
+    name         String         @unique @db.VarChar(100)
+    category     FlavorCategory
+    ingredients  String         @db.Text
+    price        Decimal        @db.Money
+    active       Boolean        @default(true)
+    createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt    DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    //
+    firstPizzas  OrderPizza[]   @relation("FirstFlavor")
+    secondPizzas OrderPizza[]   @relation("SecondFlavor")
+
+    @@map("flavors")
+}
+
+model Crust {
+    id        Int          @id @default(autoincrement())
+    name      String       @unique @db.VarChar(100)
+    price     Decimal      @db.Money
+    active    Boolean      @default(true)
+    createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    //
+    pizzas    OrderPizza[]
+
+    @@map("crusts")
+}
+
+model Drink {
+    id          Int          @id @default(autoincrement())
+    name        String       @unique @db.VarChar(100)
+    description String?      @db.Text
+    price       Decimal      @db.Money
+    active      Boolean      @default(true)
+    createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    //
+    orderDrinks OrderDrink[]
+
+    @@map("drinks")
 }
 
 model Order {
-    id            String      @id @default(uuid())
-    customerPhone String
-    address       String
-    total         Float
-    status        OrderStatus @default(PENDING)
-    createdAt     DateTime    @default(now())
-    items         Pizza[]
+    id              Int           @id @default(autoincrement())
+    deliveryAddress String        @map("delivery_address") @db.Text
+    status          OrderStatus   @default(pending)
+    totalAmount     Decimal       @map("total_amount") @db.Money
+    paymentMethod   PaymentMethod @map("payment_method")
+    notes           String?       @db.Text
+    createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    //
+    customer        Customer      @relation(fields: [customerId], references: [id])
+    customerId      Int           @map("customer_id")
+    items           OrderItem[]
+
+    @@map("orders")
 }
 
-enum OrderStatus {
-    PENDING
-    CONFIRMED
-    PREPARING
-    DELIVERING
-    DELIVERED
-    CANCELLED
+model OrderItem {
+    id        Int         @id @default(autoincrement())
+    itemType  ItemType    @map("item_type")
+    quantity  Int         @default(1) @db.SmallInt
+    unitPrice Decimal     @map("unit_price") @db.Money
+    subtotal  Decimal     @db.Money
+    notes     String?     @db.Text
+    createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz()
+    //
+    order     Order       @relation(fields: [orderId], references: [id])
+    orderId   Int         @map("order_id")
+    pizza     OrderPizza?
+    drink     OrderDrink?
+
+    @@map("order_items")
+}
+
+model OrderPizza {
+    id             Int       @id @default(autoincrement())
+    createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+    //
+    orderItem      OrderItem @relation(fields: [orderItemId], references: [id])
+    orderItemId    Int       @unique @map("order_item_id")
+    firstFlavor    Flavor    @relation("FirstFlavor", fields: [firstFlavorId], references: [id])
+    firstFlavorId  Int       @map("first_flavor_id")
+    secondFlavor   Flavor?   @relation("SecondFlavor", fields: [secondFlavorId], references: [id])
+    secondFlavorId Int?      @map("second_flavor_id")
+    crust          Crust     @relation(fields: [crustId], references: [id])
+    crustId        Int       @map("crust_id")
+
+    @@map("order_pizzas")
+}
+
+model OrderDrink {
+    id          Int       @id @default(autoincrement())
+    createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+    //
+    orderItem   OrderItem @relation(fields: [orderItemId], references: [id])
+    orderItemId Int       @unique @map("order_item_id")
+    drink       Drink     @relation(fields: [drinkId], references: [id])
+    drinkId     Int       @map("drink_id")
+
+    @@map("order_drinks")
+}
+
+model WorkingHour {
+    id          Int      @id @default(autoincrement())
+    dayOfWeek   Int      @map("day_of_week") @db.SmallInt
+    openingTime DateTime @map("opening_time") @db.Time()
+    closingTime DateTime @map("closing_time") @db.Time()
+    active      Boolean  @default(true)
+    createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+    @@map("working_hours")
 }

@@ -1,0 +1,149 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table customers {
+  id Int [pk, increment]
+  name String [not null]
+  phone String [unique, not null]
+  address String [not null]
+  active Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  orders orders [not null]
+}
+
+Table flavors {
+  id Int [pk, increment]
+  name String [unique, not null]
+  category FlavorCategory [not null]
+  ingredients String [not null]
+  price Decimal [not null]
+  active Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  firstPizzas order_pizzas [not null]
+  secondPizzas order_pizzas [not null]
+}
+
+Table crusts {
+  id Int [pk, increment]
+  name String [unique, not null]
+  price Decimal [not null]
+  active Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  pizzas order_pizzas [not null]
+}
+
+Table drinks {
+  id Int [pk, increment]
+  name String [unique, not null]
+  description String
+  price Decimal [not null]
+  active Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  orderDrinks order_drinks [not null]
+}
+
+Table orders {
+  id Int [pk, increment]
+  deliveryAddress String [not null]
+  status OrderStatus [not null, default: 'pending']
+  totalAmount Decimal [not null]
+  paymentMethod PaymentMethod [not null]
+  notes String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  customer customers [not null]
+  customerId Int [not null]
+  items order_items [not null]
+}
+
+Table order_items {
+  id Int [pk, increment]
+  itemType ItemType [not null]
+  quantity Int [not null, default: 1]
+  unitPrice Decimal [not null]
+  subtotal Decimal [not null]
+  notes String
+  createdAt DateTime [default: `now()`, not null]
+  order orders [not null]
+  orderId Int [not null]
+  pizza order_pizzas
+  drink order_drinks
+}
+
+Table order_pizzas {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  orderItem order_items [not null]
+  orderItemId Int [unique, not null]
+  firstFlavor flavors [not null]
+  firstFlavorId Int [not null]
+  secondFlavor flavors
+  secondFlavorId Int
+  crust crusts [not null]
+  crustId Int [not null]
+}
+
+Table order_drinks {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  orderItem order_items [not null]
+  orderItemId Int [unique, not null]
+  drink drinks [not null]
+  drinkId Int [not null]
+}
+
+Table working_hours {
+  id Int [pk, increment]
+  dayOfWeek Int [not null]
+  openingTime DateTime [not null]
+  closingTime DateTime [not null]
+  active Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+}
+
+Enum OrderStatus {
+  pending
+  preparing
+  delivering
+  completed
+  cancelled
+}
+
+Enum FlavorCategory {
+  sweet
+  savory
+}
+
+Enum PaymentMethod {
+  cash
+  credit
+  debit
+  pix
+}
+
+Enum ItemType {
+  pizza
+  drink
+}
+
+Ref: orders.customerId > customers.id
+
+Ref: order_items.orderId > orders.id
+
+Ref: order_pizzas.orderItemId - order_items.id
+
+Ref: order_pizzas.firstFlavorId > flavors.id
+
+Ref: order_pizzas.secondFlavorId > flavors.id
+
+Ref: order_pizzas.crustId > crusts.id
+
+Ref: order_drinks.orderItemId - order_items.id
+
+Ref: order_drinks.drinkId > drinks.id

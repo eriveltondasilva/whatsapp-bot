@@ -27,7 +27,7 @@
     "test": "vitest run tests"
   },
   "prisma": {
-    "schema": "src/db/schema.prisma"
+    "seed": "tsx prisma/seeds/index.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.3.1",
