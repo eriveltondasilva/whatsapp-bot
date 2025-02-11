@@ -7,7 +7,6 @@ export async function seedPizzas(prisma: PrismaClient) {
             name: item.name,
             category: item.category as FlavorCategory,
             price: item.price,
-            active: item.isAvailable,
             ingredients: item.ingredients,
         })),
         skipDuplicates: true,

@@ -1,13 +1,21 @@
 import { PrismaClient } from '@prisma/client'
-import {seedPizzas} from './pizza.js'
+// import { seedCrust } from './crust.js'
+// import { seedCustomer } from './customer.js'
+// import { seedDrink } from './drink.js'
+// import { seedPizzas } from './pizza.js'
 
 const prisma = new PrismaClient()
 
 async function main() {
     try {
-      const result = await seedPizzas(prisma)
+        const result: string[] = await prisma.$queryRaw`SELECT version()`
+        // await seedPizzas(prisma)
+        // await seedDrink(prisma)
+        // await seedCrust(prisma)
+        // await seedCustomer(prisma)
 
-        console.log('Created: %o', result)
+        console.log('\n🚀 Seeded successfully...')
+        console.dir(...result)
         await prisma.$disconnect()
     } catch (e) {
         console.error(e)

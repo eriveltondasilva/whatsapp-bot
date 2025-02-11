@@ -3,5 +3,15 @@
     "name": "Ingrid Alves",
     "phone": "558298350441",
     "address": "123 Main St, Springfield"
+  },
+  {
+    "name": "John Doe",
+    "phone": "558298350442",
+    "address": "456 Elm St, New York"
+  },
+  {
+    "name": "Erivelton",
+    "phone": "558298350443",
+    "address": "789 Oak St, Los Angeles"
   }
 ]
