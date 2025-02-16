@@ -1,27 +1,26 @@
 // Enums
 enum OrderStatus {
-    pending
-    preparing
-    delivering
-    completed
-    cancelled
+    PENDING    @map("pending")
+    PREPARING  @map("preparing")
+    DELIVERING @map("delivering")
+    COMPLETED  @map("completed")
+    CANCELLED  @map("cancelled")
 }
 
 enum FlavorCategory {
-    sweet
-    savory
+    SWEET  @map("sweet")
+    SAVORY @map("savory")
 }
 
 enum PaymentMethod {
-    cash
-    credit
-    debit
-    pix
+    CASH   @map("cash")
+    CREDIT @map("credit")
+    DEBIT  @map("debit")
 }
 
 enum ItemType {
-    pizza
-    drink
+    PIZZA @map("pizza")
+    DRINK @map("drink")
 }
 
 // # Models
@@ -32,39 +31,42 @@ model Customer {
     address   String   @db.Text
     active    Boolean  @default(true)
     createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
     //
     orders    Order[]
 
+    @@index([phone])
     @@map("customers")
 }
 
 model Flavor {
     id           Int            @id @default(autoincrement())
     name         String         @unique @db.VarChar(100)
-    category     FlavorCategory
+    category     FlavorCategory @default(SAVORY)
     ingredients  String         @db.Text
-    price        Decimal        @db.Money
+    price        Decimal        @default("0.00") @db.Decimal(10, 2)
     active       Boolean        @default(true)
     createdAt    DateTime       @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt    DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    updatedAt    DateTime       @updatedAt @map("updated_at") @db.Timestamptz()
     //
     firstPizzas  OrderPizza[]   @relation("FirstFlavor")
     secondPizzas OrderPizza[]   @relation("SecondFlavor")
 
+    @@index([name])
     @@map("flavors")
 }
 
 model Crust {
     id        Int          @id @default(autoincrement())
     name      String       @unique @db.VarChar(100)
-    price     Decimal      @db.Money
+    price    Decimal @default("0.00") @db.Decimal(10,2)
     active    Boolean      @default(true)
     createdAt DateTime     @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    updatedAt DateTime     @updatedAt @map("updated_at") @db.Timestamptz()
     //
     pizzas    OrderPizza[]
 
+    @@index([name])
     @@map("crusts")
 }
 
@@ -72,39 +74,43 @@ model Drink {
     id          Int          @id @default(autoincrement())
     name        String       @unique @db.VarChar(100)
     description String?      @db.Text
-    price       Decimal      @db.Money
+    price       Decimal @default("0.00") @db.Decimal(10,2)
     active      Boolean      @default(true)
     createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt   DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    updatedAt   DateTime     @updatedAt @map("updated_at") @db.Timestamptz()
     //
     orderDrinks OrderDrink[]
 
+    @@index([name])
     @@map("drinks")
 }
 
 model Order {
     id              Int           @id @default(autoincrement())
     deliveryAddress String        @map("delivery_address") @db.Text
-    status          OrderStatus   @default(pending)
-    totalAmount     Decimal       @map("total_amount") @db.Money
-    paymentMethod   PaymentMethod @map("payment_method")
+    status          OrderStatus   @default(PENDING)
+    totalAmount     Decimal @default("0.00") @db.Decimal(10,2)       @map("total_amount")
+    paymentMethod   PaymentMethod @default(CASH) @map("payment_method")
     notes           String?       @db.Text
     createdAt       DateTime      @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt       DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    updatedAt       DateTime      @updatedAt @map("updated_at") @db.Timestamptz()
     //
     customer        Customer      @relation(fields: [customerId], references: [id])
     customerId      Int           @map("customer_id")
     items           OrderItem[]
 
+    @@index([customerId])
+    @@index([status])
+    @@index([createdAt])
     @@map("orders")
 }
 
 model OrderItem {
     id        Int         @id @default(autoincrement())
-    itemType  ItemType    @map("item_type")
+    itemType  ItemType
     quantity  Int         @default(1) @db.SmallInt
-    unitPrice Decimal     @map("unit_price") @db.Money
-    subtotal  Decimal     @db.Money
+    unitPrice Decimal @default("0.00") @db.Decimal(10,2)     @map("unit_price")
+    subtotal  Decimal @default("0.00") @db.Decimal(10,2)
     notes     String?     @db.Text
     createdAt DateTime    @default(now()) @map("created_at") @db.Timestamptz()
     //
@@ -113,6 +119,8 @@ model OrderItem {
     pizza     OrderPizza?
     drink     OrderDrink?
 
+    @@index([orderId])
+    @@index([itemType])
     @@map("order_items")
 }
 
@@ -120,7 +128,7 @@ model OrderPizza {
     id             Int       @id @default(autoincrement())
     createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
     //
-    orderItem      OrderItem @relation(fields: [orderItemId], references: [id])
+    orderItem      OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
     orderItemId    Int       @unique @map("order_item_id")
     firstFlavor    Flavor    @relation("FirstFlavor", fields: [firstFlavorId], references: [id])
     firstFlavorId  Int       @map("first_flavor_id")
@@ -136,7 +144,7 @@ model OrderDrink {
     id          Int       @id @default(autoincrement())
     createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz()
     //
-    orderItem   OrderItem @relation(fields: [orderItemId], references: [id])
+    orderItem   OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
     orderItemId Int       @unique @map("order_item_id")
     drink       Drink     @relation(fields: [drinkId], references: [id])
     drinkId     Int       @map("drink_id")
@@ -150,8 +158,32 @@ model WorkingHour {
     openingTime DateTime @map("opening_time") @db.Time()
     closingTime DateTime @map("closing_time") @db.Time()
     active      Boolean  @default(true)
+    //
     createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
-    updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+    updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 
+    @@unique([dayOfWeek, active])
     @@map("working_hours")
+}
+
+model Pizzeria {
+    id            Int      @id @default(autoincrement())
+    name          String   @db.VarChar(100)
+    description   String?  @db.Text
+    cnpj          String   @unique @db.VarChar(20)
+    address       String   @db.Text
+    phone         String?   @unique @db.VarChar(20)
+    active        Boolean  @default(true)
+    //
+    deliveryTax   Decimal? @map("delivery_tax") @default("0.00") @db.Decimal(10,2)
+    minOrderValue Decimal? @map("min_order_value") @default("0.00") @db.Decimal(10,2)
+    //
+    website       String?  @db.VarChar(100)
+    instagram     String?  @db.VarChar(100)
+    facebook      String?  @db.VarChar(100)
+    //
+    createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+    updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+
+    @@map("pizzerias")
 }

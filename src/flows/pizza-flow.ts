@@ -23,9 +23,9 @@ export class PizzaFlow implements FlowHandler {
     const actions: FlowActions = {
       [FlowStep.PIZZA_TYPE]: () => this.handlePizzaType(phone, message),
       [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(phone, message),
-      [FlowStep.PIZZA_EDGE]: () => this.handlePizzaEdge(phone, message),
+      [FlowStep.PIZZA_CRUST]: () => this.handlePizzaEdge(phone, message),
       [FlowStep.PIZZA_QUANTITY]: () => this.handlePizzaQuantity(phone, message),
-      [FlowStep.PIZZA_OBSERVATIONS]: () => this.handlePizzaObservations(phone, message),
+      [FlowStep.PIZZA_NOTES]: () => this.handlePizzaObservations(phone, message),
     }
 
     return actions[step]?.() || this.handleDefaultAction()
@@ -95,7 +95,7 @@ export class PizzaFlow implements FlowHandler {
     }
 
     this.flowStateManager.updateState(phone, {
-      step: FlowStep.PIZZA_EDGE,
+      step: FlowStep.PIZZA_CRUST,
       data: {
         selectedFlavors,
       },
@@ -157,7 +157,7 @@ export class PizzaFlow implements FlowHandler {
     }
 
     this.flowStateManager.updateState(phone, {
-      step: FlowStep.PIZZA_EDGE,
+      step: FlowStep.PIZZA_CRUST,
       data: {
         quantity,
       },

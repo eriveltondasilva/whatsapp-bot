@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Pizzaria Bella Napoli",
+    "cnpj": "12.345.678/0001-90",
+    "address": "Rua das Pizzas, 123 - Centro, São Paulo - SP, 01234-567",
+    "phone": "(11) 3456-7890",
+    "website": "https://www.bellanapoli.com.br",
+    "instagram": "@pizzariabellanapoli",
+    "facebook": "facebook.com/PizzariaBellaNapoli",
+    "deliveryTax": 5.0,
+    "minOrderValue": 30.0,
+    "description": "A Pizzaria Bella Napoli traz o autêntico sabor da culinária italiana para São Paulo desde 1995. Nossas pizzas são preparadas com ingredientes selecionados e assadas em forno à lenha, seguindo receitas tradicionais napolitanas. Oferecemos um ambiente acolhedor para toda a família e também serviço de delivery rápido e eficiente.",
+    "active": true
+  }
+]

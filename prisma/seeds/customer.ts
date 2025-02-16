@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import customers from '../../src/db/customers.json';
+import customers from './customers-seed.json';
 
 export async function seedCustomer(prisma: PrismaClient) {
     return await prisma.customer.createMany({

@@ -1,9 +1,9 @@
 import type { FlavorCategory, PrismaClient } from "@prisma/client";
-import pizzas from '../../src/db/pizzas.json';
+import flavors from './flavors-seed.json';
 
-export async function seedPizzas(prisma: PrismaClient) {
+export async function seedFlavors(prisma: PrismaClient) {
     return await prisma.flavor.createMany({
-        data: pizzas.map(item => ({
+        data: flavors.map(item => ({
             name: item.name,
             category: item.category as FlavorCategory,
             price: item.price,

@@ -1,20 +1,25 @@
-import type { Category } from '@/config/enums.js'
-import initialProducts from '@/database/pizzas.json' with { type: 'json' }
+import { inject, injectable } from 'tsyringe'
+import { FlavorRepository, DrinkRepository, CrustRepository } from '@/repositories/index.js'
 
+@injectable()
 export class ProductService {
-  private products = initialProducts
+  constructor(
+    @inject(FlavorRepository) private flavorRepo: FlavorRepository,
+    @inject(DrinkRepository) private drinkRepo: DrinkRepository,
+    @inject(CrustRepository) private crustRepo: CrustRepository,
+  ) {}
 
-  getProducts(category?: Category) {
-    if (!category) {
-      return this.products.filter((item) => item.isAvailable)
-    }
-
-    return this.products.filter((item) => item.category === category && item.isAvailable)
+  async getPizzaFlavors() {
+    return this.flavorRepo.getAllFlavors()
   }
 
-  getProduct(id: number) {
-    return this.products.find((item) => item.id === id && item.isAvailable) || null
+  async getDrinks() {
+    return this.drinkRepo.getAllDrinks()
   }
 
-  // TODO: implement the method: createProduct, updateProduct, and deleteProduct
+  async getCrusts() {
+    return this.crustRepo.getAllCrusts()
+  }
+
+  // Métodos adicionais conforme necessário
 }
