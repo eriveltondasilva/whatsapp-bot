@@ -2,11 +2,12 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/index.js'
+import { orderMenu } from '@/messages/order-menu.js'
 import { LoggerService } from '@/services/index.js'
+
 import { DrinkFlow } from './drink-flow.js'
 import { PizzaFlow } from './pizza-flow.js'
 
-import { orderMenu } from '@/messages/order-menu.js'
 import type { FlowActions, FlowHandler } from '@/types.js'
 
 @injectable()
@@ -29,7 +30,7 @@ export class OrderFlow implements FlowHandler {
       0: () => this.cancelOrder(phone),
     }
 
-    return actions[message]?.() || this.handleDefaultAction()
+    return actions[message]?.() || this.handleInvalidOption()
   }
 
   // ###
@@ -59,7 +60,7 @@ export class OrderFlow implements FlowHandler {
   }
 
   // ###
-  private handleDefaultAction() {
+  private handleInvalidOption() {
     return [
       '❌ OPÇÃO INVÁLIDA:\n',
       //

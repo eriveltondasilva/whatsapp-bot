@@ -1,12 +1,12 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
+import { FlowStep } from '@/config/enums.js'
 import { LoggerService } from '@/services/logger-service.js'
-
-import type { FlowActions, FlowHandler } from '@/types.js'
 import { mainMenu } from '@/messages/main-menu.js'
 import { orderMenu } from '@/messages/order-menu.js'
+
+import type { FlowActions, FlowHandler } from '@/types.js'
 
 @injectable()
 export class MainMenuFlow implements FlowHandler {
@@ -58,11 +58,12 @@ export class MainMenuFlow implements FlowHandler {
     this.flowStateManager.clearState(phone)
     return [
       '✨ Obrigado por utilizar nossos serviços!',
-      'Se precisar de algo, estamos aqui para ajudar.',
+      'Se precisar de algo, estamos aqui para ajudar.\n',
       '👋 Até a próxima!',
     ]
   }
 
+  // ###
   private handleInvalidOption(): string[] {
     return [
       '❌ OPÇÃO INVÁLIDA:\n',

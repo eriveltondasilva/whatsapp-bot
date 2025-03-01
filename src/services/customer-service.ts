@@ -22,7 +22,7 @@ export class CustomerService {
     const newCustomer: Customer = {
       ...data,
       id: this.customers.size + 1,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(),
     }
 
     this.customers.set(newCustomer.phone, newCustomer)

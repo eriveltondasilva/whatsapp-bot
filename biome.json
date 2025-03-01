@@ -23,8 +23,7 @@
     },
     "formatter": {
       "semicolons": "asNeeded",
-      "quoteStyle": "single",
-      "trailingCommas": "all"
+      "quoteStyle": "single"
     }
   },
   "linter": {

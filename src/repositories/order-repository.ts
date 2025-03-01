@@ -9,8 +9,8 @@ export class OrderRepository {
     return await prisma.order.create({
       data,
       include: {
-        customer: true
-      }
+        customer: true,
+      },
     })
   }
 

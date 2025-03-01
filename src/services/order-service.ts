@@ -1,10 +1,10 @@
-import { LoggerService } from '@/services/logger-service.js';
-import { inject, injectable } from 'tsyringe';
+import { LoggerService } from '@/services/logger-service.js'
+import { inject, injectable } from 'tsyringe'
 
-import { OrderRepository } from '@/repositories/index.js';
-import { ProductService } from './product-service.js';
+import { OrderRepository } from '@/repositories/index.js'
+import { ProductService } from './product-service.js'
 
-import type { OrderItem, OrderStatus, PaymentMethod } from '@/types.js';
+import type { OrderItem, OrderStatus, PaymentMethod } from '@/types.js'
 
 @injectable()
 export class OrderService {
@@ -12,7 +12,7 @@ export class OrderService {
     @inject(LoggerService) private logger: LoggerService,
     @inject(OrderRepository) private orderRepository: OrderRepository,
     @inject(ProductService) private productService: ProductService,
-  ) { }
+  ) {}
 
   public async createOrder(address = '') {
     return await this.orderRepository.createOrder({

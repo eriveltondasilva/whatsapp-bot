@@ -1,22 +1,25 @@
+import type { Crust, Flavor } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/index.js'
 import { orderMenu } from '@/messages/order-menu.js'
-import { LoggerService, ProductService } from '@/services/index.js'
+import { CrustRepository, FlavorRepository } from '@/repositories/index.js'
+import { LoggerService } from '@/services/index.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 
-import type { FlowActions, FlowHandler, Pizza } from '@/types.js'
+import type { FlowActions, FlowHandler } from '@/types.js'
 
 @injectable()
 export class PizzaFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
-    @inject(ProductService) private productService: ProductService,
+    @inject(FlavorRepository) private flavorRepo: FlavorRepository,
+    @inject(CrustRepository) private crustRepo: CrustRepository,
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
-  handle(phone: string, message: string): string[] {
+  handle(phone: string, message: string) {
     this.logger.info('🍕 Pizza Flow: %o', { phone, message })
     const { step } = this.flowStateManager.getState(phone)
 
@@ -28,13 +31,13 @@ export class PizzaFlow implements FlowHandler {
       [FlowStep.PIZZA_NOTES]: () => this.handlePizzaObservations(phone, message),
     }
 
-    return actions[step]?.() || this.handleDefaultAction()
+    return actions[step]?.() || this.handleInvalidOption()
   }
 
   // ###
-  private handlePizzaType(phone: string, message: string): string[] {
+  private async handlePizzaType(phone: string, message: string) {
     const pizzaType = message === '1' ? 'full' : 'half'
-    const pizzas = this.productService.getProducts()
+    const pizzas = await this.flavorRepo.getAllFlavors()
 
     if (!pizzas?.length) {
       this.flowStateManager.clearState(phone)
@@ -53,29 +56,29 @@ export class PizzaFlow implements FlowHandler {
         ? '🍕 *ESCOLHA O SABOR DA PIZZA:*\n'
         : '🍕 *ESCOLHA O PRIMEIRO SABOR DA PIZZA:*\n',
       //
-      ...this.buildPizzaList(pizzas),
+      ...this.buildFlavorList(pizzas),
       //
-      '\n✍️ Digite o número da opção desejada:',
+      '✍️ Digite o número da opção desejada:',
     ]
   }
 
-  //
-  private handlePizzaFlavor(phone: string, message: string): string[] {
+  private async handlePizzaFlavor(phone: string, message: string) {
     const { data } = this.flowStateManager.getState(phone)
-    const pizzas = this.productService.getProducts()
+    const flavors = await this.flavorRepo.getAllFlavors()
+    const crusts = await this.crustRepo.getAllCrusts()
 
     const selectedIndex = Number.parseInt(message) - 1
 
-    if (Number.isNaN(selectedIndex) || !pizzas?.[selectedIndex]) {
+    if (Number.isNaN(selectedIndex) || !flavors?.[selectedIndex]) {
       return [
         '❌ *OPÇÃO INVÁLIDA!*',
-        'Por favor, digite um número válido da opção desejada.',
+        'Por favor, digite um número válido da opção desejada.\n',
         //
-        '\n✍️ Digite o número da opção desejada:',
+        '✍️ Digite o número da opção desejada:',
       ]
     }
 
-    const selectedFlavors = [...(data?.selectedFlavors || []), pizzas[selectedIndex]]
+    const selectedFlavors = [...(data?.selectedFlavors || []), flavors[selectedIndex]]
 
     if (data?.pizzaType === 'half' && selectedFlavors.length === 1) {
       this.flowStateManager.updateState(phone, {
@@ -88,7 +91,7 @@ export class PizzaFlow implements FlowHandler {
       return [
         '🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA:*\n',
         //
-        ...this.buildPizzaList(pizzas),
+        ...this.buildFlavorList(flavors),
         //
         '\n✍️ *Digite o número da opção desejada:*',
       ]
@@ -104,35 +107,22 @@ export class PizzaFlow implements FlowHandler {
     return [
       '🔄 *ESCOLHA A BORDA DA PIZZA:*\n',
       //
-      '1 - Tradicional (Grátis)',
-      '2 - Catupiry (+R$ 5,00)',
-      '3 - Cheddar (+R$ 5,00)',
-      '4 - Chocolate (+R$ 7,00)',
+      ...this.buildCrustList(crusts),
       //
       '\n✍️ Digite o número da borda desejada:',
     ]
   }
 
-  //
-  private handlePizzaEdge(phoneNumber: string, message: string): string[] {
-    const edges = [
-      { id: 1, name: 'Tradicional', price: 0 },
-      { id: 2, name: 'Catupiry', price: 5.0 },
-      { id: 3, name: 'Cheddar', price: 5.0 },
-      { id: 4, name: 'Chocolate', price: 7.0 },
-    ]
+  private async handlePizzaEdge(phoneNumber: string, message: string) {
+    const crusts = await this.crustRepo.getAllCrusts()
+    const selectedCrust = crusts[+message - 1]
 
-    const edge = edges[+message - 1]
-
-    if (!edge) {
+    if (!selectedCrust) {
       return [
         '❌ *BORDA INVÁLIDA!*',
         'Por favor, escolha uma opção válida:\n',
         //
-        '1 - Tradicional (Grátis)',
-        '2 - Catupiry (+R$ 5,00)',
-        '3 - Cheddar (+R$ 5,00)',
-        '4 - Chocolate (+R$ 7,00)',
+        ...this.buildCrustList(crusts),
         //
         '\n✍️ Digite o número da borda desejada:',
       ]
@@ -141,14 +131,13 @@ export class PizzaFlow implements FlowHandler {
     this.flowStateManager.updateState(phoneNumber, {
       step: FlowStep.PIZZA_QUANTITY,
       data: {
-        edge,
+        selectedCrust,
       },
     })
 
     return ['🔢 Digite a quantidade desejada (1-5):']
   }
 
-  //
   private handlePizzaQuantity(phone: string, message: string) {
     const quantity = Number.parseInt(message)
 
@@ -170,13 +159,14 @@ export class PizzaFlow implements FlowHandler {
     ]
   }
 
-  //
   private handlePizzaObservations(phone: string, message: string) {
-    const { data } = this.flowStateManager.getState(phone)
     const observations = message === '0' ? undefined : message
 
     this.flowStateManager.updateState(phone, {
       step: FlowStep.ORDER,
+      data: {
+        observations,
+      },
     })
 
     return [
@@ -187,15 +177,22 @@ export class PizzaFlow implements FlowHandler {
   }
 
   // ###
-  private handleDefaultAction() {
+  private handleInvalidOption() {
     return ['❌ Ocorreu um erro no fluxo. Por favor, tente novamente.']
   }
 
   // ###
-  private buildPizzaList(pizzas: Pizza[]): string[] {
-    return pizzas.map((pizza, index) => {
+  private buildFlavorList(flavors: Flavor[]) {
+    return flavors.map((pizza, index) => {
       const ingredients = pizza.ingredients || 'sem ingredientes'
-      return `${index + 1} - ${pizza.name} (${formatCurrency(pizza.price)}) - _${ingredients}_`
+      return `${index + 1} - ${pizza.name} (${formatCurrency(Number(pizza.price))}) - _${ingredients}_`
+    })
+  }
+
+  private buildCrustList(crusts: Crust[]) {
+    return crusts.map((crust, index) => {
+      const crustPrice = Number(crust.price) === 0 ? formatCurrency(Number(crust.price)) : 'grátis'
+      return `${index + 1} - ${crust.name} (${crustPrice})`
     })
   }
 }
