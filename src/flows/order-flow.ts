@@ -19,7 +19,7 @@ export class OrderFlow implements FlowHandler {
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
-  handle(phone: string, message: string): string[] {
+  handle(phone: string, message: string) {
     this.logger.info('👋 Order Flow: %o', { phone, message })
 
     const actions: FlowActions = {

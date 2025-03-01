@@ -3,7 +3,8 @@ import { inject, injectable } from 'tsyringe'
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { mainMenu } from '@/messages/main-menu.js'
-import { CustomerService, LoggerService } from '@/services/index.js'
+import {CustomerRepository} from '@/repositories/index.js'
+import { LoggerService } from '@/services/index.js'
 import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
 
 import type { FlowActions, FlowHandler } from '@/types.js'
@@ -12,12 +13,12 @@ import type { FlowActions, FlowHandler } from '@/types.js'
 export class RegistrationFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
-    @inject(CustomerService) private customerService: CustomerService,
+    @inject(CustomerRepository) private customerRepo: CustomerRepository,
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
   // ###
-  public handle(phone: string, message: string): string[] {
+  public handle(phone: string, message: string) {
     this.logger.debug('👋 Registration Flow: %o', { phone, message })
     const { step } = this.flowStateManager.getState(phone)
 
@@ -84,7 +85,7 @@ export class RegistrationFlow implements FlowHandler {
 
     const { data } = this.flowStateManager.getState(phone)
 
-    const newCustomer = this.customerService.createCustomer({
+    const newCustomer = this.customerRepo.create({
       phone: phone,
       name: data?.name || '',
       address,
@@ -105,7 +106,6 @@ export class RegistrationFlow implements FlowHandler {
   // ###
   private resetFlow(phone: string): string[] {
     this.flowStateManager.clearState(phone)
-    this.customerService.deleteCustomer(phone)
 
     return ['❌ Ops! Algo deu errado. Por favor, tente novamente.']
   }

@@ -3,7 +3,8 @@ import { inject, injectable } from 'tsyringe'
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { mainMenu } from '@/messages/main-menu.js'
-import { CustomerService, LoggerService } from '@/services/index.js'
+import { CustomerRepository } from '@/repositories/index.js'
+import { LoggerService } from '@/services/index.js'
 import { getGreeting } from '@/utils/get-greeting.js'
 import { RegistrationFlow } from './registration-flow.js'
 
@@ -13,14 +14,14 @@ import type { FlowHandler } from '@/types.js'
 export class WelcomeFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
-    @inject(CustomerService) private customerService: CustomerService,
+    @inject(CustomerRepository) private customerRepo: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
     @inject(LoggerService) private logger: LoggerService,
-  ) {}
+  ) { }
 
-  public handle(phone: string, message: string): string[] {
+  public async handle(phone: string, message: string) {
     this.logger.debug('👋 Welcome Flow: %o', { phone, message })
-    const customer = this.customerService.getCustomer(phone)
+    const customer = await this.customerRepo.findByPhone(phone)
 
     if (!customer) {
       this.flowStateManager.updateState(phone, {

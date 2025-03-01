@@ -16,7 +16,7 @@ export class MainMenuFlow implements FlowHandler {
   ) {}
 
   // ###
-  public handle(phone: string, message: string): string[] {
+  public handle(phone: string, message: string) {
     this.logger.debug('👋 Menu Flow: %o', { phone, message })
 
     const actions: FlowActions = {
