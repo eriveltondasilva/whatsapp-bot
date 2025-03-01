@@ -1,9 +1,6 @@
 import type { Prisma } from '@prisma/client'
-import { injectable } from 'tsyringe'
-
 import { prisma } from '@/db/prisma.js'
 
-@injectable()
 export class DrinkRepository {
   async getAllDrinks() {
     return await prisma.drink.findMany({
