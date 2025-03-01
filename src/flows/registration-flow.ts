@@ -48,7 +48,6 @@ export class RegistrationFlow implements FlowHandler {
     ]
   }
 
-  //
   private handleNameInput(phone: string, name: string): string[] {
     if (!isValidName(name)) {
       return [
