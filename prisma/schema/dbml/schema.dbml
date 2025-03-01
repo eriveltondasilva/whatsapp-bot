@@ -9,19 +9,19 @@ Table customers {
   address String [not null]
   active Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   orders orders [not null]
 }
 
 Table flavors {
   id Int [pk, increment]
   name String [unique, not null]
-  category FlavorCategory [not null]
+  category FlavorCategory [not null, default: 'savory']
   ingredients String [not null]
-  price Decimal [not null]
+  price Decimal [not null, default: 0]
   active Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   firstPizzas order_pizzas [not null]
   secondPizzas order_pizzas [not null]
 }
@@ -29,10 +29,10 @@ Table flavors {
 Table crusts {
   id Int [pk, increment]
   name String [unique, not null]
-  price Decimal [not null]
+  price Decimal [not null, default: 0]
   active Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   pizzas order_pizzas [not null]
 }
 
@@ -40,10 +40,10 @@ Table drinks {
   id Int [pk, increment]
   name String [unique, not null]
   description String
-  price Decimal [not null]
+  price Decimal [not null, default: 0]
   active Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   orderDrinks order_drinks [not null]
 }
 
@@ -51,11 +51,11 @@ Table orders {
   id Int [pk, increment]
   deliveryAddress String [not null]
   status OrderStatus [not null, default: 'pending']
-  totalAmount Decimal [not null]
-  paymentMethod PaymentMethod [not null]
+  totalAmount Decimal [not null, default: 0]
+  paymentMethod PaymentMethod [not null, default: 'cash']
   notes String
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
   customer customers [not null]
   customerId Int [not null]
   items order_items [not null]
@@ -65,8 +65,8 @@ Table order_items {
   id Int [pk, increment]
   itemType ItemType [not null]
   quantity Int [not null, default: 1]
-  unitPrice Decimal [not null]
-  subtotal Decimal [not null]
+  unitPrice Decimal [not null, default: 0]
+  subtotal Decimal [not null, default: 0]
   notes String
   createdAt DateTime [default: `now()`, not null]
   order orders [not null]
@@ -100,11 +100,32 @@ Table order_drinks {
 Table working_hours {
   id Int [pk, increment]
   dayOfWeek Int [not null]
-  openingTime DateTime [not null]
-  closingTime DateTime [not null]
+  openingTime String [not null]
+  closingTime String [not null]
   active Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+
+  indexes {
+    (dayOfWeek, active) [unique]
+  }
+}
+
+Table pizzerias {
+  id Int [pk, increment]
+  name String [not null]
+  description String
+  cnpj String [unique, not null]
+  address String [not null]
+  phone String [unique]
+  active Boolean [not null, default: true]
+  deliveryTax Decimal [default: 0]
+  minOrderValue Decimal [default: 0]
+  website String
+  instagram String
+  facebook String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
 }
 
 Enum OrderStatus {
@@ -124,7 +145,6 @@ Enum PaymentMethod {
   cash
   credit
   debit
-  pix
 }
 
 Enum ItemType {
@@ -136,7 +156,7 @@ Ref: orders.customerId > customers.id
 
 Ref: order_items.orderId > orders.id
 
-Ref: order_pizzas.orderItemId - order_items.id
+Ref: order_pizzas.orderItemId - order_items.id [delete: Cascade]
 
 Ref: order_pizzas.firstFlavorId > flavors.id
 
@@ -144,6 +164,6 @@ Ref: order_pizzas.secondFlavorId > flavors.id
 
 Ref: order_pizzas.crustId > crusts.id
 
-Ref: order_drinks.orderItemId - order_items.id
+Ref: order_drinks.orderItemId - order_items.id [delete: Cascade]
 
 Ref: order_drinks.drinkId > drinks.id

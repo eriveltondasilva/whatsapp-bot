@@ -14,11 +14,10 @@ export class OrderService {
     @inject(ProductService) private productService: ProductService,
   ) { }
 
-  public async createOrder(customerId: string) {
-    const address = ''
-
+  public async createOrder(address = '') {
     return await this.orderRepository.createOrder({
       deliveryAddress: address,
+      customer: '',
     })
   }
 

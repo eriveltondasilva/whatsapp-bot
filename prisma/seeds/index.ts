@@ -1,27 +1,43 @@
 import { PrismaClient } from '@prisma/client'
-// import { seedCrust } from './crust.js'
-// import { seedCustomer } from './customer.js'
-// import { seedDrink } from './drink.js'
-// import { seedPizzas } from './pizza.js'
+
+import { seedCrust } from './crust.js'
+import { seedCustomer } from './customer.js'
+import { seedDrink } from './drink.js'
+import { seedFlavor } from './flavor.js'
+import { seedPizzeria } from './pizzeria.js'
+import { seedWorkingHour } from './working-hour.js'
 
 const prisma = new PrismaClient()
 
+async function seedDatabase() {
+    console.log('\n🔄 Starting database seeding...');
+
+    await Promise.all([
+        seedPizzeria(prisma),
+        seedWorkingHour(prisma),
+        seedCrust(prisma),
+        seedCustomer(prisma),
+        seedDrink(prisma),
+        seedFlavor(prisma),
+    ])
+
+    console.log('✅ Seeding completed successfully!');
+}
+
 async function main() {
     try {
-        const result: string[] = await prisma.$queryRaw`SELECT version()`
-        // await seedPizzas(prisma)
-        // await seedDrink(prisma)
-        // await seedCrust(prisma)
-        // await seedCustomer(prisma)
+        const [dbVersion]: [{ version: string }] = await prisma.$queryRaw`SELECT version()`
+        console.log(`\n📦 Database version: ${dbVersion.version}`);
 
-        console.log('\n🚀 Seeded successfully...')
-        console.dir(...result)
-        await prisma.$disconnect()
-    } catch (e) {
-        console.error(e)
-        await prisma.$disconnect()
-        process.exit(1)
+        await seedDatabase()
+    } catch (err) {
+        console.error('❌ Error during seeding:', err);
+
+    } finally {
+        await prisma.$disconnect();
+        console.log('🔌 Database connection closed.');
     }
 
 }
+
 main()

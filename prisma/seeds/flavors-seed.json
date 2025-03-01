@@ -3,19 +3,22 @@
     "name": "Milho Verde",
     "category": "savory",
     "ingredients": "Mussarela, milho verde, orégano",
-    "price": 34.0
+    "price": 34.0,
+    "active": true
   },
   {
     "name": "Calabresa",
     "ingredients": "Mussarela, calabresa, cebola, orégano",
     "price": 34.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Presunto",
     "ingredients": "Mussarela, presunto, orégano",
     "price": 34.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Frango Caipira",
@@ -27,108 +30,126 @@
     "name": "Dois Queijos",
     "ingredients": "Mussarela, catupiry, orégano",
     "price": 34.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Lombo",
     "ingredients": "Mussarela, lombo, cebola, orégano",
     "price": 36.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Catupirela",
     "ingredients": "Mussarela, calabresa, catupiry, orégano",
     "price": 38.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Portuguesa",
     "ingredients": "Mussarela, presunto, tomate, cebola, pimentão, milho verde, ovos, orégano",
     "price": 40.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "À Moda",
     "ingredients": "Mussarela, calabresa, presunto, cebola",
     "price": 40.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Frango Catupiry",
     "ingredients": "Mussarela, frango, catupiry, orégano",
     "price": 40.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Quatro Queijos",
     "ingredients": "Mussarela, prato, provolone, catupiry, orégano",
     "price": 40.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Palharina",
     "ingredients": "Mussarela, frango, batata desfiada, orégano",
     "price": 40.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Peperone",
     "ingredients": "Mussarela, peperone, cebola, orégano",
     "price": 42.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Americana",
     "ingredients": "Mussarela, bacon, ovos, presunto, cebola, orégano",
     "price": 42.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Mussarela",
     "ingredients": "Mussarela, tomate, orégano",
     "price": 40.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Atum",
     "ingredients": "Mussarela, atum, cebola, orégano",
     "price": 42.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Marguerita",
     "ingredients": "Mussarela, manjericão, tomate, orégano",
     "price": 42.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Carne de Sol",
     "ingredients": "Mussarela, carne de sol, cebola, orégano",
     "price": 44.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Queijo do Reino",
     "ingredients": "Mussarela, queijo do reino, orégano",
     "price": 46.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Nordestina",
     "ingredients": "Mussarela, carne de sol, queijo coalho, cebola, orégano",
     "price": 50.0,
-    "category": "savory"
+    "category": "savory",
+    "active": true
   },
   {
     "name": "Brigadeiro",
     "ingredients": "Chocolate, chocolate granulado",
     "price": 38.0,
-    "category": "sweet"
+    "category": "sweet",
+    "active": true
   },
   {
     "name": "Cartola",
     "ingredients": "Mussarela, banana, açúcar, canela em pó",
     "price": 38.0,
-    "category": "sweet"
+    "category": "sweet",
+    "active": true
   }
 ]

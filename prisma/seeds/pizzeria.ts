@@ -1,9 +1,8 @@
 import type { PrismaClient } from "@prisma/client";
 import pizzerias from './pizzerias-seed.json';
 
-export async function seedFlavors(prisma: PrismaClient) {
+export async function seedPizzeria(prisma: PrismaClient) {
     return await prisma.pizzeria.create({
-        data: pizzerias[0],
-        skipDuplicates: true,
+        data: pizzerias[0]
     });
 }

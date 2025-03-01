@@ -2,16 +2,19 @@
   {
     "name": "Ingrid Alves",
     "phone": "558298350441",
-    "address": "123 Main St, Springfield"
+    "address": "123 Main St, Springfield",
+    "active": true
   },
   {
     "name": "John Doe",
     "phone": "558298350442",
-    "address": "456 Elm St, New York"
+    "address": "456 Elm St, New York",
+    "active": true
   },
   {
     "name": "Erivelton",
     "phone": "558298350443",
-    "address": "789 Oak St, Los Angeles"
+    "address": "789 Oak St, Los Angeles",
+    "active": true
   }
 ]
