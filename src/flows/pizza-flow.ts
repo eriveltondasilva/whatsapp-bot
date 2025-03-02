@@ -6,7 +6,7 @@ import { FlowStateManager } from '@/managers/index.js'
 import { orderMenu } from '@/messages/order-menu.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/index.js'
 import { LoggerService } from '@/services/index.js'
-import { formatCurrency } from '@/utils/format-currency.js'
+import { formatCurrency, isValidQuantity } from '@/utils/index.js'
 
 import type { FlowActions, FlowHandler } from '@/types.js'
 
@@ -17,7 +17,7 @@ export class PizzaFlow implements FlowHandler {
     @inject(FlavorRepository) private flavorRepo: FlavorRepository,
     @inject(CrustRepository) private crustRepo: CrustRepository,
     @inject(LoggerService) private logger: LoggerService,
-  ) { }
+  ) {}
 
   handle(phone: string, message: string) {
     this.logger.info('🍕 Pizza Flow: %o', { phone, message })
@@ -37,9 +37,9 @@ export class PizzaFlow implements FlowHandler {
   // ###
   private async handlePizzaType(phone: string, message: string) {
     const pizzaType = message === '1' ? 'full' : 'half'
-    const pizzas = await this.flavorRepo.getAllFlavors()
+    const flavors = await this.flavorRepo.getAllFlavors()
 
-    if (!pizzas?.length) {
+    if (!flavors?.length) {
       this.flowStateManager.clearState(phone)
       return ['❌ Desculpe, não encontramos sabores disponíveis no momento.']
     }
@@ -51,14 +51,20 @@ export class PizzaFlow implements FlowHandler {
       },
     })
 
-    return [
+    const title =
       pizzaType === 'full'
         ? '🍕 *ESCOLHA O SABOR DA PIZZA:*'
-        : '🍕 *ESCOLHA O PRIMEIRO SABOR DA PIZZA:*\n',
+        : '🍕 *ESCOLHA O PRIMEIRO SABOR DA PIZZA:*'
+
+    const description =
+      '> Para escolher sua pizza, toque no botão "Clique Aqui" abaixo para abrir nosso cardápio.'
+
+    return [
+      'list',
+      title,
+      description,
       //
-      ...this.buildFlavorList(pizzas),
-      //
-      '\n✍️ Digite o número da opção desejada:',
+      ...this.buildFlavorList(flavors),
     ]
   }
 
@@ -141,7 +147,7 @@ export class PizzaFlow implements FlowHandler {
   private handlePizzaQuantity(phone: string, message: string) {
     const quantity = Number.parseInt(message)
 
-    if (Number.isNaN(quantity) || quantity < 1 || quantity > 5) {
+    if (!isValidQuantity(quantity)) {
       return ['❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.']
     }
 
@@ -182,23 +188,24 @@ export class PizzaFlow implements FlowHandler {
   }
 
   // ###
-  private buildFlavorList(flavors: Flavor[]) {
-    return flavors.map((flavor, index) => {
-      const ingredients = flavor.ingredients || 'sem ingredientes'
-      return [
-        `${index + 1} - *${flavor.name}* (${formatCurrency(Number(flavor.price))})`,
-        `_${ingredients}_`,
-      ].join('\n')
+  // private buildFlavorList(flavors: Flavor[]) {
+  //   return flavors.map((flavor, index) => {
+  //     const ingredients = flavor.ingredients || 'sem ingredientes'
+  //     return [
+  //       `${index + 1} - *${flavor.name}* (${formatCurrency(Number(flavor.price))})`,
+  //       `_${ingredients}_`,
+  //     ].join('\n')
+  //   })
+  // }
+
+  private buildFlavorList(flavors: Flavor[]): string[] {
+    return flavors.map(({ id, name, ingredients, price, category }) => {
+      const flavorPrice = formatCurrency(Number(price))
+
+      return `${id}::${id} - ${name} (${flavorPrice})::${ingredients}::${category}`
+      // 'rowId :: rowTitle :: rowDescription :: category'
     })
   }
-
-  // private buildList(flavors: Flavor[]): string[] {
-  //   return flavors.map((flavor, index) => ({
-  //     rowId: `${index + 1}`,
-  //     title: flavor.name
-  //     description: flavor.ingredients,
-  //   }))
-  // }
 
   private buildCrustList(crusts: Crust[]) {
     return crusts.map((crust, index) => {

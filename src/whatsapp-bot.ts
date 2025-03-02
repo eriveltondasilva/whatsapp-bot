@@ -1,9 +1,10 @@
 import type { Message, Whatsapp } from '@wppconnect-team/wppconnect'
-import { delay, inject, injectable } from 'tsyringe'
+import { inject, injectable } from 'tsyringe'
 
 import { ClientManager, DialogManager } from '@/managers/index.js'
 import { LoggerService } from '@/services/logger-service.js'
 import { isValidMessage } from '@/utils/validations.js'
+
 import { getDelay } from './utils/get-delay.js'
 
 @injectable()
@@ -14,7 +15,7 @@ export class WhatsappBot {
     @inject(ClientManager) private clientManager: ClientManager,
     @inject(DialogManager) private dialogManager: DialogManager,
     @inject(LoggerService) private logger: LoggerService,
-  ) {}
+  ) { }
 
   // ###
   public async initialize(): Promise<void> {
@@ -26,7 +27,7 @@ export class WhatsappBot {
     this.logger.debug('📬 Received message: %o', {
       from: message.from,
       body: message.body,
-      // message: message,
+      message: message,
     })
 
     // TODO: remover a validação
@@ -40,6 +41,8 @@ export class WhatsappBot {
     }
 
     const response = await this.dialogManager.handleMessage(message.from, message.body)
+
+    if (response[0] === 'list') return await this.sendList(message.from, response)
 
     await this.sendMessage(message.from, response)
   }
@@ -71,30 +74,36 @@ export class WhatsappBot {
   }
 
   private async sendList(to: string, list: string[]): Promise<void> {
+    this.logger.info('📬 sendList')
+
+    const [, title, description, ...rowsData] = list
+    const mappedRows = rowsData.map((row) => {
+      const [rowId, rowTitle, rowDescription, rowCategory = 'cardápio'] = row.split('::')
+      return {
+        rowId: rowId,
+        title: rowTitle,
+        description: rowDescription,
+        category: rowCategory.toUpperCase(),
+      }
+    })
+
+    const rowsByCategory = Object.groupBy(mappedRows, ({ category }) => category)
+    const sections = Object.entries(rowsByCategory).map(([sectionTitle, sectionRows]) => ({
+      title: sectionTitle,
+      rows: sectionRows?.map(({ rowId, title, description }) => ({
+        rowId,
+        title,
+        description,
+      })),
+    }))
+
     try {
       await this.client?.sendListMessage(to, {
         buttonText: 'Clique Aqui',
-        title: list[1],
-        description: list[2],
+        title: title,
+        description: description,
         delay: getDelay(),
-        sections: [
-          {
-            title: 'Section 1',
-            rows: list[3]
-            // rows: [
-            //   {
-            //     rowId: 'my_custom_id',
-            //     title: 'Test 1',
-            //     description: 'Description 1',
-            //   },
-            //   {
-            //     rowId: '2',
-            //     title: 'Test 2',
-            //     description: 'Description 2',
-            //   },
-            // ],
-          },
-        ],
+        sections,
       })
       this.logger.debug('📬 List sent to: %s', to)
     } catch (error) {

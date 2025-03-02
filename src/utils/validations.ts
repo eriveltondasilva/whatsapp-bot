@@ -1,16 +1,5 @@
-import type { Message } from '@wppconnect-team/wppconnect'
-
-import { PaymentMethod, Validation } from '@/config/enums.js'
-import { dayjs } from '@/utils/dayjs.js'
-
-export function isValidPhoneNumber(phone: string): boolean {
-  const regex = /^(\(?\d{2}\)?[\s]?)?(9?\d{4})[-\s]?(\d{4})$/
-  return regex.test(phone.trim())
-}
-
-export function isValidBirthday(date: string): boolean {
-  return dayjs(date, 'DD/MM/YYYY', true).isValid()
-}
+import { Validation } from '@/config/enums.js'
+import { type Message, MessageType } from '@wppconnect-team/wppconnect'
 
 export function isValidName(name: string): boolean {
   return name.trim().length >= Validation.NAME_MIN_LENGTH
@@ -28,21 +17,30 @@ export function isValidQuantity(quantity: number): boolean {
   )
 }
 
-export function isValidPaymentMethod(method: PaymentMethod): boolean {
-  const validMethods = Object.values(PaymentMethod)
-  return validMethods.includes(method)
-}
-
 export function isValidMessage(message: Message): boolean {
-  if (!message) return false
+  if (!message || !message.body) {
+    console.log('🚫 Invalid message')
+    return false
+  }
 
-  // TODO: Add fromMe check
-  if (message.fromMe || message.isGroupMsg || message.type !== 'chat') return false
+  if (![MessageType.CHAT, MessageType.LIST_RESPONSE].includes(message.type)) {
+    console.log('🚫 Invalid message type:', message.type)
+    return false
+  }
 
-  if (!message.body?.trim()) return false
+  if (message.fromMe || message.isGroupMsg) {
+    console.log('🚫 Invalid message from:', message.from)
+    return false
+  }
 
+  if (!message.isNewMsg) {
+    console.log('🚫 Invalid message isNewMsg:', message.isNewMsg)
+    return false
+  }
+
+  const messageLength = message.body.length;
   return (
-    message.body.trim().length >= Validation.MESSAGE_MIN_LENGTH &&
-    message.body.trim().length <= Validation.MESSAGE_MAX_LENGTH
+    messageLength >= Validation.MESSAGE_MIN_LENGTH &&
+    messageLength <= Validation.MESSAGE_MAX_LENGTH
   )
 }
