@@ -22,4 +22,5 @@ export type FlowHandler = {
   handle(phone: string, msg: string): string[] | Promise<string[]>
 }
 
-export type FlowActions = Record<string, () => string[] | Promise<string[]>>
+export type FlowAction = () => string[] | Promise<string[]>
+export type FlowActions = Record<string | number, FlowAction>

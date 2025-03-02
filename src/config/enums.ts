@@ -56,6 +56,7 @@ export const FlowStep = {
   PIZZA_QUANTITY: 'pizza::quantity',
   PIZZA_NOTES: 'pizza::notes',
   //
+  DRINK: 'drink',
   DRINK_TYPE: 'drink::type',
   DRINK_QUANTITY: 'drink::quantity',
   //

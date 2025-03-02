@@ -36,13 +36,11 @@ export class OrderFlow implements FlowHandler {
   // ###
   private handlePizzaSelection(phone: string, message: string) {
     this.flowStateManager.updateState(phone, { step: FlowStep.PIZZA_TYPE })
-
     return this.pizzaFlow.handle(phone, message)
   }
 
   private handleDrinkSelection(phone: string, message: string) {
-    this.flowStateManager.updateState(phone, { step: FlowStep.DRINK_TYPE })
-
+    this.flowStateManager.updateState(phone, { step: FlowStep.DRINK })
     return this.drinkFlow.handle(phone, message)
   }
 
@@ -62,7 +60,7 @@ export class OrderFlow implements FlowHandler {
   // ###
   private handleInvalidOption() {
     return [
-      '❌ OPÇÃO INVÁLIDA:\n',
+      '❌ *OPÇÃO INVÁLIDA:*\n',
       //
       ...orderMenu,
     ]

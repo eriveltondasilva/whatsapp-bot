@@ -1,5 +1,5 @@
 import type { Message, Whatsapp } from '@wppconnect-team/wppconnect'
-import { inject, injectable } from 'tsyringe'
+import { delay, inject, injectable } from 'tsyringe'
 
 import { ClientManager, DialogManager } from '@/managers/index.js'
 import { LoggerService } from '@/services/logger-service.js'
@@ -26,6 +26,7 @@ export class WhatsappBot {
     this.logger.debug('📬 Received message: %o', {
       from: message.from,
       body: message.body,
+      // message: message,
     })
 
     // TODO: remover a validação
@@ -40,11 +41,10 @@ export class WhatsappBot {
 
     const response = await this.dialogManager.handleMessage(message.from, message.body)
 
-    if (!response) return
-
     await this.sendMessage(message.from, response)
   }
 
+  // ###
   private async sendMessage(to: string, message: string[]): Promise<void> {
     try {
       await this.client?.sendText(to, message.join('\n'), {
@@ -53,6 +53,52 @@ export class WhatsappBot {
       this.logger.debug('📬 Message sent to: %s', to)
     } catch (error) {
       this.logger.error('❌ Failed to send message to %s: %o', to, error)
+    }
+  }
+
+  private async sendImage(to: string, image: string): Promise<void> {
+    try {
+      await this.client?.sendImage(
+        '000000000000@c.us',
+        'path/to/img.jpg',
+        'image-name',
+        'Caption text',
+      )
+      this.logger.debug('📬 Image sent to: %s', to)
+    } catch (error) {
+      this.logger.error('❌ Failed to send image to %s: %o', to, error)
+    }
+  }
+
+  private async sendList(to: string, list: string[]): Promise<void> {
+    try {
+      await this.client?.sendListMessage(to, {
+        buttonText: 'Clique Aqui',
+        title: list[1],
+        description: list[2],
+        delay: getDelay(),
+        sections: [
+          {
+            title: 'Section 1',
+            rows: list[3]
+            // rows: [
+            //   {
+            //     rowId: 'my_custom_id',
+            //     title: 'Test 1',
+            //     description: 'Description 1',
+            //   },
+            //   {
+            //     rowId: '2',
+            //     title: 'Test 2',
+            //     description: 'Description 2',
+            //   },
+            // ],
+          },
+        ],
+      })
+      this.logger.debug('📬 List sent to: %s', to)
+    } catch (error) {
+      this.logger.error('❌ Failed to send list to %s: %o', to, error)
     }
   }
 }

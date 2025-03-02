@@ -2,7 +2,6 @@ import { LoggerService } from '@/services/logger-service.js'
 import { inject, injectable } from 'tsyringe'
 
 import { OrderRepository } from '@/repositories/index.js'
-import { ProductService } from './product-service.js'
 
 import type { OrderItem, OrderStatus, PaymentMethod } from '@/types.js'
 
@@ -11,14 +10,14 @@ export class OrderService {
   constructor(
     @inject(LoggerService) private logger: LoggerService,
     @inject(OrderRepository) private orderRepository: OrderRepository,
-    @inject(ProductService) private productService: ProductService,
+    // @inject(ProductService) private productService: ProductService,
   ) {}
 
   public async createOrder(address = '') {
-    return await this.orderRepository.createOrder({
-      deliveryAddress: address,
-      customer: '',
-    })
+    // return await this.orderRepository.createOrder({
+    //   deliveryAddress: address,
+    //   customer: '',
+    // })
   }
 
   public getOrder(orderId: number) {

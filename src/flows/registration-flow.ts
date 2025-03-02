@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe'
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { mainMenu } from '@/messages/main-menu.js'
-import {CustomerRepository} from '@/repositories/index.js'
+import { CustomerRepository } from '@/repositories/index.js'
 import { LoggerService } from '@/services/index.js'
 import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
 
@@ -38,10 +38,10 @@ export class RegistrationFlow implements FlowHandler {
     })
 
     return [
-      '🍕 Olá! Bem-vindo(a) à *Pizzaria [Nome da Pizzaria]*!\n',
+      '🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!\n',
       //
       'Estamos prontos para transformar a sua fome em felicidade. 😊',
-      'Antes de começar, precisamos fazer um _rápido_ cadastro. 🏃💨\n',
+      'Antes de começar, precisamos fazer um _*rápido*_ cadastro. 🏃💨\n',
       //
       '✍️ Qual o seu nome completo?',
       '> Exemplo: _"João da Silva"_',
@@ -95,8 +95,8 @@ export class RegistrationFlow implements FlowHandler {
     this.flowStateManager.updateState(phone, { step: FlowStep.MAIN_MENU })
 
     return [
-      `🎉 Cadastro concluído com sucesso, ${this.getFirstName(data?.name || 'cliente')}!`,
-      'Agora, vamos ao que interessa: _escolher algo gostoso_! 😋\n',
+      `🎉 Cadastro concluído com sucesso, ${this.getFirstName(data?.name || 'cliente')}!\n`,
+      'Agora, vamos ao que interessa: _*escolher algo gostoso*_! 😋\n',
       //
       ...mainMenu,
     ]
