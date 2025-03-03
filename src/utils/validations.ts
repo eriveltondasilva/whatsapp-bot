@@ -17,9 +17,24 @@ export function isValidQuantity(quantity: number): boolean {
   )
 }
 
+export function isListDataValid(title: string, description: string, content: string[]): boolean {
+  if (!title || !description || content.length === 0) {
+    console.log('🚫 Invalid list data')
+    return false
+  }
+
+  return true
+}
+
 export function isValidMessage(message: Message): boolean {
   if (!message || !message.body) {
     console.log('🚫 Invalid message')
+    return false
+  }
+
+  if (!isValidMessage(message) || !message.body) {
+    console.log('🚫 Invalid message:', message)
+
     return false
   }
 
@@ -38,9 +53,8 @@ export function isValidMessage(message: Message): boolean {
     return false
   }
 
-  const messageLength = message.body.length;
+  const messageLength = message.body.length
   return (
-    messageLength >= Validation.MESSAGE_MIN_LENGTH &&
-    messageLength <= Validation.MESSAGE_MAX_LENGTH
+    messageLength >= Validation.MESSAGE_MIN_LENGTH && messageLength <= Validation.MESSAGE_MAX_LENGTH
   )
 }

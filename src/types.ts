@@ -24,3 +24,8 @@ export type FlowHandler = {
 
 export type FlowAction = () => string[] | Promise<string[]>
 export type FlowActions = Record<string | number, FlowAction>
+
+
+export type ActionMap<T extends string = string> = Partial<
+  Record<T | '_default', () => Promise<void>>
+>;

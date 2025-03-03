@@ -17,5 +17,7 @@
       "filePath": "src",
       "group": "Default"
     }
-  ]
+  ],
+  "editor.defaultFormatter": "biomejs.biome",
+  "editor.formatOnSave": true
 }

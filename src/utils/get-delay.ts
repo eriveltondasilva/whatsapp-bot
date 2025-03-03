@@ -1,6 +1,3 @@
-export function getDelay() {
-  const min = 1_000 // 1 sec
-  const max = 10_000 // 10 sec
-
+export function getDelay(min = 1_000, max = 5_000): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
