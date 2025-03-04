@@ -16,8 +16,8 @@ Table customers {
 Table flavors {
   id Int [pk, increment]
   name String [unique, not null]
-  category FlavorCategory [not null, default: 'savory']
-  ingredients String [not null]
+  description String
+  category String [not null]
   price Decimal [not null, default: 0]
   active Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
@@ -49,52 +49,52 @@ Table drinks {
 
 Table orders {
   id Int [pk, increment]
+  customerId Int [not null]
   deliveryAddress String [not null]
-  status OrderStatus [not null, default: 'pending']
+  status String [not null]
   totalAmount Decimal [not null, default: 0]
-  paymentMethod PaymentMethod [not null, default: 'cash']
+  paymentMethod String [not null]
   notes String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   customer customers [not null]
-  customerId Int [not null]
   items order_items [not null]
 }
 
 Table order_items {
   id Int [pk, increment]
-  itemType ItemType [not null]
+  orderId Int [not null]
+  itemType String [not null]
   quantity Int [not null, default: 1]
   unitPrice Decimal [not null, default: 0]
   subtotal Decimal [not null, default: 0]
   notes String
   createdAt DateTime [default: `now()`, not null]
   order orders [not null]
-  orderId Int [not null]
   pizza order_pizzas
   drink order_drinks
 }
 
 Table order_pizzas {
   id Int [pk, increment]
+  orderItemId Int [unique, not null]
+  firstFlavorId Int [not null]
+  secondFlavorId Int
+  crustId Int [not null]
   createdAt DateTime [default: `now()`, not null]
   orderItem order_items [not null]
-  orderItemId Int [unique, not null]
   firstFlavor flavors [not null]
-  firstFlavorId Int [not null]
   secondFlavor flavors
-  secondFlavorId Int
   crust crusts [not null]
-  crustId Int [not null]
 }
 
 Table order_drinks {
   id Int [pk, increment]
+  orderItemId Int [unique, not null]
+  drinkId Int [not null]
   createdAt DateTime [default: `now()`, not null]
   orderItem order_items [not null]
-  orderItemId Int [unique, not null]
   drink drinks [not null]
-  drinkId Int [not null]
 }
 
 Table working_hours {
@@ -115,8 +115,8 @@ Table pizzerias {
   id Int [pk, increment]
   name String [not null]
   description String
-  cnpj String [unique, not null]
-  address String [not null]
+  cnpj String [unique]
+  address String
   phone String [unique]
   active Boolean [not null, default: true]
   deliveryTax Decimal [default: 0]
@@ -126,30 +126,6 @@ Table pizzerias {
   facebook String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-}
-
-Enum OrderStatus {
-  pending
-  preparing
-  delivering
-  completed
-  cancelled
-}
-
-Enum FlavorCategory {
-  sweet
-  savory
-}
-
-Enum PaymentMethod {
-  cash
-  credit
-  debit
-}
-
-Enum ItemType {
-  pizza
-  drink
 }
 
 Ref: orders.customerId > customers.id

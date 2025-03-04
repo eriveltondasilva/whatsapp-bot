@@ -5,8 +5,8 @@ import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { orderMenu } from '@/messages/order-menu.js'
 import { DrinkRepository } from '@/repositories/drink-repository.js'
-import { LoggerService } from '@/services/logger-service.js'
 import { formatCurrency } from '@/utils/format-currency.js'
+import { LoggerService } from '@/utils/logger.js'
 
 import type { FlowActions, FlowHandler } from '@/types.js'
 

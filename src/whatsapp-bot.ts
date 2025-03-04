@@ -2,11 +2,10 @@ import { type Message, MessageType, type Whatsapp } from '@wppconnect-team/wppco
 import { inject, injectable } from 'tsyringe'
 
 import { ClientManager, DialogManager } from '@/managers/index.js'
-import { LoggerService } from '@/services/logger-service.js'
 import { isListDataValid, isValidMessage } from '@/utils/validations.js'
+import { getDelay, logger } from './utils/index.js'
 
-import type { ActionMap } from './types.js'
-import { getDelay } from './utils/get-delay.js'
+import type { ActionsMap } from './types.js'
 
 @injectable()
 export class WhatsappBot {
@@ -15,26 +14,23 @@ export class WhatsappBot {
   constructor(
     @inject(ClientManager) private clientManager: ClientManager,
     @inject(DialogManager) private dialogManager: DialogManager,
-    @inject(LoggerService) private logger: LoggerService,
-  ) { }
+  ) {}
 
   // ###
   public async initialize(): Promise<void> {
+    logger.info('🤖 WhatsApp bot initialized successfully')
+
     try {
       this.client = await this.clientManager.getClient()
-      this.client?.onMessage(this.handleMessage)
-      this.logger.info('🤖 WhatsApp bot initialized successfully')
+      this.client.onMessage((message) => this.handleMessage(message))
     } catch (error) {
-      this.logger.error('❌ Failed to initialize bot: %o', error)
+      logger.error('❌ Failed to initialize bot: %o', error)
       process.exitCode = 1
     }
   }
 
   private async handleMessage(message: Message): Promise<void> {
-    this.logger.debug('📬 Received message: %o', {
-      from: message.from,
-      body: message.body,
-    })
+    logger.info('📬 Received message: %o', { from: message.from, body: message.body })
 
     if (!isValidMessage(message)) return
 
@@ -42,7 +38,7 @@ export class WhatsappBot {
       const response = await this.dialogManager.handleMessage(message.from, message.body || '')
       await this.sendResponse(message.from, response)
     } catch (error) {
-      this.logger.error('❌ Message handling error: %o', error)
+      logger.error('❌ Message handling error: %o', error)
       await this.sendMessage(message.from, [
         '❌ Desculpe, ocorreu um erro ao processar sua mensagem.',
         'Por favor, tente novamente em alguns instantes.',
@@ -56,21 +52,20 @@ export class WhatsappBot {
 
     const [messageType, ...content] = response
 
-    const actions: ActionMap<MessageType> = {
+    const actions: ActionsMap<MessageType> = {
       [MessageType.LIST]: () => this.sendList(to, content),
       [MessageType.IMAGE]: () => this.sendImage(to, content),
-      _default: () => this.sendMessage(to, response),
     }
 
-    await (actions[messageType as MessageType] || actions._default)?.();
+    actions[messageType as MessageType]?.() || this.sendMessage(to, response)
   }
 
   private async sendMessage(to: string, message: string[]): Promise<void> {
     try {
       await this.client?.sendText(to, message.join('\n'), { delay: getDelay() })
-      this.logger.info('✅ Message sent to: %s', to)
+      logger.info('✅ Message sent to: %s', to)
     } catch (error) {
-      this.logger.error('❌ Message sending failed to %s: %o', to, error)
+      logger.error('❌ Message sending failed to %s: %o', to, error)
     }
   }
 
@@ -79,9 +74,9 @@ export class WhatsappBot {
       const [imagePath, imageName = 'Imagem', captionText] = content
 
       await this.client?.sendImage(to, imagePath, imageName, captionText)
-      this.logger.info('📬 Image sent to: %s', to)
+      logger.info('📬 Image sent to: %s', to)
     } catch (error) {
-      this.logger.error('❌ Image sending failed to %s: %o', to, error)
+      logger.error('❌ Image sending failed to %s: %o', to, error)
     }
   }
 
@@ -97,9 +92,9 @@ export class WhatsappBot {
         delay: getDelay(),
         sections: this.createListSections(rowsData),
       })
-      this.logger.debug('📬 List sent to: %s', to)
+      logger.info('📬 List sent to: %s', to)
     } catch (error) {
-      this.logger.error('❌ List sending failed to %s: %o', to, error)
+      logger.error('❌ List sending failed to %s: %o', to, error)
     }
   }
 

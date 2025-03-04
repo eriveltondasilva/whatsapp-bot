@@ -1,51 +1,52 @@
-import { OrderStatus, PaymentMethod } from '@/config/enums.js'
-import type { Customer, Order, OrderItem } from '@/types.js'
-import { formatCurrency } from './format-currency.js'
+// import type { Customer, Order, OrderItem } from '@prisma/client'
 
-function formatPaymentMethod(method?: PaymentMethod) {
-  if (method === undefined) return 'Não definido'
+// import { OrderStatus, PaymentMethod } from '@/config/enums.js'
+// import { formatCurrency } from './format-currency.js'
 
-  if (Object.values(PaymentMethod).includes(method)) {
-    return method
-  }
+// function formatPaymentMethod(method?: PaymentMethod) {
+//   if (method === undefined) return 'Não definido'
 
-  return 'Método de pagamento inválido'
-}
+//   if (Object.values(PaymentMethod).includes(method)) {
+//     return method
+//   }
 
-function formatOrderStatus(status: OrderStatus): string {
-  const statusDescriptions: Record<OrderStatus, string> = {
-    [OrderStatus.PENDING]: '🕒 Pendente',
-    [OrderStatus.CONFIRMED]: '✅ Confirmado',
-    [OrderStatus.PREPARING]: '👨‍🍳 Preparando',
-    [OrderStatus.DELIVERING]: '🛵 Em entrega',
-    [OrderStatus.COMPLETED]: '🎉 Entregue',
-    [OrderStatus.CANCELLED]: '❌ Cancelado',
-  } as const
+//   return 'Método de pagamento inválido'
+// }
 
-  return statusDescriptions[status as OrderStatus] ?? 'Status desconhecido'
-}
+// function formatOrderStatus(status: OrderStatus): string {
+//   const statusDescriptions: Record<OrderStatus, string> = {
+//     [OrderStatus.PENDING]: '🕒 Pendente',
+//     // [OrderStatus.CONFIRMED]: '✅ Confirmado',
+//     [OrderStatus.PREPARING]: '👨‍🍳 Preparando',
+//     [OrderStatus.DELIVERING]: '🛵 Em entrega',
+//     [OrderStatus.COMPLETED]: '🎉 Entregue',
+//     [OrderStatus.CANCELLED]: '❌ Cancelado',
+//   } as const
 
-function formatOrderItem(item: OrderItem) {
-  const totalItemPrice = item.price * item.quantity
-  return `${item.quantity}x ${item.name} - ${formatCurrency(totalItemPrice)}`
-}
+//   return statusDescriptions[status as OrderStatus] ?? 'Status desconhecido'
+// }
 
-export function formatOrderSummary(order: Order, customer: Customer) {
-  const formattedItems = order.items.map(formatOrderItem).join('\n')
+// function formatOrderItem(item: OrderItem) {
+//   const totalItemPrice = item.price * item.quantity
+//   return `${item.quantity}x ${item.name} - ${formatCurrency(totalItemPrice)}`
+// }
 
-  return `
-  📝 Resumo do Pedido #${order.id}
+// export function formatOrderSummary(order: Order, customer: Customer) {
+//   const formattedItems = order.items.map(formatOrderItem).join('\n')
 
-  Cliente: ${customer.name}
-  Endereço: ${customer.address}
+//   return `
+//   📝 Resumo do Pedido #${order.id}
 
-  Itens do Pedido:
-  ${formattedItems}
+//   Cliente: ${customer.name}
+//   Endereço: ${customer.address}
 
-  Total: ${formatCurrency(order.totalPrice)}
-  Forma de Pagamento: ${formatPaymentMethod(order.paymentMethod)}
-  ${order.change ? `Troco para: ${formatCurrency(order.change)}` : ''}
+//   Itens do Pedido:
+//   ${formattedItems}
 
-  Status: ${formatOrderStatus(order.status)}
-  `
-}
+//   Total: ${formatCurrency(order.totalPrice)}
+//   Forma de Pagamento: ${formatPaymentMethod(order.paymentMethod)}
+//   ${order.change ? `Troco para: ${formatCurrency(order.change)}` : ''}
+
+//   Status: ${formatOrderStatus(order.status)}
+//   `
+// }

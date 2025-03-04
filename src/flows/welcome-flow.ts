@@ -20,7 +20,7 @@ export class WelcomeFlow implements FlowHandler {
   ) {}
 
   public async handle(phone: string, message: string) {
-    this.logger.debug('👋 Welcome Flow: %o', { phone, message })
+    this.logger.info('👋 Welcome Flow: %o', { phone, message })
     const customer = await this.customerRepo.findByPhone(phone)
 
     if (!customer) {

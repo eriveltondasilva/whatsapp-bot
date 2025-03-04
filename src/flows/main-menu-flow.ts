@@ -1,10 +1,10 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { FlowStep } from '@/config/enums.js'
-import { LoggerService } from '@/services/logger-service.js'
+import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { mainMenu } from '@/messages/main-menu.js'
 import { orderMenu } from '@/messages/order-menu.js'
+import { LoggerService } from '@/utils/logger.js'
 
 import type { FlowActions, FlowHandler } from '@/types.js'
 
@@ -17,7 +17,7 @@ export class MainMenuFlow implements FlowHandler {
 
   // ###
   public handle(phone: string, message: string) {
-    this.logger.debug('👋 Menu Flow: %o', { phone, message })
+    this.logger.info('👋 Menu Flow: %o', { phone, message })
 
     const actions: FlowActions = {
       1: () => this.showOrderMenu(phone),

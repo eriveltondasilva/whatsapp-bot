@@ -14,7 +14,7 @@ export class DialogManager {
   ) {}
 
   public async handleMessage(phone: string, message: string): Promise<string[]> {
-    this.logger.debug('👋 Handling Message: %o', { phone, message })
+    this.logger.info('👋 Handling Message: %o', { phone, message })
     const { step } = this.flowStateManager.getState(phone)
     const handler = this.handlerManager.getHandler(step)
 

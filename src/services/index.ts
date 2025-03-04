@@ -1,2 +1,2 @@
-export * from './logger-service.js'
+export * from '../utils/logger.js'
 export * from './order-service.js'

@@ -1,24 +1,12 @@
--- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('pending', 'preparing', 'delivering', 'completed', 'cancelled');
-
--- CreateEnum
-CREATE TYPE "FlavorCategory" AS ENUM ('sweet', 'savory');
-
--- CreateEnum
-CREATE TYPE "PaymentMethod" AS ENUM ('cash', 'credit', 'debit');
-
--- CreateEnum
-CREATE TYPE "ItemType" AS ENUM ('pizza', 'drink');
-
 -- CreateTable
 CREATE TABLE "customers" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(100) NOT NULL,
     "phone" VARCHAR(20) NOT NULL,
-    "address" TEXT NOT NULL,
+    "address" VARCHAR(255) NOT NULL,
     "active" BOOLEAN NOT NULL DEFAULT true,
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "customers_pkey" PRIMARY KEY ("id")
 );
@@ -27,12 +15,12 @@ CREATE TABLE "customers" (
 CREATE TABLE "flavors" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(100) NOT NULL,
-    "category" "FlavorCategory" NOT NULL DEFAULT 'savory',
-    "ingredients" TEXT NOT NULL,
+    "description" VARCHAR(255),
+    "category" VARCHAR(100) NOT NULL,
     "price" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     "active" BOOLEAN NOT NULL DEFAULT true,
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "flavors_pkey" PRIMARY KEY ("id")
 );
@@ -43,8 +31,8 @@ CREATE TABLE "crusts" (
     "name" VARCHAR(100) NOT NULL,
     "price" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     "active" BOOLEAN NOT NULL DEFAULT true,
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "crusts_pkey" PRIMARY KEY ("id")
 );
@@ -53,11 +41,11 @@ CREATE TABLE "crusts" (
 CREATE TABLE "drinks" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(100) NOT NULL,
-    "description" TEXT,
+    "description" VARCHAR(255),
     "price" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     "active" BOOLEAN NOT NULL DEFAULT true,
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "drinks_pkey" PRIMARY KEY ("id")
 );
@@ -65,14 +53,14 @@ CREATE TABLE "drinks" (
 -- CreateTable
 CREATE TABLE "orders" (
     "id" SERIAL NOT NULL,
-    "delivery_address" TEXT NOT NULL,
-    "status" "OrderStatus" NOT NULL DEFAULT 'pending',
-    "total_amount" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    "payment_method" "PaymentMethod" NOT NULL DEFAULT 'cash',
-    "notes" TEXT,
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL,
     "customer_id" INTEGER NOT NULL,
+    "delivery_address" VARCHAR(255) NOT NULL,
+    "status" VARCHAR(100) NOT NULL,
+    "total_amount" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    "payment_method" VARCHAR(100) NOT NULL,
+    "notes" VARCHAR(255),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "orders_pkey" PRIMARY KEY ("id")
 );
@@ -80,13 +68,13 @@ CREATE TABLE "orders" (
 -- CreateTable
 CREATE TABLE "order_items" (
     "id" SERIAL NOT NULL,
-    "itemType" "ItemType" NOT NULL,
+    "order_id" INTEGER NOT NULL,
+    "item_type" VARCHAR(100) NOT NULL,
     "quantity" SMALLINT NOT NULL DEFAULT 1,
     "unit_price" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     "subtotal" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    "notes" TEXT,
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "order_id" INTEGER NOT NULL,
+    "notes" VARCHAR(255),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "order_items_pkey" PRIMARY KEY ("id")
 );
@@ -94,11 +82,11 @@ CREATE TABLE "order_items" (
 -- CreateTable
 CREATE TABLE "order_pizzas" (
     "id" SERIAL NOT NULL,
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "order_item_id" INTEGER NOT NULL,
     "first_flavor_id" INTEGER NOT NULL,
     "second_flavor_id" INTEGER,
     "crust_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "order_pizzas_pkey" PRIMARY KEY ("id")
 );
@@ -106,9 +94,9 @@ CREATE TABLE "order_pizzas" (
 -- CreateTable
 CREATE TABLE "order_drinks" (
     "id" SERIAL NOT NULL,
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "order_item_id" INTEGER NOT NULL,
     "drink_id" INTEGER NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "order_drinks_pkey" PRIMARY KEY ("id")
 );
@@ -120,8 +108,8 @@ CREATE TABLE "working_hours" (
     "opening_time" VARCHAR(8) NOT NULL,
     "closing_time" VARCHAR(8) NOT NULL,
     "active" BOOLEAN NOT NULL DEFAULT true,
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "working_hours_pkey" PRIMARY KEY ("id")
 );
@@ -130,9 +118,9 @@ CREATE TABLE "working_hours" (
 CREATE TABLE "pizzerias" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(100) NOT NULL,
-    "description" TEXT,
-    "cnpj" VARCHAR(20) NOT NULL,
-    "address" TEXT NOT NULL,
+    "description" VARCHAR(255),
+    "cnpj" VARCHAR(20),
+    "address" VARCHAR(255),
     "phone" VARCHAR(20),
     "active" BOOLEAN NOT NULL DEFAULT true,
     "delivery_tax" DECIMAL(10,2) DEFAULT 0.00,
@@ -140,8 +128,8 @@ CREATE TABLE "pizzerias" (
     "website" VARCHAR(100),
     "instagram" VARCHAR(100),
     "facebook" VARCHAR(100),
-    "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMPTZ NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "pizzerias_pkey" PRIMARY KEY ("id")
 );
@@ -150,25 +138,13 @@ CREATE TABLE "pizzerias" (
 CREATE UNIQUE INDEX "customers_phone_key" ON "customers"("phone");
 
 -- CreateIndex
-CREATE INDEX "customers_phone_idx" ON "customers"("phone");
-
--- CreateIndex
 CREATE UNIQUE INDEX "flavors_name_key" ON "flavors"("name");
-
--- CreateIndex
-CREATE INDEX "flavors_name_idx" ON "flavors"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "crusts_name_key" ON "crusts"("name");
 
 -- CreateIndex
-CREATE INDEX "crusts_name_idx" ON "crusts"("name");
-
--- CreateIndex
 CREATE UNIQUE INDEX "drinks_name_key" ON "drinks"("name");
-
--- CreateIndex
-CREATE INDEX "drinks_name_idx" ON "drinks"("name");
 
 -- CreateIndex
 CREATE INDEX "orders_customer_id_idx" ON "orders"("customer_id");
@@ -183,7 +159,7 @@ CREATE INDEX "orders_created_at_idx" ON "orders"("created_at");
 CREATE INDEX "order_items_order_id_idx" ON "order_items"("order_id");
 
 -- CreateIndex
-CREATE INDEX "order_items_itemType_idx" ON "order_items"("itemType");
+CREATE INDEX "order_items_item_type_idx" ON "order_items"("item_type");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "order_pizzas_order_item_id_key" ON "order_pizzas"("order_item_id");

@@ -1,154 +1,154 @@
 [
   {
     "name": "Milho Verde",
-    "ingredients": "Mussarela, milho verde, orégano",
+    "description": "Mussarela, milho verde, orégano",
     "category": "salgada",
     "price": 34.0,
     "active": true
   },
   {
     "name": "Calabresa",
-    "ingredients": "Mussarela, calabresa, cebola, orégano",
+    "description": "Mussarela, calabresa, cebola, orégano",
     "category": "salgada",
     "price": 34.0,
     "active": true
   },
   {
     "name": "Presunto",
-    "ingredients": "Mussarela, presunto, orégano",
+    "description": "Mussarela, presunto, orégano",
     "category": "salgada",
     "price": 34.0,
     "active": true
   },
   {
     "name": "Frango Caipira",
-    "ingredients": "Mussarela, frango, milho verde, orégano",
+    "description": "Mussarela, frango, milho verde, orégano",
     "category": "salgada",
     "price": 36.0,
     "active": true
   },
   {
     "name": "Dois Queijos",
-    "ingredients": "Mussarela, catupiry, orégano",
+    "description": "Mussarela, catupiry, orégano",
     "category": "salgada",
     "price": 34.0,
     "active": true
   },
   {
     "name": "Lombo",
-    "ingredients": "Mussarela, lombo, cebola, orégano",
+    "description": "Mussarela, lombo, cebola, orégano",
     "category": "salgada",
     "price": 36.0,
     "active": true
   },
   {
     "name": "Catupirela",
-    "ingredients": "Mussarela, calabresa, catupiry, orégano",
+    "description": "Mussarela, calabresa, catupiry, orégano",
     "category": "salgada",
     "price": 38.0,
     "active": true
   },
   {
     "name": "Portuguesa",
-    "ingredients": "Mussarela, presunto, tomate, cebola, pimentão, milho verde, ovos, orégano",
+    "description": "Mussarela, presunto, tomate, cebola, pimentão, milho verde, ovos, orégano",
     "category": "salgada",
     "price": 40.0,
     "active": true
   },
   {
     "name": "À Moda",
-    "ingredients": "Mussarela, calabresa, presunto, cebola",
+    "description": "Mussarela, calabresa, presunto, cebola",
     "category": "salgada",
     "price": 40.0,
     "active": true
   },
   {
     "name": "Frango Catupiry",
-    "ingredients": "Mussarela, frango, catupiry, orégano",
+    "description": "Mussarela, frango, catupiry, orégano",
     "category": "salgada",
     "price": 40.0,
     "active": true
   },
   {
     "name": "Quatro Queijos",
-    "ingredients": "Mussarela, prato, provolone, catupiry, orégano",
+    "description": "Mussarela, prato, provolone, catupiry, orégano",
     "category": "salgada",
     "price": 40.0,
     "active": true
   },
   {
     "name": "Palharina",
-    "ingredients": "Mussarela, frango, batata desfiada, orégano",
+    "description": "Mussarela, frango, batata desfiada, orégano",
     "category": "salgada",
     "price": 40.0,
     "active": true
   },
   {
     "name": "Peperone",
-    "ingredients": "Mussarela, peperone, cebola, orégano",
+    "description": "Mussarela, peperone, cebola, orégano",
     "category": "salgada",
     "price": 42.0,
     "active": true
   },
   {
     "name": "Americana",
-    "ingredients": "Mussarela, bacon, ovos, presunto, cebola, orégano",
+    "description": "Mussarela, bacon, ovos, presunto, cebola, orégano",
     "category": "salgada",
     "price": 42.0,
     "active": true
   },
   {
     "name": "Mussarela",
-    "ingredients": "Mussarela, tomate, orégano",
+    "description": "Mussarela, tomate, orégano",
     "category": "salgada",
     "price": 40.0,
     "active": true
   },
   {
     "name": "Atum",
-    "ingredients": "Mussarela, atum, cebola, orégano",
+    "description": "Mussarela, atum, cebola, orégano",
     "category": "salgada",
     "price": 42.0,
     "active": true
   },
   {
     "name": "Marguerita",
-    "ingredients": "Mussarela, manjericão, tomate, orégano",
+    "description": "Mussarela, manjericão, tomate, orégano",
     "category": "salgada",
     "price": 42.0,
     "active": true
   },
   {
     "name": "Carne de Sol",
-    "ingredients": "Mussarela, carne de sol, cebola, orégano",
+    "description": "Mussarela, carne de sol, cebola, orégano",
     "category": "salgada",
     "price": 44.0,
     "active": true
   },
   {
     "name": "Queijo do Reino",
-    "ingredients": "Mussarela, queijo do reino, orégano",
+    "description": "Mussarela, queijo do reino, orégano",
     "category": "salgada",
     "price": 46.0,
     "active": true
   },
   {
     "name": "Nordestina",
-    "ingredients": "Mussarela, carne de sol, queijo coalho, cebola, orégano",
+    "description": "Mussarela, carne de sol, queijo coalho, cebola, orégano",
     "category": "salgada",
     "price": 50.0,
     "active": true
   },
   {
     "name": "Brigadeiro",
-    "ingredients": "Chocolate, chocolate granulado",
+    "description": "Chocolate, chocolate granulado",
     "category": "doce",
     "price": 38.0,
     "active": true
   },
   {
     "name": "Cartola",
-    "ingredients": "Mussarela, banana, açúcar, canela em pó",
+    "description": "Mussarela, banana, açúcar, canela em pó",
     "category": "doce",
     "price": 38.0,
     "active": true

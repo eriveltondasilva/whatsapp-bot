@@ -19,7 +19,7 @@ export class RegistrationFlow implements FlowHandler {
 
   // ###
   public handle(phone: string, message: string) {
-    this.logger.debug('👋 Registration Flow: %o', { phone, message })
+    this.logger.info('👋 Registration Flow: %o', { phone, message })
     const { step } = this.flowStateManager.getState(phone)
 
     const actions: FlowActions = {
@@ -89,7 +89,7 @@ export class RegistrationFlow implements FlowHandler {
       name: data?.name || '',
       address,
     })
-    this.logger.debug('📝 New customer registered: %o', newCustomer)
+    this.logger.info('📝 New customer registered: %o', newCustomer)
 
     this.flowStateManager.clearState(phone)
     this.flowStateManager.updateState(phone, { step: FlowStep.MAIN_MENU })

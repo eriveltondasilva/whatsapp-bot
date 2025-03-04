@@ -1,7 +1,8 @@
+import { MessageType } from '@wppconnect-team/wppconnect'
 import type { Crust, Flavor } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStep } from '@/config/enums.js'
+import { FlowStep, PizzaType } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/index.js'
 import { orderMenu } from '@/messages/order-menu.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/index.js'
@@ -19,24 +20,24 @@ export class PizzaFlow implements FlowHandler {
     @inject(LoggerService) private logger: LoggerService,
   ) {}
 
-  handle(phone: string, message: string) {
-    this.logger.info('🍕 Pizza Flow: %o', { phone, message })
+  handle(phone: string, msg: string) {
+    this.logger.info('🍕 Pizza Flow: %o', { phone, msg })
     const { step } = this.flowStateManager.getState(phone)
 
-    const actions: FlowActions = {
-      [FlowStep.PIZZA_TYPE]: () => this.handlePizzaType(phone, message),
-      [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(phone, message),
-      [FlowStep.PIZZA_CRUST]: () => this.handlePizzaCrust(phone, message),
-      [FlowStep.PIZZA_QUANTITY]: () => this.handlePizzaQuantity(phone, message),
-      [FlowStep.PIZZA_NOTES]: () => this.handlePizzaNotes(phone, message),
+    const actions: FlowActions<FlowStep> = {
+      [FlowStep.PIZZA_TYPE]: () => this.handlePizzaType(phone, msg),
+      [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(phone, msg),
+      [FlowStep.PIZZA_CRUST]: () => this.handlePizzaCrust(phone, msg),
+      [FlowStep.PIZZA_QUANTITY]: () => this.handlePizzaQuantity(phone, msg),
+      [FlowStep.PIZZA_NOTES]: () => this.handlePizzaNotes(phone, msg),
     }
 
-    return actions[step]?.() || this.handleInvalidOption()
+    return actions[step as FlowStep]?.() || this.handleInvalidOption()
   }
 
   // ###
-  private async handlePizzaType(phone: string, message: string) {
-    const pizzaType = message === '1' ? 'full' : 'half'
+  private async handlePizzaType(phone: string, msg: string) {
+    const pizzaType = msg === '1' ? PizzaType.FULL : PizzaType.HALF
     const flavors = await this.flavorRepo.getAllFlavors()
 
     if (!flavors?.length) {
@@ -46,106 +47,75 @@ export class PizzaFlow implements FlowHandler {
 
     this.flowStateManager.updateState(phone, {
       step: FlowStep.PIZZA_FLAVOR,
-      data: {
-        pizzaType,
-      },
+      data: { pizzaType },
     })
 
-    const title =
-      pizzaType === 'full'
-        ? '🍕 *ESCOLHA O SABOR DA PIZZA:*'
-        : '🍕 *ESCOLHA O PRIMEIRO SABOR DA PIZZA:*'
+    const title = `🍕 *ESCOLHA ${pizzaType === PizzaType.FULL ? 'O SABOR' : 'O PRIMEIRO SABOR'} DA SUA PIZZA:*`
+    const description = '> Por favor, escolha uma opção válida.'
 
-    const description =
-      '> Para escolher sua pizza, toque no botão "Clique Aqui" abaixo para abrir nosso cardápio.'
-
-    return [
-      'list',
-      title,
-      description,
-      //
-      ...this.buildFlavorList(flavors),
-    ]
+    return [MessageType.LIST, title, description, ...this.buildFlavorList(flavors)]
   }
 
-  private async handlePizzaFlavor(phone: string, message: string) {
+  private async handlePizzaFlavor(phone: string, msg: string) {
     const { data } = this.flowStateManager.getState(phone)
     const flavors = await this.flavorRepo.getAllFlavors()
     const crusts = await this.crustRepo.getAllCrusts()
 
-    const selectedIndex = Number.parseInt(message) - 1
+    const selectedIndex = Number.parseInt(msg, 10) - 1
 
     if (Number.isNaN(selectedIndex) || !flavors?.[selectedIndex]) {
-      return [
-        '❌ *OPÇÃO INVÁLIDA!*',
-        'Por favor, digite um número válido da opção desejada.\n',
-        //
-        '✍️ Digite o número da opção desejada:',
-      ]
+      const title = '❌ *OPÇÃO INVÁLIDA!*'
+      const description = 'Por favor, escolha uma opção válida.'
+
+      return [MessageType.LIST, title, description, ...this.buildFlavorList(flavors)]
     }
 
     const selectedFlavors = [...(data?.selectedFlavors || []), flavors[selectedIndex]]
 
-    if (data?.pizzaType === 'half' && selectedFlavors.length === 1) {
+    if (data?.pizzaType === PizzaType.HALF && selectedFlavors.length === 1) {
       this.flowStateManager.updateState(phone, {
         step: FlowStep.PIZZA_FLAVOR,
-        data: {
-          selectedFlavors,
-        },
+        data: { selectedFlavors },
       })
 
-      return [
-        '🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA:*\n',
-        //
-        ...this.buildFlavorList(flavors),
-        //
-        '\n✍️ *Digite o número da opção desejada:*',
-      ]
+      const title = '🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA:*'
+      const description = '> Por favor, escolha uma opção válida.'
+
+      return [title, description, ...this.buildFlavorList(flavors)]
     }
 
     this.flowStateManager.updateState(phone, {
       step: FlowStep.PIZZA_CRUST,
-      data: {
-        selectedFlavors,
-      },
+      data: { selectedFlavors },
     })
 
-    return [
-      '🔄 *ESCOLHA A BORDA DA PIZZA:*\n',
-      //
-      ...this.buildCrustList(crusts),
-      //
-      '\n✍️ Digite o número da borda desejada:',
-    ]
+    const title = '🍕 *ESCOLHA A BORDA DA PIZZA:*'
+    const description = '> Por favor, escolha uma opção válida.'
+
+    return [title, description, ...this.buildCrustList(crusts)]
   }
 
-  private async handlePizzaCrust(phoneNumber: string, message: string) {
+  private async handlePizzaCrust(phoneNumber: string, msg: string) {
     const crusts = await this.crustRepo.getAllCrusts()
-    const selectedCrust = crusts[+message - 1]
+    const selectedCrust = crusts[+msg - 1]
 
     if (!selectedCrust) {
-      return [
-        '❌ *BORDA INVÁLIDA!*',
-        'Por favor, escolha uma opção válida:\n',
-        //
-        ...this.buildCrustList(crusts),
-        //
-        '\n✍️ Digite o número da borda desejada:',
-      ]
+      const title = '❌ *BORDA INVÁLIDA!*'
+      const description = '> Por favor, escolha uma opção válida.'
+
+      return [title, description, ...this.buildCrustList(crusts)]
     }
 
     this.flowStateManager.updateState(phoneNumber, {
       step: FlowStep.PIZZA_QUANTITY,
-      data: {
-        selectedCrust,
-      },
+      data: { selectedCrust },
     })
 
     return ['🔢 Digite a quantidade desejada (1-5):']
   }
 
-  private handlePizzaQuantity(phone: string, message: string) {
-    const quantity = Number.parseInt(message)
+  private handlePizzaQuantity(phone: string, msg: string) {
+    const quantity = Number.parseInt(msg, 10)
 
     if (!isValidQuantity(quantity)) {
       return ['❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.']
@@ -153,9 +123,7 @@ export class PizzaFlow implements FlowHandler {
 
     this.flowStateManager.updateState(phone, {
       step: FlowStep.PIZZA_NOTES,
-      data: {
-        quantity,
-      },
+      data: { quantity },
     })
 
     return [
@@ -165,52 +133,43 @@ export class PizzaFlow implements FlowHandler {
     ]
   }
 
-  private handlePizzaNotes(phone: string, message: string) {
-    const notes = message === '0' ? undefined : message
+  private handlePizzaNotes(phone: string, msg: string) {
+    const notes = msg === '0' ? undefined : msg
 
     this.flowStateManager.updateState(phone, {
       step: FlowStep.ORDER,
-      data: {
-        notes,
-      },
+      data: { notes },
     })
 
-    return [
-      '✅ Pizza adicionada ao carrinho com sucesso!\n',
-      //
-      ...orderMenu,
-    ]
+    return ['✅ Pizza adicionada ao carrinho com sucesso!\n', ...orderMenu]
   }
 
-  // ###
   private handleInvalidOption() {
-    return ['❌ Ocorreu um erro no fluxo. Por favor, tente novamente.']
+    return ['❌ Ocorreu um erro no fluxo.', 'Por favor, tente novamente.']
   }
 
   // ###
-  // private buildFlavorList(flavors: Flavor[]) {
-  //   return flavors.map((flavor, index) => {
-  //     const ingredients = flavor.ingredients || 'sem ingredientes'
-  //     return [
-  //       `${index + 1} - *${flavor.name}* (${formatCurrency(Number(flavor.price))})`,
-  //       `_${ingredients}_`,
-  //     ].join('\n')
-  //   })
-  // }
-
   private buildFlavorList(flavors: Flavor[]): string[] {
-    return flavors.map(({ id, name, ingredients, price, category }) => {
+    return flavors.map(({ name, ingredients: description, price, category }, index) => {
       const flavorPrice = formatCurrency(Number(price))
 
-      return `${id}::${id} - ${name} (${flavorPrice})::${ingredients}::${category}`
-      // 'rowId :: rowTitle :: rowDescription :: category'
+      const rowId = index + 1
+      const title = `${rowId} - ${name} (${flavorPrice})`
+
+      return [rowId, title, description, category].join('::')
     })
   }
 
-  private buildCrustList(crusts: Crust[]) {
-    return crusts.map((crust, index) => {
-      const crustPrice = Number(crust.price) === 0 ? 'grátis' : formatCurrency(Number(crust.price))
-      return `${index + 1} - ${crust.name} (${crustPrice})`
+  private buildCrustList(crusts: Crust[]): string[] {
+    return crusts.map(({ name, price }, index) => {
+      const crustPrice = Number(price) === 0 ? 'grátis' : formatCurrency(Number(price))
+
+      const rowId = index + 1
+      const title = `${rowId} - ${name} (${crustPrice})`
+      const description = ''
+      const category = 'bordas'
+
+      return [rowId, title, description, category].join('::')
     })
   }
 }

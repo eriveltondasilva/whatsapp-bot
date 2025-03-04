@@ -1,12 +1,16 @@
-import { Validation } from '@/config/enums.js'
 import { type Message, MessageType } from '@wppconnect-team/wppconnect'
 
+import { Validation } from '@/config/enums.js'
+// import { LoggerService } from '@/services/logger-service.js'
+
+// const logger = new LoggerService()
+
 export function isValidName(name: string): boolean {
-  return name.trim().length >= Validation.NAME_MIN_LENGTH
+  return name.length >= Validation.NAME_MIN_LENGTH
 }
 
 export function isValidAddress(address: string): boolean {
-  return address.trim().length >= Validation.ADDRESS_MIN_LENGTH
+  return address.length >= Validation.ADDRESS_MIN_LENGTH
 }
 
 export function isValidQuantity(quantity: number): boolean {
@@ -18,8 +22,8 @@ export function isValidQuantity(quantity: number): boolean {
 }
 
 export function isListDataValid(title: string, description: string, content: string[]): boolean {
-  if (!title || !description || content.length === 0) {
-    console.log('🚫 Invalid list data')
+  if (!title || !description || !content?.length) {
+    // logger.error('🚫 Invalid list data')
     return false
   }
 
@@ -28,28 +32,22 @@ export function isListDataValid(title: string, description: string, content: str
 
 export function isValidMessage(message: Message): boolean {
   if (!message || !message.body) {
-    console.log('🚫 Invalid message')
-    return false
-  }
-
-  if (!isValidMessage(message) || !message.body) {
-    console.log('🚫 Invalid message:', message)
-
+    // logger.error('🚫 Invalid message')
     return false
   }
 
   if (![MessageType.CHAT, MessageType.LIST_RESPONSE].includes(message.type)) {
-    console.log('🚫 Invalid message type:', message.type)
+    // logger.error('🚫 Invalid message type:', message.type)
     return false
   }
 
   if (message.fromMe || message.isGroupMsg) {
-    console.log('🚫 Invalid message from:', message.from)
+    // logger.error('🚫 Invalid message from:', message.from)
     return false
   }
 
   if (!message.isNewMsg) {
-    console.log('🚫 Invalid message isNewMsg:', message.isNewMsg)
+    // logger.error('🚫 Invalid message isNewMsg:', message.isNewMsg)
     return false
   }
 

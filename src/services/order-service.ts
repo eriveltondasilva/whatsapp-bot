@@ -1,9 +1,8 @@
-import { LoggerService } from '@/services/logger-service.js'
+import type { OrderItem, OrderStatus, PaymentMethod } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
 import { OrderRepository } from '@/repositories/index.js'
-
-import type { OrderItem, OrderStatus, PaymentMethod } from '@/types.js'
+import { LoggerService } from '@/utils/logger.js'
 
 @injectable()
 export class OrderService {

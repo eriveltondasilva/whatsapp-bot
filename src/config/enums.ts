@@ -1,31 +1,30 @@
-export const OrderStatus = {
-  PENDING: 'pending',
-  PREPARING: 'preparing',
-  DELIVERING: 'delivering',
-  COMPLETED: 'completed',
-  CANCELLED: 'cancelled',
+export const PizzaType = {
+  FULL: 'full',
+  HALF: 'half',
 } as const
-export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
+export type PizzaType = (typeof PizzaType)[keyof typeof PizzaType]
 
-export const Category = {
-  FOOD: 'pizza',
+export const ItemType = {
+  PIZZA: 'pizza',
   DRINK: 'bebida',
 } as const
-export type Category = (typeof Category)[keyof typeof Category]
+export type ItemType = (typeof ItemType)[keyof typeof ItemType]
 
 export const PaymentMethod = {
-  CREDIT: 'crédito',
-  DEBIT: 'débito',
   CASH: 'dinheiro',
-  // PIX: 'pix', // TODO: Added pix payment method
+  CREDIT: 'cartão',
+  DEBIT: 'débito',
 } as const
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
 
-export const Delay = {
-  PREPARATION: 2 * 60 * 1_000, // 2 minutes
-  DELIVERY: 5 * 60 * 1_000, // 5 minutes
+export const OrderStatus = {
+  PENDING: 'pendente',
+  PREPARING: 'preparando',
+  DELIVERING: 'entregando',
+  COMPLETED: 'completo',
+  CANCELLED: 'cancelado',
 } as const
-export type Delay = (typeof Delay)[keyof typeof Delay]
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 export const Validation = {
   NAME_MIN_LENGTH: 3,
