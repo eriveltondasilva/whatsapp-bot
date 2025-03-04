@@ -15,7 +15,7 @@ export class WelcomeFlow implements FlowHandler {
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
-  ) { }
+  ) {}
 
   public async handle(phone: string, message: string) {
     logger.info('👋 Welcome Flow: %o', { phone, message })

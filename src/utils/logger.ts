@@ -1,5 +1,5 @@
-import { type Logger as WinstonLogger, createLogger, format, transports } from 'winston'
 import { SESSION_NAME } from '@/config/env.js'
+import { type Logger as WinstonLogger, createLogger, format, transports } from 'winston'
 
 interface ILogger {
   info(message: string, ...meta: unknown[]): void

@@ -77,7 +77,8 @@ export class PizzaFlow implements FlowHandler {
       })
 
       const title = '🍕🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA*'
-      const description = '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
+      const description =
+        '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
 
       return [MessageType.LIST, title, description, ...this.buildFlavorList(flavors)]
     }

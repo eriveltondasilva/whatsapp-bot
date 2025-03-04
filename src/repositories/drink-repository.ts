@@ -1,5 +1,5 @@
-import type { Prisma } from '@prisma/client'
 import { prisma } from '@/db/prisma.js'
+import type { Prisma } from '@prisma/client'
 
 export class DrinkRepository {
   async getAllDrinks() {

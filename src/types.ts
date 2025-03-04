@@ -2,6 +2,7 @@ import type { FlowStep } from '@/config/enums.js'
 
 export type FlowState = {
   step: FlowStep
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   data?: Record<string, any>
 }
 

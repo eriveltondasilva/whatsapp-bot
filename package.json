@@ -19,9 +19,16 @@
     "build": "tsup",
     "start": "node --env-file=.env dist/index.js",
     "dev": "tsx --env-file=.env -r tsconfig-paths/register src/index.ts",
-    "fix": "npm run lint && npm run fmt",
-    "fmt": "biome format --write src tests prisma/seed",
-    "lint": "biome lint --write src tests prisma/seed",
+
+    "fmt": "biome format --verbose .",
+    "fmt:fix": "biome format --fix --verbose .",
+
+    "lint": "biome lint --unsafe --verbose .",
+    "lint:fix": "biome lint --fix --unsafe --verbose .",
+
+    "check": "biome check --unsafe --verbose .",
+    "check:fix": "biome check --fix --unsafe --verbose .",
+
     "type:check": "tsc --noEmit",
     "clean": "rm -rf dist",
     "test": "vitest run tests"

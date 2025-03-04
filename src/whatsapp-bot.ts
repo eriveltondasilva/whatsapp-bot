@@ -1,8 +1,8 @@
-import { MessageType, type Message, type Whatsapp } from '@wppconnect-team/wppconnect'
+import { type Message, MessageType, type Whatsapp } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
 import { ClientManager, DialogManager } from '@/managers/index.js'
-import { getDelay, logger, isListDataValid, isValidMessage } from '@/utils/index.js'
+import { getDelay, isListDataValid, isValidMessage, logger } from '@/utils/index.js'
 
 import type { ActionsMap } from './types.js'
 
