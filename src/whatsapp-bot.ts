@@ -1,9 +1,8 @@
-import { type Message, MessageType, type Whatsapp } from '@wppconnect-team/wppconnect'
+import { MessageType, type Message, type Whatsapp } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
 import { ClientManager, DialogManager } from '@/managers/index.js'
-import { isListDataValid, isValidMessage } from '@/utils/validations.js'
-import { getDelay, logger } from './utils/index.js'
+import { getDelay, logger, isListDataValid, isValidMessage } from '@/utils/index.js'
 
 import type { ActionsMap } from './types.js'
 
@@ -18,7 +17,7 @@ export class WhatsappBot {
 
   // ###
   public async initialize(): Promise<void> {
-    logger.info('🤖 WhatsApp bot initialized successfully')
+    logger.info('🤖 WhatsApp bot initialized successfully 🚀')
 
     try {
       this.client = await this.clientManager.getClient()
@@ -30,7 +29,10 @@ export class WhatsappBot {
   }
 
   private async handleMessage(message: Message): Promise<void> {
-    logger.info('📬 Received message: %o', { from: message.from, body: message.body })
+    logger.info('📬 Received message: %o', {
+      from: message.from,
+      body: message.body?.slice(0, 100),
+    })
 
     if (!isValidMessage(message)) return
 
@@ -63,38 +65,38 @@ export class WhatsappBot {
   private async sendMessage(to: string, message: string[]): Promise<void> {
     try {
       await this.client?.sendText(to, message.join('\n'), { delay: getDelay() })
-      logger.info('✅ Message sent to: %s', to)
+      logger.info('📬 Message sent to: %o', { to })
     } catch (error) {
-      logger.error('❌ Message sending failed to %s: %o', to, error)
+      logger.error('❌ Message sending failed: %o', { to, error })
     }
   }
 
   private async sendImage(to: string, content: string[]): Promise<void> {
-    try {
-      const [imagePath, imageName = 'Imagem', captionText] = content
+    const [imagePath, imageName = 'Imagem', captionText = ''] = content
 
+    try {
       await this.client?.sendImage(to, imagePath, imageName, captionText)
-      logger.info('📬 Image sent to: %s', to)
+      logger.info('📬 Image sent to: %o', { to })
     } catch (error) {
-      logger.error('❌ Image sending failed to %s: %o', to, error)
+      logger.error('❌ Image sending failed: %o', { to, error })
     }
   }
 
   private async sendList(to: string, content: string[]): Promise<void> {
     const [title, description, ...rowsData] = content
-    if (!isListDataValid(title, description, rowsData)) return
+    if (!isListDataValid(title, rowsData)) return
 
     try {
       await this.client?.sendListMessage(to, {
         buttonText: 'Clique Aqui',
-        title: title,
-        description: description,
+        title,
+        description,
         delay: getDelay(),
         sections: this.createListSections(rowsData),
       })
-      logger.info('📬 List sent to: %s', to)
+      logger.info('📬 List sent to: %o', { to })
     } catch (error) {
-      logger.error('❌ List sending failed to %s: %o', to, error)
+      logger.error('❌ List sending failed: %o', { to, error })
     }
   }
 

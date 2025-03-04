@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe'
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/index.js'
 import { orderMenu } from '@/messages/order-menu.js'
-import { LoggerService } from '@/services/index.js'
+import { logger } from '@/utils/index.js'
 
 import { DrinkFlow } from './drink-flow.js'
 import { PizzaFlow } from './pizza-flow.js'
@@ -16,11 +16,10 @@ export class OrderFlow implements FlowHandler {
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(DrinkFlow) private drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
-    @inject(LoggerService) private logger: LoggerService,
   ) {}
 
   handle(phone: string, message: string) {
-    this.logger.info('👋 Order Flow: %o', { phone, message })
+    logger.info('👋 Order Flow: %o', { phone, message })
 
     const actions: FlowActions = {
       1: () => this.handlePizzaSelection(phone, message),

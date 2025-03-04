@@ -1,15 +1,13 @@
-import { inject, singleton } from 'tsyringe'
+import { singleton } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
-import { LoggerService } from '@/utils/logger.js'
+import { logger } from '@/utils/logger.js'
 
 import type { FlowState } from '@/types.js'
 
 @singleton()
 export class FlowStateManager {
   private states: Map<string, FlowState> = new Map()
-
-  constructor(@inject(LoggerService) private logger: LoggerService) {}
 
   public getState(phone: string): FlowState {
     let state = this.states.get(phone)
@@ -22,7 +20,7 @@ export class FlowStateManager {
       this.states.set(phone, state)
     }
 
-    this.logger.info('📝 Flow state requested: %o', state)
+    logger.info('📝 Flow state requested: %o', { state })
     return state
   }
 
@@ -33,14 +31,11 @@ export class FlowStateManager {
       data: { ...currentState.data, ...newState.data },
     }
     this.states.set(phone, updatedState)
-    this.logger.info('🔄 Flow state updated: %o', {
-      phone,
-      updatedState,
-    })
+    logger.info('🔄 Flow state updated: %o', { phone, updatedState })
   }
 
   public clearState(phone: string): void {
     this.states.delete(phone)
-    this.logger.info('🧹 Flow state cleared: %s', phone)
+    logger.info('🧹 Flow state cleared: %o', { phone })
   }
 }

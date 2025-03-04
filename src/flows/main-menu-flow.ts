@@ -2,22 +2,18 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
-import { mainMenu } from '@/messages/main-menu.js'
-import { orderMenu } from '@/messages/order-menu.js'
-import { LoggerService } from '@/utils/logger.js'
+import { mainMenu, orderMenu } from '@/messages/index.js'
+import { logger } from '@/utils/logger.js'
 
 import type { FlowActions, FlowHandler } from '@/types.js'
 
 @injectable()
 export class MainMenuFlow implements FlowHandler {
-  constructor(
-    @inject(FlowStateManager) private flowStateManager: FlowStateManager,
-    @inject(LoggerService) private logger: LoggerService,
-  ) {}
+  constructor(@inject(FlowStateManager) private flowStateManager: FlowStateManager) {}
 
   // ###
   public handle(phone: string, message: string) {
-    this.logger.info('👋 Menu Flow: %o', { phone, message })
+    logger.info('👋 Main Menu Flow: %o', { phone, message })
 
     const actions: FlowActions = {
       1: () => this.showOrderMenu(phone),
@@ -31,11 +27,7 @@ export class MainMenuFlow implements FlowHandler {
   private showOrderMenu(phone: string): string[] {
     this.flowStateManager.updateState(phone, { step: FlowStep.ORDER })
 
-    return [
-      'Está com vontade de comer uma pizza?\n',
-      //
-      ...orderMenu,
-    ]
+    return [...orderMenu]
   }
 
   private tackOrder(phone: string): string[] {

@@ -1,13 +1,12 @@
-import { MessageType } from '@wppconnect-team/wppconnect'
 import type { Crust, Flavor } from '@prisma/client'
+import { MessageType } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
 import { FlowStep, PizzaType } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/index.js'
 import { orderMenu } from '@/messages/order-menu.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/index.js'
-import { LoggerService } from '@/services/index.js'
-import { formatCurrency, isValidQuantity } from '@/utils/index.js'
+import { formatCurrency, isValidQuantity, logger } from '@/utils/index.js'
 
 import type { FlowActions, FlowHandler } from '@/types.js'
 
@@ -15,13 +14,12 @@ import type { FlowActions, FlowHandler } from '@/types.js'
 export class PizzaFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
-    @inject(FlavorRepository) private flavorRepo: FlavorRepository,
-    @inject(CrustRepository) private crustRepo: CrustRepository,
-    @inject(LoggerService) private logger: LoggerService,
+    @inject(FlavorRepository) private flavorRepository: FlavorRepository,
+    @inject(CrustRepository) private crustRepository: CrustRepository,
   ) {}
 
   handle(phone: string, msg: string) {
-    this.logger.info('🍕 Pizza Flow: %o', { phone, msg })
+    logger.info('🍕 Pizza Flow: %o', { phone, msg })
     const { step } = this.flowStateManager.getState(phone)
 
     const actions: FlowActions<FlowStep> = {
@@ -38,7 +36,7 @@ export class PizzaFlow implements FlowHandler {
   // ###
   private async handlePizzaType(phone: string, msg: string) {
     const pizzaType = msg === '1' ? PizzaType.FULL : PizzaType.HALF
-    const flavors = await this.flavorRepo.getAllFlavors()
+    const flavors = await this.flavorRepository.getAllFlavors()
 
     if (!flavors?.length) {
       this.flowStateManager.clearState(phone)
@@ -50,16 +48,16 @@ export class PizzaFlow implements FlowHandler {
       data: { pizzaType },
     })
 
-    const title = `🍕 *ESCOLHA ${pizzaType === PizzaType.FULL ? 'O SABOR' : 'O PRIMEIRO SABOR'} DA SUA PIZZA:*`
-    const description = '> Por favor, escolha uma opção válida.'
+    const title = `🍕 *ESCOLHA ${pizzaType === PizzaType.FULL ? 'O SABOR' : 'O PRIMEIRO SABOR'} DA SUA PIZZA*`
+    const description = '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
 
     return [MessageType.LIST, title, description, ...this.buildFlavorList(flavors)]
   }
 
   private async handlePizzaFlavor(phone: string, msg: string) {
     const { data } = this.flowStateManager.getState(phone)
-    const flavors = await this.flavorRepo.getAllFlavors()
-    const crusts = await this.crustRepo.getAllCrusts()
+    const flavors = await this.flavorRepository.getAllFlavors()
+    const crusts = await this.crustRepository.getAllCrusts()
 
     const selectedIndex = Number.parseInt(msg, 10) - 1
 
@@ -78,10 +76,10 @@ export class PizzaFlow implements FlowHandler {
         data: { selectedFlavors },
       })
 
-      const title = '🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA:*'
-      const description = '> Por favor, escolha uma opção válida.'
+      const title = '🍕🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA*'
+      const description = '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
 
-      return [title, description, ...this.buildFlavorList(flavors)]
+      return [MessageType.LIST, title, description, ...this.buildFlavorList(flavors)]
     }
 
     this.flowStateManager.updateState(phone, {
@@ -89,22 +87,23 @@ export class PizzaFlow implements FlowHandler {
       data: { selectedFlavors },
     })
 
-    const title = '🍕 *ESCOLHA A BORDA DA PIZZA:*'
-    const description = '> Por favor, escolha uma opção válida.'
+    const title = '⭕🍕 *ESCOLHA A BORDA DA SUA PIZZA*'
+    const description = '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
 
-    return [title, description, ...this.buildCrustList(crusts)]
+    return [MessageType.LIST, title, description, ...this.buildCrustList(crusts)]
   }
 
   private async handlePizzaCrust(phoneNumber: string, msg: string) {
-    const crusts = await this.crustRepo.getAllCrusts()
-    const selectedCrust = crusts[+msg - 1]
+    const crusts = await this.crustRepository.getAllCrusts()
+    const selectedIndex = Number.parseInt(msg, 10) - 1
 
-    if (!selectedCrust) {
+    if (Number.isNaN(selectedIndex) || !crusts?.[selectedIndex]) {
       const title = '❌ *BORDA INVÁLIDA!*'
-      const description = '> Por favor, escolha uma opção válida.'
-
-      return [title, description, ...this.buildCrustList(crusts)]
+      const description = 'Por favor, escolha uma opção válida.'
+      return [MessageType.LIST, title, description, ...this.buildCrustList(crusts)]
     }
+
+    const selectedCrust = crusts[selectedIndex]
 
     this.flowStateManager.updateState(phoneNumber, {
       step: FlowStep.PIZZA_QUANTITY,
@@ -150,12 +149,13 @@ export class PizzaFlow implements FlowHandler {
 
   // ###
   private buildFlavorList(flavors: Flavor[]): string[] {
-    return flavors.map(({ name, ingredients: description, price, category }, index) => {
+    return flavors.map(({ name, description, price, category }, index) => {
       const flavorPrice = formatCurrency(Number(price))
 
       const rowId = index + 1
       const title = `${rowId} - ${name} (${flavorPrice})`
 
+      // rowId :: title :: description :: category
       return [rowId, title, description, category].join('::')
     })
   }
@@ -169,6 +169,7 @@ export class PizzaFlow implements FlowHandler {
       const description = ''
       const category = 'bordas'
 
+      // rowId :: title :: description :: category
       return [rowId, title, description, category].join('::')
     })
   }

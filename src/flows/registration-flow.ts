@@ -4,8 +4,7 @@ import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { mainMenu } from '@/messages/main-menu.js'
 import { CustomerRepository } from '@/repositories/index.js'
-import { LoggerService } from '@/services/index.js'
-import { getGreeting, isValidAddress, isValidName } from '@/utils/index.js'
+import { getGreeting, isValidAddress, isValidName, logger } from '@/utils/index.js'
 
 import type { FlowActions, FlowHandler } from '@/types.js'
 
@@ -13,16 +12,15 @@ import type { FlowActions, FlowHandler } from '@/types.js'
 export class RegistrationFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
-    @inject(CustomerRepository) private customerRepo: CustomerRepository,
-    @inject(LoggerService) private logger: LoggerService,
+    @inject(CustomerRepository) private customerRepository: CustomerRepository,
   ) {}
 
   // ###
   public handle(phone: string, message: string) {
-    this.logger.info('👋 Registration Flow: %o', { phone, message })
+    logger.info('👋 Registration Flow: %o', { phone, message })
     const { step } = this.flowStateManager.getState(phone)
 
-    const actions: FlowActions = {
+    const actions: FlowActions<FlowStep> = {
       [FlowStep.REGISTRATION]: () => this.initializeFlow(phone),
       [FlowStep.COLLECT_NAME]: () => this.handleNameInput(phone, message),
       [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(phone, message),
@@ -33,14 +31,11 @@ export class RegistrationFlow implements FlowHandler {
 
   // ###
   private initializeFlow(phone: string): string[] {
-    this.flowStateManager.updateState(phone, {
-      step: FlowStep.COLLECT_NAME,
-    })
+    this.flowStateManager.updateState(phone, { step: FlowStep.COLLECT_NAME })
 
     return [
-      '🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!\n',
-      //
-      'Estamos prontos para transformar a sua fome em felicidade. 😊',
+      '🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!',
+      'Estamos prontos para transformar a sua fome em felicidade.',
       'Antes de começar, precisamos fazer um _*rápido*_ cadastro. 🏃💨\n',
       //
       '✍️ Qual o seu nome completo?',
@@ -51,9 +46,8 @@ export class RegistrationFlow implements FlowHandler {
   private handleNameInput(phone: string, name: string): string[] {
     if (!isValidName(name)) {
       return [
-        '❌ *NOME INVÁLIDO*\n',
-        //
-        '✍️ Por favor, informe seu nome completo:',
+        '❌ *NOME INVÁLIDO*',
+        'Por favor, informe seu nome completo:',
         '> Exemplo: _"João da Silva"_',
       ]
     }
@@ -75,34 +69,32 @@ export class RegistrationFlow implements FlowHandler {
   private handleAddressInput(phone: string, address: string): string[] {
     if (!isValidAddress(address)) {
       return [
-        '❌ *ENDEREÇO INVÁLIDO*\n',
-        //
-        '✍️ Por favor, informe seu endereço completo:',
+        '❌ *ENDEREÇO INVÁLIDO*',
+        'Por favor, informe seu endereço completo:',
         '> Exemplo: _"Rua das Flores, n° 83, Centro"_',
       ]
     }
 
     const { data } = this.flowStateManager.getState(phone)
 
-    const newCustomer = this.customerRepo.create({
+    const newCustomer = this.customerRepository.create({
       phone: phone,
       name: data?.name || '',
       address,
     })
-    this.logger.info('📝 New customer registered: %o', newCustomer)
+    logger.info('📝 New customer registered: %o', { newCustomer })
 
     this.flowStateManager.clearState(phone)
     this.flowStateManager.updateState(phone, { step: FlowStep.MAIN_MENU })
 
     return [
-      `🎉 Cadastro concluído com sucesso, ${this.getFirstName(data?.name || 'cliente')}!\n`,
+      `🎉 Cadastro concluído com sucesso, ${this.getFirstName(data?.name || 'cliente')}!`,
       'Agora, vamos ao que interessa: _*escolher algo gostoso*_! 😋\n',
       //
       ...mainMenu,
     ]
   }
 
-  // ###
   private resetFlow(phone: string): string[] {
     this.flowStateManager.clearState(phone)
 

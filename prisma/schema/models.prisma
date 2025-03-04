@@ -157,8 +157,8 @@ model Pizzeria {
 
   name        String  @db.VarChar(100)
   description String? @db.VarChar(255)
-  cnpj        String?  @unique @db.VarChar(20)
-  address     String?  @db.VarChar(255)
+  cnpj        String? @unique @db.VarChar(20)
+  address     String? @db.VarChar(255)
   phone       String? @unique @db.VarChar(20)
   active      Boolean @default(true)
 

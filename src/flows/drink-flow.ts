@@ -5,27 +5,23 @@ import { FlowStep } from '@/config/enums.js'
 import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { orderMenu } from '@/messages/order-menu.js'
 import { DrinkRepository } from '@/repositories/drink-repository.js'
-import { formatCurrency } from '@/utils/format-currency.js'
-import { LoggerService } from '@/utils/logger.js'
+import { formatCurrency, isValidQuantity, logger } from '@/utils/index.js'
 
 import type { FlowActions, FlowHandler } from '@/types.js'
-
-const MIN_QUANTITY = 1
-const MAX_QUANTITY = 5
+import { MessageType } from '@wppconnect-team/wppconnect'
 
 @injectable()
 export class DrinkFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
-    @inject(DrinkRepository) private drinkRepo: DrinkRepository,
-    @inject(LoggerService) private logger: LoggerService,
+    @inject(DrinkRepository) private drinkRepository: DrinkRepository,
   ) {}
 
   handle(phone: string, message: string) {
-    this.logger.info('🍹 Drink Flow: %o', { phone, message })
+    logger.info('🍹 Drink Flow: %o', { phone, message })
     const { step } = this.flowStateManager.getState(phone)
 
-    const actions: FlowActions = {
+    const actions: FlowActions<FlowStep> = {
       [FlowStep.DRINK]: () => this.handleDrinkList(phone, message),
       [FlowStep.DRINK_TYPE]: () => this.handleDrinkType(phone, message),
       [FlowStep.DRINK_QUANTITY]: () => this.handleDrinkQuantity(phone, message),
@@ -36,7 +32,7 @@ export class DrinkFlow implements FlowHandler {
 
   // ###
   private async handleDrinkList(phone: string, message: string) {
-    const drinks = await this.drinkRepo.getAllDrinks()
+    const drinks = await this.drinkRepository.getAllDrinks()
 
     if (!drinks?.length) {
       this.flowStateManager.clearState(phone)
@@ -45,23 +41,21 @@ export class DrinkFlow implements FlowHandler {
 
     this.flowStateManager.updateState(phone, { step: FlowStep.DRINK_TYPE })
 
-    return [
-      '🍹 *ESCOLHA SUA BEBIDA:*\n',
-      ...this.buildDrinkList(drinks),
-      '\n✍️ Digite o número da opção desejada:',
-    ]
+    const title = '🍹 *ESCOLHA SUA BEBIDA*'
+    const description = '\n> Por favor, aperte no botão abaixo para escolher a sua bebida.'
+
+    return [MessageType.LIST, title, description, ...this.buildDrinkList(drinks)]
   }
 
   private async handleDrinkType(phone: string, message: string) {
-    const drinks = await this.drinkRepo.getAllDrinks()
-    const selectedIndex = Number.parseInt(message) - 1
+    const drinks = await this.drinkRepository.getAllDrinks()
+    const selectedIndex = Number.parseInt(message, 10) - 1
 
     if (Number.isNaN(selectedIndex) || !drinks?.[selectedIndex]) {
-      return [
-        '❌ *OPÇÃO INVÁLIDA!*',
-        'Por favor, digite um número válido da opção desejada.',
-        '\n✍️ Digite o número da opção desejada:',
-      ]
+      const title = '❌ *OPÇÃO INVÁLIDA!*'
+      const description = 'Selecione uma opção válida.'
+
+      return [MessageType.LIST, title, description, ...this.buildDrinkList(drinks)]
     }
 
     const selectedDrink = drinks[selectedIndex]
@@ -75,13 +69,10 @@ export class DrinkFlow implements FlowHandler {
   }
 
   private handleDrinkQuantity(phone: string, message: string) {
-    const quantity = Number.parseInt(message)
+    const quantity = Number.parseInt(message, 10)
 
-    if (Number.isNaN(quantity) || quantity < MIN_QUANTITY || quantity > MAX_QUANTITY) {
-      return [
-        '❌ *QUANTIDADE INVÁLIDA!*',
-        `Por favor, digite um número entre ${MIN_QUANTITY} e ${MAX_QUANTITY}.`,
-      ]
+    if (!isValidQuantity(quantity)) {
+      return ['❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.']
     }
 
     this.flowStateManager.updateState(phone, { step: FlowStep.ORDER })
@@ -89,15 +80,21 @@ export class DrinkFlow implements FlowHandler {
     return ['✅ Bebida adicionada ao carrinho com sucesso!\n', ...orderMenu]
   }
 
-  // ###
   private handleDefaultAction() {
     return ['❌ Ocorreu um erro no fluxo da conversa. Por favor, tente novamente.']
   }
 
   // ###
   private buildDrinkList(drinks: Drink[]) {
-    return drinks.map((drink, index) => {
-      return `${index + 1} - ${drink.name} (${formatCurrency(Number(drink.price))})`
+    return drinks.map(({ name, description, price }, index) => {
+      const drinkPrice = formatCurrency(Number(price))
+
+      const rowId = index + 1
+      const title = `${rowId} - ${name} (${drinkPrice})`
+      const category = 'bebidas'
+
+      // rowId :: title :: description :: category
+      return [rowId, title, description, category].join('::')
     })
   }
 }

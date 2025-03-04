@@ -9,11 +9,9 @@ export class ClientManager {
 
   public async getClient(): Promise<Whatsapp> {
     if (!this.client) {
-      this.client = await create({
-        session: SESSION_NAME,
-        phoneNumber: PHONE_NUMBER,
-      })
+      this.client = await create({ session: SESSION_NAME, phoneNumber: PHONE_NUMBER })
     }
+
     return this.client
   }
 }
