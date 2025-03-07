@@ -7,7 +7,7 @@ import { orderMenu } from '@/messages/order-menu.js'
 import { DrinkRepository } from '@/repositories/drink-repository.js'
 import { formatCurrency, isValidQuantity, logger } from '@/utils/index.js'
 
-import type { FlowActions, FlowHandler } from '@/types.js'
+import type { FlowActions, FlowHandler } from '@/types/index.js'
 import { MessageType } from '@wppconnect-team/wppconnect'
 
 @injectable()
@@ -15,7 +15,7 @@ export class DrinkFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(DrinkRepository) private drinkRepository: DrinkRepository,
-  ) {}
+  ) { }
 
   handle(phone: string, message: string) {
     logger.info('🍹 Drink Flow: %o', { phone, message })

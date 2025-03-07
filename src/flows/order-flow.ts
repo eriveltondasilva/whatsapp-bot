@@ -8,7 +8,7 @@ import { logger } from '@/utils/index.js'
 import { DrinkFlow } from './drink-flow.js'
 import { PizzaFlow } from './pizza-flow.js'
 
-import type { FlowActions, FlowHandler } from '@/types.js'
+import type { FlowActions, FlowHandler } from '@/types/index.js'
 
 @injectable()
 export class OrderFlow implements FlowHandler {
@@ -16,7 +16,7 @@ export class OrderFlow implements FlowHandler {
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(DrinkFlow) private drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
-  ) {}
+  ) { }
 
   handle(phone: string, message: string) {
     logger.info('👋 Order Flow: %o', { phone, message })

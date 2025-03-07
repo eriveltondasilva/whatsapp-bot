@@ -5,11 +5,11 @@ import { FlowStateManager } from '@/managers/flow-state-manager.js'
 import { mainMenu, orderMenu } from '@/messages/index.js'
 import { logger } from '@/utils/logger.js'
 
-import type { FlowActions, FlowHandler } from '@/types.js'
+import type { FlowActions, FlowHandler } from '@/types/index.js'
 
 @injectable()
 export class MainMenuFlow implements FlowHandler {
-  constructor(@inject(FlowStateManager) private flowStateManager: FlowStateManager) {}
+  constructor(@inject(FlowStateManager) private flowStateManager: FlowStateManager) { }
 
   // ###
   public handle(phone: string, message: string) {

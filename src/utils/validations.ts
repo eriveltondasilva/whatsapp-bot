@@ -19,28 +19,19 @@ export function isValidQuantity(quantity: number): boolean {
   )
 }
 
-export function isListDataValid(title: string, content: string[]): boolean {
-  if (!title || !content?.length) {
-    logger.error('🚫 Invalid list data')
-    return false
-  }
-
-  return true
-}
-
 export function isValidMessage(message: Message): boolean {
   if (!message || !message.body) {
     logger.error('🚫 Invalid message')
     return false
   }
 
-  if (![MessageType.CHAT, MessageType.LIST_RESPONSE].includes(message.type)) {
-    logger.error('🚫 Invalid message type: %o', { type: message.type })
+  if (message.fromMe || message.isGroupMsg) {
+    logger.error('🚫 Invalid message from: %o', { from: message.from })
     return false
   }
 
-  if (message.fromMe || message.isGroupMsg) {
-    logger.error('🚫 Invalid message from: %o', { from: message.from })
+  if (![MessageType.CHAT, MessageType.LIST_RESPONSE].includes(message.type)) {
+    logger.error('🚫 Invalid message type: %o', { type: message.type })
     return false
   }
 

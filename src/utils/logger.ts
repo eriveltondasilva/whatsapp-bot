@@ -1,4 +1,4 @@
-import { SESSION_NAME } from '@/config/env.js'
+import { SESSION_NAME } from '@/config/constants.js'
 import { type Logger as WinstonLogger, createLogger, format, transports } from 'winston'
 
 interface ILogger {

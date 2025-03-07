@@ -5,13 +5,12 @@ import {
   DrinkFlow,
   MainMenuFlow,
   OrderFlow,
-  // PaymentFlow,
   PizzaFlow,
   RegistrationFlow,
   WelcomeFlow,
 } from '@/flows/index.js'
 
-import type { FlowHandler } from '@/types.js'
+import type { FlowHandler } from '@/types/index.js'
 
 @singleton()
 export class HandlerManager {
@@ -21,7 +20,6 @@ export class HandlerManager {
     @inject(DrinkFlow) drinkFlow: DrinkFlow,
     @inject(MainMenuFlow) menuFlow: MainMenuFlow,
     @inject(OrderFlow) orderFlow: OrderFlow,
-    // @inject(PaymentFlow) paymentFlow: PaymentFlow,
     @inject(PizzaFlow) pizzaFlow: PizzaFlow,
     @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
     @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
@@ -30,7 +28,6 @@ export class HandlerManager {
       [FlowKeys.DRINK, drinkFlow],
       [FlowKeys.MAIN_MENU, menuFlow],
       [FlowKeys.ORDER, orderFlow],
-      // [FlowKeys.PAYMENT, paymentFlow],
       [FlowKeys.PIZZA, pizzaFlow],
       [FlowKeys.REGISTRATION, registrationFlow],
       [FlowKeys.WELCOME, welcomeFlow],

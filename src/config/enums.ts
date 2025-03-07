@@ -1,3 +1,10 @@
+export const MessageType = {
+  TEXT: 'text',
+  LIST: 'list',
+  IMAGE: 'image',
+} as const
+export type MessageType = (typeof MessageType)[keyof typeof MessageType]
+
 export const PizzaType = {
   FULL: 'full',
   HALF: 'half',

@@ -1,24 +1,17 @@
 {
   "name": "whatsapp-bot",
   "description": "",
-  "keywords": [],
   "version": "1.0.0",
   "main": "dist/src/index.js",
   "type": "module",
   "license": "MIT",
   "private": true,
-  "engines": {
-    "node": ">=22.0.0"
-  },
-  "author": {
-    "name": "Erivelton Silva",
-    "email": "eriveltondasilva13@gmail.com",
-    "url": "https://github.com/eriveltondasilva"
-  },
+  "engines": { "node": ">=22.0.0" },
+  "author": "Erivelton Silva <eriveltondasilva13@gmail.com> (https://github.com/eriveltondasilva)",
   "scripts": {
     "build": "tsup",
-    "start": "node --env-file=.env dist/index.js",
-    "dev": "tsx --env-file=.env -r tsconfig-paths/register src/index.ts",
+    "start": "node --env-file=.env ./dist/index.js",
+    "dev": "tsx --env-file=.env -r tsconfig-paths/register ./src/index.ts",
 
     "fmt": "biome format --verbose .",
     "fmt:fix": "biome format --fix --verbose .",
@@ -30,6 +23,7 @@
     "check:fix": "biome check --fix --unsafe --verbose .",
 
     "type:check": "tsc --noEmit",
+
     "clean": "rm -rf dist",
     "test": "vitest run tests"
   },

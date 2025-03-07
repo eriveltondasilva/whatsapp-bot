@@ -6,14 +6,14 @@ import { mainMenu } from '@/messages/main-menu.js'
 import { CustomerRepository } from '@/repositories/index.js'
 import { getGreeting, isValidAddress, isValidName, logger } from '@/utils/index.js'
 
-import type { FlowActions, FlowHandler } from '@/types.js'
+import type { FlowActions, FlowHandler } from '@/types/index.js'
 
 @injectable()
 export class RegistrationFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
-  ) {}
+  ) { }
 
   // ###
   public handle(phone: string, message: string) {

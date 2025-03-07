@@ -7,7 +7,7 @@ import { CustomerRepository } from '@/repositories/index.js'
 import { getGreeting, logger } from '@/utils/index.js'
 import { RegistrationFlow } from './registration-flow.js'
 
-import type { FlowHandler } from '@/types.js'
+import type { FlowHandler } from '@/types/index.js'
 
 @injectable()
 export class WelcomeFlow implements FlowHandler {
@@ -15,7 +15,7 @@ export class WelcomeFlow implements FlowHandler {
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
-  ) {}
+  ) { }
 
   public async handle(phone: string, message: string) {
     logger.info('👋 Welcome Flow: %o', { phone, message })

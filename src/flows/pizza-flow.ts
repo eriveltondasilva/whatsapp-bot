@@ -8,7 +8,7 @@ import { orderMenu } from '@/messages/order-menu.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/index.js'
 import { formatCurrency, isValidQuantity, logger } from '@/utils/index.js'
 
-import type { FlowActions, FlowHandler } from '@/types.js'
+import type { FlowActions, FlowHandler } from '@/types/index.js'
 
 @injectable()
 export class PizzaFlow implements FlowHandler {
@@ -16,26 +16,25 @@ export class PizzaFlow implements FlowHandler {
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(CrustRepository) private crustRepository: CrustRepository,
-  ) {}
+  ) { }
 
-  handle(phone: string, msg: string) {
-    logger.info('🍕 Pizza Flow: %o', { phone, msg })
+  handle(phone: string, message: string) {
+    logger.info('🍕 Pizza Flow: %o', { phone, message })
     const { step } = this.flowStateManager.getState(phone)
 
     const actions: FlowActions<FlowStep> = {
-      [FlowStep.PIZZA_TYPE]: () => this.handlePizzaType(phone, msg),
-      [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(phone, msg),
-      [FlowStep.PIZZA_CRUST]: () => this.handlePizzaCrust(phone, msg),
-      [FlowStep.PIZZA_QUANTITY]: () => this.handlePizzaQuantity(phone, msg),
-      [FlowStep.PIZZA_NOTES]: () => this.handlePizzaNotes(phone, msg),
+      [FlowStep.PIZZA_TYPE]: () => this.handlePizzaType(phone, message),
+      [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(phone, message),
+      [FlowStep.PIZZA_CRUST]: () => this.handlePizzaCrust(phone, message),
+      [FlowStep.PIZZA_QUANTITY]: () => this.handlePizzaQuantity(phone, message),
+      [FlowStep.PIZZA_NOTES]: () => this.handlePizzaNotes(phone, message),
     }
 
     return actions[step as FlowStep]?.() || this.handleInvalidOption()
   }
-
   // ###
-  private async handlePizzaType(phone: string, msg: string) {
-    const pizzaType = msg === '1' ? PizzaType.FULL : PizzaType.HALF
+  private async handlePizzaType(phone: string, message: string) {
+    const pizzaType = message === '1' ? PizzaType.FULL : PizzaType.HALF
     const flavors = await this.flavorRepository.getAllFlavors()
 
     if (!flavors?.length) {
@@ -54,12 +53,12 @@ export class PizzaFlow implements FlowHandler {
     return [MessageType.LIST, title, description, ...this.buildFlavorList(flavors)]
   }
 
-  private async handlePizzaFlavor(phone: string, msg: string) {
+  private async handlePizzaFlavor(phone: string, message: string) {
     const { data } = this.flowStateManager.getState(phone)
     const flavors = await this.flavorRepository.getAllFlavors()
     const crusts = await this.crustRepository.getAllCrusts()
 
-    const selectedIndex = Number.parseInt(msg, 10) - 1
+    const selectedIndex = Number.parseInt(message, 10) - 1
 
     if (Number.isNaN(selectedIndex) || !flavors?.[selectedIndex]) {
       const title = '❌ *OPÇÃO INVÁLIDA!*'
@@ -94,9 +93,9 @@ export class PizzaFlow implements FlowHandler {
     return [MessageType.LIST, title, description, ...this.buildCrustList(crusts)]
   }
 
-  private async handlePizzaCrust(phoneNumber: string, msg: string) {
+  private async handlePizzaCrust(phoneNumber: string, message: string) {
     const crusts = await this.crustRepository.getAllCrusts()
-    const selectedIndex = Number.parseInt(msg, 10) - 1
+    const selectedIndex = Number.parseInt(message, 10) - 1
 
     if (Number.isNaN(selectedIndex) || !crusts?.[selectedIndex]) {
       const title = '❌ *BORDA INVÁLIDA!*'
@@ -114,8 +113,8 @@ export class PizzaFlow implements FlowHandler {
     return ['🔢 Digite a quantidade desejada (1-5):']
   }
 
-  private handlePizzaQuantity(phone: string, msg: string) {
-    const quantity = Number.parseInt(msg, 10)
+  private handlePizzaQuantity(phone: string, message: string) {
+    const quantity = Number.parseInt(message, 10)
 
     if (!isValidQuantity(quantity)) {
       return ['❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.']
@@ -133,8 +132,8 @@ export class PizzaFlow implements FlowHandler {
     ]
   }
 
-  private handlePizzaNotes(phone: string, msg: string) {
-    const notes = msg === '0' ? undefined : msg
+  private handlePizzaNotes(phone: string, message: string) {
+    const notes = message === '0' ? undefined : message
 
     this.flowStateManager.updateState(phone, {
       step: FlowStep.ORDER,
