@@ -1,7 +1,10 @@
 import { type Message, MessageType } from '@wppconnect-team/wppconnect'
 
 import { Validation } from '@/config/enums.js'
-import { logger } from '@/utils/logger.js'
+import { LoggerProvider } from '@/providers/index.js'
+import { container } from 'tsyringe'
+
+const logger = container.resolve(LoggerProvider)
 
 export function isValidName(name: string): boolean {
   return name.length >= Validation.NAME_MIN_LENGTH

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
-import { FlowStateManager } from '@/managers/flow-state-manager.js'
+import { StateManager } from '@/managers/state-manager.js'
 import { mainMenu } from '@/messages/main-menu.js'
 import { CustomerRepository } from '@/repositories/index.js'
 import { getGreeting, isValidAddress, isValidName, logger } from '@/utils/index.js'
@@ -11,9 +11,9 @@ import type { FlowActions, FlowHandler } from '@/types/index.js'
 @injectable()
 export class RegistrationFlow implements FlowHandler {
   constructor(
-    @inject(FlowStateManager) private flowStateManager: FlowStateManager,
+    @inject(StateManager) private flowStateManager: StateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
-  ) {}
+  ) { }
 
   // ###
   public handle(phone: string, message: string) {

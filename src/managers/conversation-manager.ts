@@ -1,24 +1,25 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStateManager } from '@/managers/flow-state-manager.js'
-import { logger } from '@/utils/index.js'
+import { StateManager } from '@/managers/state-manager.js'
+import { LoggerProvider } from '@/providers/index.js'
 
 import { HandlerManager } from './handler-manager.js'
 
 @injectable()
-export class DialogManager {
+export class ConversationManager {
   constructor(
-    @inject(FlowStateManager) private flowStateManager: FlowStateManager,
+    @inject(StateManager) private flowStateManager: StateManager,
     @inject(HandlerManager) private handlerManager: HandlerManager,
-  ) {}
+    @inject(LoggerProvider) private logger: LoggerProvider,
+  ) { }
 
   public async handle(phone: string, message: string): Promise<string[]> {
-    logger.info('👋 Handling Message: %o', { phone, message })
+    this.logger.info('👋 Handling Message: %o', { phone, message })
     const { step } = this.flowStateManager.getState(phone)
     const handler = this.handlerManager.getHandler(step)
 
     if (!handler) {
-      logger.error('No handler found for current step:', { phone, step })
+      this.logger.error('No handler found for current step:', { phone, step })
       return ['❌ Fluxo inválido']
     }
 

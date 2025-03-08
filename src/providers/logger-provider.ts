@@ -1,5 +1,7 @@
-import { SESSION_NAME } from '@/config/constants.js'
+import { singleton } from 'tsyringe'
 import { type Logger as WinstonLogger, createLogger, format, transports } from 'winston'
+
+import { SESSION_NAME } from '@/config/constants.js'
 
 interface ILogger {
   info(message: string, ...meta: unknown[]): void
@@ -9,7 +11,8 @@ interface ILogger {
   warn(message: string, ...meta: unknown[]): void
 }
 
-class Logger implements ILogger {
+@singleton()
+export class LoggerProvider implements ILogger {
   private logger: WinstonLogger
 
   constructor() {
@@ -46,5 +49,3 @@ class Logger implements ILogger {
     this.logger.warn(`⚠️ ${message}`, ...meta)
   }
 }
-
-export const logger = new Logger()

@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe'
 
 import { MessageType } from '@/config/enums.js'
-import { getDelay, logger } from '@/utils/index.js'
-import { ClientService } from './client-service.js'
+import { ClientProvider, LoggerProvider } from '@/providers/index.js'
+import { getDelay } from '@/utils/index.js'
 
 import type { ActionsMap } from '@/types/index.js'
 
@@ -13,7 +13,7 @@ type MessageResponse = {
 
 @injectable()
 export class MessageSender {
-  constructor(@inject(ClientService) private clientService: ClientService) {}
+  constructor(@inject(ClientProvider) private clientService: ClientProvider, @inject(LoggerProvider) private logger: LoggerProvider) { }
 
   public async send(phone: string, response: string[]) {
     // const { type = '', content = []} = response
@@ -30,9 +30,9 @@ export class MessageSender {
 
     try {
       sendAction && (await sendAction())
-      logger.info('📬 Message sent successfully: %o', { phone, type })
+      this.logger.info('📬 Message sent successfully: %o', { phone, type })
     } catch (error) {
-      logger.error('❌ Failed to send message: %o', { phone, type, error })
+      this.logger.error('❌ Failed to send message: %o', { phone, type, error })
       throw error
     }
   }
@@ -54,7 +54,7 @@ export class MessageSender {
     const [title, description, ...rows] = content
 
     if (!title || !rows?.length) {
-      logger.error('🚫 Invalid list data: %o', { title, rows })
+      this.logger.error('🚫 Invalid list data: %o', { title, rows })
       return
     }
 
@@ -77,7 +77,7 @@ export class MessageSender {
   // ###
   private createListSections(rows: string[]) {
     if (!rows?.length) {
-      logger.error('🚫 Empty list')
+      this.logger.error('🚫 Empty list')
       return []
     }
 

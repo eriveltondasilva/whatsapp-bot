@@ -1,5 +1,5 @@
 export const orderMenu = [
-  '🛒 *MENU DE PEDIDO:*\n',
+  '🛒 *MENU DE PEDIDO*\n',
   //
   '1️⃣ - Pizza inteira 🍕',
   '2️⃣ - Pizza dois sabores 🍕🍕',

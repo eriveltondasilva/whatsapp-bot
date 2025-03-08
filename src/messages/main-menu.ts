@@ -1,5 +1,5 @@
 export const mainMenu = [
-  '📝 *MENU PRINCIPAL:*\n',
+  '📝 *MENU PRINCIPAL*\n',
   //
   '1️⃣ - Fazer Pedido 🛒',
   '2️⃣ - Acompanhar Pedido 🚚',

@@ -3,7 +3,7 @@ import { MessageType } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
 import { FlowStep, PizzaType } from '@/config/enums.js'
-import { FlowStateManager } from '@/managers/index.js'
+import { StateManager } from '@/managers/index.js'
 import { orderMenu } from '@/messages/order-menu.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/index.js'
 import { formatCurrency, isValidQuantity, logger } from '@/utils/index.js'
@@ -13,10 +13,10 @@ import type { FlowActions, FlowHandler } from '@/types/index.js'
 @injectable()
 export class PizzaFlow implements FlowHandler {
   constructor(
-    @inject(FlowStateManager) private flowStateManager: FlowStateManager,
+    @inject(StateManager) private flowStateManager: StateManager,
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(CrustRepository) private crustRepository: CrustRepository,
-  ) {}
+  ) { }
 
   handle(phone: string, message: string) {
     logger.info('🍕 Pizza Flow: %o', { phone, message })

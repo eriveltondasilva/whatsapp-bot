@@ -1,6 +1,6 @@
-import { injectable } from 'tsyringe'
+// import { injectable } from 'tsyringe'
 
-@injectable()
+// @injectable()
 export class OrderService {
   // constructor(
   // @inject(OrderRepository) private orderRepository: OrderRepository,

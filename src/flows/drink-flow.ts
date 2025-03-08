@@ -2,7 +2,7 @@ import type { Drink } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
-import { FlowStateManager } from '@/managers/flow-state-manager.js'
+import { StateManager } from '@/managers/state-manager.js'
 import { orderMenu } from '@/messages/order-menu.js'
 import { DrinkRepository } from '@/repositories/drink-repository.js'
 import { formatCurrency, isValidQuantity, logger } from '@/utils/index.js'
@@ -13,9 +13,9 @@ import { MessageType } from '@wppconnect-team/wppconnect'
 @injectable()
 export class DrinkFlow implements FlowHandler {
   constructor(
-    @inject(FlowStateManager) private flowStateManager: FlowStateManager,
+    @inject(StateManager) private flowStateManager: StateManager,
     @inject(DrinkRepository) private drinkRepository: DrinkRepository,
-  ) {}
+  ) { }
 
   handle(phone: string, message: string) {
     logger.info('🍹 Drink Flow: %o', { phone, message })

@@ -1,30 +1,33 @@
 import { type CreateOptions, type Whatsapp, create } from '@wppconnect-team/wppconnect'
-import { singleton } from 'tsyringe'
+import { inject, injectable, singleton } from 'tsyringe'
 
 import { PHONE_NUMBER, SESSION_NAME } from '@/config/constants.js'
-import { logger } from '@/utils/index.js'
+import { LoggerProvider } from './logger-provider.js'
 
-interface ClientServiceI {
+interface ClientProviderI {
   getClient(): Promise<Whatsapp>
   closeClient(): Promise<void>
 }
 
 @singleton()
-export class ClientService implements ClientServiceI {
+@injectable()
+export class ClientProvider implements ClientProviderI {
   private client: Whatsapp | null = null
   private readonly clientOptions: CreateOptions = {
     session: SESSION_NAME,
     phoneNumber: PHONE_NUMBER,
   }
 
+  constructor(@inject(LoggerProvider) private logger: LoggerProvider) { }
+
   private async createClient(): Promise<Whatsapp> {
     try {
       const client = await create(this.clientOptions)
-      logger.ok('Client initialized successfully')
+      this.logger.ok('Client initialized successfully')
 
       return client
     } catch (error) {
-      logger.error('Failed to initialize client: %o', error)
+      this.logger.error('Failed to initialize client: %o', error)
       throw error
     }
   }
@@ -39,17 +42,17 @@ export class ClientService implements ClientServiceI {
 
   public async closeClient(): Promise<void> {
     if (!this.client) {
-      logger.warn('Client not initialized')
+      this.logger.warn('Client not initialized')
       return
     }
 
     try {
       await this.client.close()
-      logger.ok('Client closed successfully')
+      this.logger.ok('Client closed successfully')
 
       this.client = null
     } catch (error) {
-      logger.error('Failed to close client: %o', error)
+      this.logger.error('Failed to close client: %o', error)
       throw error
     }
   }
