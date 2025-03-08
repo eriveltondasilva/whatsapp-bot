@@ -2,9 +2,9 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
-import { mainMenu } from '@/messages/main-menu.js'
-import { CustomerRepository } from '@/repositories/index.js'
-import { getGreeting, logger } from '@/utils/index.js'
+import { CustomerRepository } from '@/repositories/@index.js'
+import { mainMenu } from '@/templates/main-menu.js'
+import { getGreeting, logger } from '@/utils/@index.js'
 import { RegistrationFlow } from './registration-flow.js'
 
 import type { FlowHandler } from '@/types/index.js'

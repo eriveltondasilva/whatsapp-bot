@@ -1,10 +1,10 @@
 import type { Message } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
-import { ConversationManager, } from '@/managers/index.js'
+import { ConversationManager } from '@/managers/index.js'
 import { ClientProvider, LoggerProvider } from '@/providers/index.js'
 import { MessageSender } from '@/services/index.js'
-import { isValidMessage } from '@/utils/index.js'
+import { isValidMessage } from '@/utils/@index.js'
 
 export interface WhatsappBotI {
   initialize(): Promise<void>
@@ -13,9 +13,9 @@ export interface WhatsappBotI {
 @injectable()
 export class WhatsappBot implements WhatsappBotI {
   constructor(
-    @inject(ClientProvider) private clientProvider: ClientProvider,
-    @inject(ConversationManager) private conversationManager: ConversationManager,
-    @inject(MessageSender) private messageSender: MessageSender,
+    @inject(ClientProvider) private client: ClientProvider,
+    @inject(ConversationManager) private conversation: ConversationManager,
+    @inject(MessageSender) private message: MessageSender,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) { }
 
@@ -24,7 +24,7 @@ export class WhatsappBot implements WhatsappBotI {
    */
   public async initialize(): Promise<void> {
     try {
-      const client = await this.clientProvider.getClient()
+      const client = await this.client.getClient()
       client.onMessage((message) => this.processMessage(message))
 
       this.logger.info('\n🤖 WhatsApp bot initialized successfully 🚀\n')
@@ -46,11 +46,11 @@ export class WhatsappBot implements WhatsappBotI {
     })
 
     try {
-      const response = await this.conversationManager.handle(message.from, message.body || '')
-      await this.messageSender.send(message.from, response)
+      const response = await this.conversation.handle(message.from, message.body || '')
+      await this.message.send(message.from, response)
     } catch (error) {
       this.logger.error('Message processing error: %o', error)
-      await this.messageSender.sendErrorMessage(message.from)
+      await this.message.sendErrorMessage(message.from)
     }
   }
 }

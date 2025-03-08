@@ -2,8 +2,8 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
-import { mainMenu, orderMenu } from '@/messages/index.js'
-import { logger } from '@/providers/logger-provider.js'
+import { logger } from '@/providers/logger.provider.js'
+import { mainMenu, orderMenu } from '@/templates/index.js'
 
 import type { FlowActions, FlowHandler } from '@/types/index.js'
 

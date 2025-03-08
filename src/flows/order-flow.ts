@@ -2,8 +2,8 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/index.js'
-import { orderMenu } from '@/messages/order-menu.js'
-import { logger } from '@/utils/index.js'
+import { orderMenu } from '@/templates/order-menu.js'
+import { logger } from '@/utils/@index.js'
 
 import { DrinkFlow } from './drink-flow.js'
 import { PizzaFlow } from './pizza-flow.js'

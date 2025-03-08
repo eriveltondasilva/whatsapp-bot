@@ -1,4 +1,4 @@
-import { prisma } from '@/db/prisma.js'
+import { prisma } from '@/providers/prisma.provider.js'
 
 export class CrustRepository {
   async getAllCrusts() {

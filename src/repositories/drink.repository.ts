@@ -1,4 +1,4 @@
-import { prisma } from '@/db/prisma.js'
+import { prisma } from '@/providers/prisma.provider.js'
 import type { Prisma } from '@prisma/client'
 
 export class DrinkRepository {

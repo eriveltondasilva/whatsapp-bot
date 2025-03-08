@@ -2,7 +2,7 @@ import { type CreateOptions, type Whatsapp, create } from '@wppconnect-team/wppc
 import { inject, injectable, singleton } from 'tsyringe'
 
 import { PHONE_NUMBER, SESSION_NAME } from '@/config/constants.js'
-import { LoggerProvider } from './logger-provider.js'
+import { LoggerProvider } from './logger.provider.js'
 
 interface ClientProviderI {
   getClient(): Promise<Whatsapp>
@@ -10,7 +10,6 @@ interface ClientProviderI {
 }
 
 @singleton()
-@injectable()
 export class ClientProvider implements ClientProviderI {
   private client: Whatsapp | null = null
   private readonly clientOptions: CreateOptions = {

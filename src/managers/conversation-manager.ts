@@ -11,7 +11,7 @@ export class ConversationManager {
     @inject(StateManager) private flowStateManager: StateManager,
     @inject(HandlerManager) private handlerManager: HandlerManager,
     @inject(LoggerProvider) private logger: LoggerProvider,
-  ) { }
+  ) {}
 
   public async handle(phone: string, message: string): Promise<string[]> {
     this.logger.info('👋 Handling Message: %o', { phone, message })
