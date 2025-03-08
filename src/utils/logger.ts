@@ -3,9 +3,10 @@ import { type Logger as WinstonLogger, createLogger, format, transports } from '
 
 interface ILogger {
   info(message: string, ...meta: unknown[]): void
+  debug(message: string, ...meta: unknown[]): void
+  ok(message: string, ...meta: unknown[]): void
   error(message: string, ...meta: unknown[]): void
   warn(message: string, ...meta: unknown[]): void
-  debug(message: string, ...meta: unknown[]): void
 }
 
 class Logger implements ILogger {
@@ -29,16 +30,20 @@ class Logger implements ILogger {
     this.logger.info(message, ...meta)
   }
 
+  public debug(message: string, ...meta: unknown[]): void {
+    this.logger.debug(message, ...meta)
+  }
+
+  public ok(message: string, ...meta: unknown[]): void {
+    this.logger.info(`✅ ${message}`, ...meta)
+  }
+
   public error(message: string, ...meta: unknown[]): void {
-    this.logger.error(message, ...meta)
+    this.logger.error(`❌ ${message}`, ...meta)
   }
 
   public warn(message: string, ...meta: unknown[]): void {
-    this.logger.warn(message, ...meta)
-  }
-
-  public debug(message: string, ...meta: unknown[]): void {
-    this.logger.debug(message, ...meta)
+    this.logger.warn(`⚠️ ${message}`, ...meta)
   }
 }
 

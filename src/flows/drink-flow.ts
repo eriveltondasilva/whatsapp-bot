@@ -15,7 +15,7 @@ export class DrinkFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(DrinkRepository) private drinkRepository: DrinkRepository,
-  ) { }
+  ) {}
 
   handle(phone: string, message: string) {
     logger.info('🍹 Drink Flow: %o', { phone, message })

@@ -16,7 +16,7 @@ export class OrderFlow implements FlowHandler {
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(DrinkFlow) private drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
-  ) { }
+  ) {}
 
   handle(phone: string, message: string) {
     logger.info('👋 Order Flow: %o', { phone, message })

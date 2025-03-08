@@ -16,7 +16,7 @@ export class PizzaFlow implements FlowHandler {
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(CrustRepository) private crustRepository: CrustRepository,
-  ) { }
+  ) {}
 
   handle(phone: string, message: string) {
     logger.info('🍕 Pizza Flow: %o', { phone, message })

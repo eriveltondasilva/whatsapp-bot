@@ -1,94 +1,96 @@
-import { MessageType } from '@/config/enums.js';
-import type { ActionsMap } from '@/types/index.js';
-import { getDelay, logger } from '@/utils/index.js';
-import type { Whatsapp } from '@wppconnect-team/wppconnect';
+import { inject, injectable } from 'tsyringe'
+
+import { MessageType } from '@/config/enums.js'
+import { getDelay, logger } from '@/utils/index.js'
+import { ClientService } from './client-service.js'
+
+import type { ActionsMap } from '@/types/index.js'
 
 type MessageResponse = {
-    type: MessageType;
-    content: string[];
-};
+  type: MessageType
+  content: string[]
+}
 
+@injectable()
 export class MessageSender {
-    public async send(client: Whatsapp, phone: string, response: MessageResponse) {
-        const { type, content } = response
+  constructor(@inject(ClientService) private clientService: ClientService) {}
 
-        const sendActions: ActionsMap<MessageType> = {
-            [MessageType.TEXT]: () => this.sendText(client, phone, content),
-            [MessageType.LIST]: () => this.sendText(client, phone, content),
-            [MessageType.IMAGE]: () => this.sendText(client, phone, content)
-        }
+  public async send(phone: string, response: string[]) {
+    // const { type = '', content = []} = response
+    const type = 'text'
+    const content = ['']
 
-        const sendAction = sendActions[type] || sendActions[MessageType.TEXT];
-        if (sendAction) await sendAction();
+    const sendActions: ActionsMap<MessageType> = {
+      [MessageType.TEXT]: () => this.sendText(phone, content),
+      [MessageType.LIST]: () => this.sendList(phone, content),
+      [MessageType.IMAGE]: () => this.sendImage(phone, content),
     }
 
-    // ###
-    public async sendErrorMessage(client: Whatsapp, phone: string): Promise<void> {
-        logger.error('❌ Error sending message: %o', { phone })
-        await this.sendText(client, phone, [
-            '❌ Desculpe, ocorreu um erro ao processar sua mensagem.',
-            'Por favor, tente novamente em alguns instantes.',
-        ]);
+    const sendAction = sendActions[type] || sendActions[MessageType.TEXT]
+
+    try {
+      sendAction && (await sendAction())
+      logger.info('📬 Message sent successfully: %o', { phone, type })
+    } catch (error) {
+      logger.error('❌ Failed to send message: %o', { phone, type, error })
+      throw error
+    }
+  }
+
+  // ###
+  public async sendErrorMessage(phone: string) {
+    await this.sendText(phone, [
+      '❌ Desculpe, ocorreu um erro ao processar sua mensagem.',
+      'Por favor, tente novamente em alguns instantes.',
+    ])
+  }
+
+  private async sendText(phone: string, content: string[]) {
+    const client = await this.clientService.getClient()
+    client.sendText(phone, content.join('\n'), { delay: getDelay() })
+  }
+
+  private async sendList(phone: string, content: string[]) {
+    const [title, description, ...rows] = content
+
+    if (!title || !rows?.length) {
+      logger.error('🚫 Invalid list data: %o', { title, rows })
+      return
     }
 
-    private async sendText(client: Whatsapp, phone: string, content: string[]) {
-        try {
-            await client.sendText(phone, content.join('\n'), { delay: getDelay() })
-            logger.info('📬 Message sent: %o', { phone })
-        } catch (error) {
-            logger.error('❌ Message sending failed: %o', { phone, error })
-        }
+    const client = await this.clientService.getClient()
+    client.sendListMessage(phone, {
+      buttonText: 'Clique Aqui',
+      title,
+      description,
+      sections: this.createListSections(rows),
+    })
+  }
+
+  private async sendImage(phone: string, content: string[]) {
+    const [path, title = 'imagem', caption = ''] = content
+
+    const client = await this.clientService.getClient()
+    client.sendImage(phone, path, title, caption)
+  }
+
+  // ###
+  private createListSections(rows: string[]) {
+    if (!rows?.length) {
+      logger.error('🚫 Empty list')
+      return []
     }
 
-    private async sendList(client: Whatsapp, phone: string, content: string[]) {
-        const [title, description, ...rows] = content
+    const parsedRows = rows.map((row: string) => {
+      const [rowId, title, description, category = 'cardápio'] = row.split('::')
+      return { rowId, title, description, category }
+    })
 
-        if (!title || !rows?.length) {
-            logger.error('🚫 Invalid list data: %o', { title, rows })
-            return false
-        }
+    const groupedRows = Object.groupBy(parsedRows, (row) => row.category)
 
-        try {
-            await client.sendListMessage(phone, {
-                buttonText: 'Clique Aqui',
-                title,
-                description,
-                sections: this.createListSections(rows),
-            })
-            logger.info('📬 List sent: %o', { phone })
-        } catch (error) {
-            logger.error('❌ List sending failed: %o', { phone, error })
-        }
-    }
-
-    private async sendImage(client: Whatsapp, phone: string, content: string[]) {
-        const [path, title = 'imagem', caption = ''] = content;
-
-        try {
-            await client.sendImage(phone, path, title, caption)
-            logger.info('📬 Image sent: %o', { phone })
-        } catch (error) {
-            logger.error('❌ Image sending failed: %o', { phone, error })
-        }
-    }
-
-    // ###
-    private createListSections(rows: string[]) {
-        if (!rows?.length) {
-            logger.error('🚫 Empty list')
-            return []
-        }
-
-        const parsedRows = rows.map((row: string) => {
-            const [rowId, title, description, category = 'cardápio'] = row.split('::')
-            return { rowId, title, description, category }
-        })
-
-        const groupedRows = Object.groupBy(parsedRows, (row) => row.category)
-
-        return Object.entries(groupedRows).map(([category, items]) => ({
-            title: category.toUpperCase(),
-            rows: items?.map(({ rowId, title, description }) => ({ rowId, title, description })),
-        }))
-    }
+    return Object.entries(groupedRows).map(([category, items]) => ({
+      title: category.toUpperCase(),
+      rows: items?.map(({ rowId, title, description }) => ({ rowId, title, description })) || [],
+    }))
+  }
 }

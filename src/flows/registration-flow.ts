@@ -13,7 +13,7 @@ export class RegistrationFlow implements FlowHandler {
   constructor(
     @inject(FlowStateManager) private flowStateManager: FlowStateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
-  ) { }
+  ) {}
 
   // ###
   public handle(phone: string, message: string) {

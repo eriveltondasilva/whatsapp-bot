@@ -9,7 +9,7 @@ import type { FlowActions, FlowHandler } from '@/types/index.js'
 
 @injectable()
 export class MainMenuFlow implements FlowHandler {
-  constructor(@inject(FlowStateManager) private flowStateManager: FlowStateManager) { }
+  constructor(@inject(FlowStateManager) private flowStateManager: FlowStateManager) {}
 
   // ###
   public handle(phone: string, message: string) {
