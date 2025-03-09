@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { MessageType } from '@/config/enums.js'
-import { ClientProvider, LoggerProvider } from '@/providers/index.js'
+import { ClientProvider, LoggerProvider } from '@/providers/@index.js'
 import { getDelay } from '@/utils/@index.js'
 
 import type { ActionsMap } from '@/types/index.js'
@@ -16,7 +16,7 @@ export class MessageSender {
   constructor(
     @inject(ClientProvider) private clientService: ClientProvider,
     @inject(LoggerProvider) private logger: LoggerProvider,
-  ) { }
+  ) {}
 
   public async send(phone: string, response: string[]) {
     // const { type = '', content = []} = response

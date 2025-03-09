@@ -8,12 +8,12 @@ import {
   PizzaFlow,
   RegistrationFlow,
   WelcomeFlow,
-} from '@/flows/index.js'
+} from '@/flows/@index.js'
 
 import type { FlowHandler } from '@/types/index.js'
 
 @singleton()
-export class HandlerManager {
+export class FlowManager {
   private handlers: Map<string, FlowHandler>
 
   constructor(

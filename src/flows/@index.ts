@@ -1,5 +1,5 @@
 export * from './drink-flow.js'
-export * from './main-menu-flow.js'
+export * from './menu-flow.js'
 export * from './order-flow.js'
 export * from './payment-flow.js'
 export * from './pizza-flow.js'

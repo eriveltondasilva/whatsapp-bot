@@ -17,7 +17,7 @@ export class ClientProvider implements ClientProviderI {
     phoneNumber: PHONE_NUMBER,
   }
 
-  constructor(@inject(LoggerProvider) private logger: LoggerProvider) { }
+  constructor(@inject(LoggerProvider) private logger: LoggerProvider) {}
 
   private async createClient(): Promise<Whatsapp> {
     try {

@@ -4,7 +4,7 @@ import { FlowStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { CustomerRepository } from '@/repositories/@index.js'
 import { mainMenu } from '@/templates/main-menu.js'
-import { getGreeting, logger } from '@/utils/@index.js'
+import { getGreeting } from '@/utils/@index.js'
 import { RegistrationFlow } from './registration-flow.js'
 
 import type { FlowHandler } from '@/types/index.js'
@@ -15,10 +15,10 @@ export class WelcomeFlow implements FlowHandler {
     @inject(StateManager) private flowStateManager: StateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
-  ) { }
+  ) {}
 
   public async handle(phone: string, message: string) {
-    logger.info('👋 Welcome Flow: %o', { phone, message })
+    logger.info('👋 Welcome Flow', { phone, message })
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {

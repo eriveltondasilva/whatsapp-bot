@@ -1,7 +1,7 @@
 import { type Message, MessageType } from '@wppconnect-team/wppconnect'
 
 import { Validation } from '@/config/enums.js'
-import { LoggerProvider } from '@/providers/index.js'
+import { LoggerProvider } from '@/providers/@index.js'
 import { container } from 'tsyringe'
 
 const logger = container.resolve(LoggerProvider)

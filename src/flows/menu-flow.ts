@@ -2,14 +2,14 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
-import { logger } from '@/providers/logger.provider.js'
-import { mainMenu, orderMenu } from '@/templates/index.js'
+import {} from '@/providers/index.js'
+import { mainMenu, orderMenu } from '@/templates/@index.js'
 
 import type { FlowActions, FlowHandler } from '@/types/index.js'
 
 @injectable()
 export class MainMenuFlow implements FlowHandler {
-  constructor(@inject(StateManager) private flowStateManager: StateManager) { }
+  constructor(@inject(StateManager) private flowStateManager: StateManager) {}
 
   // ###
   public handle(phone: string, message: string) {

@@ -5,7 +5,7 @@ import { FlowStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { orderMenu } from '@/templates/order-menu.js'
-import { formatCurrency, isValidQuantity, logger } from '@/utils/@index.js'
+import { formatCurrency, isValidQuantity } from '@/utils/@index.js'
 
 import type { FlowActions, FlowHandler } from '@/types/index.js'
 import { MessageType } from '@wppconnect-team/wppconnect'
@@ -15,7 +15,7 @@ export class DrinkFlow implements FlowHandler {
   constructor(
     @inject(StateManager) private flowStateManager: StateManager,
     @inject(DrinkRepository) private drinkRepository: DrinkRepository,
-  ) { }
+  ) {}
 
   handle(phone: string, message: string) {
     logger.info('🍹 Drink Flow: %o', { phone, message })

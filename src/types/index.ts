@@ -1,9 +1,18 @@
 import type { FlowStep } from '@/config/enums.js'
+import type { Customer } from '@prisma/client'
+
+type User = {
+  name: string
+  age: number
+}
 
 export type FlowState = {
   step: FlowStep
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  data?: Record<string, any>
+  customer?: Partial<Pick<Customer, 'name' | 'address'>>
+  order?: {
+    id: string
+    status: string
+  }
 }
 
 export interface FlowHandler {

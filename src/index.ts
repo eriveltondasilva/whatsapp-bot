@@ -2,7 +2,13 @@ import 'reflect-metadata'
 import { container } from 'tsyringe'
 
 import { WhatsappBot } from '@/bot.js'
-import { ClientProvider, LoggerProvider } from '@/providers/index.js'
+import { ClientProvider, LoggerProvider } from '@/providers/@index.js'
+
+const PROCESS_EVENTS = {
+  SIGINT: 'SIGINT',
+  UNCAUGHT_EXCEPTION: 'uncaughtException',
+  UNHANDLED_REJECTION: 'unhandledRejection',
+} as const
 
 /*
  * Bootstrap the bot.
@@ -31,17 +37,17 @@ function setupProcessHandlers(): void {
   const logger = container.resolve(LoggerProvider)
 
   // Handle uncaught exceptions and unhandled rejections
-  process.on('uncaughtException', (error) => {
+  process.on(PROCESS_EVENTS.UNCAUGHT_EXCEPTION, (error) => {
     logger.error('Uncaught exception: %o', error)
     process.exit(1)
   })
 
-  process.on('unhandledRejection', (reason) => {
+  process.on(PROCESS_EVENTS.UNHANDLED_REJECTION, (reason) => {
     logger.error('Unhandled rejection: %o', reason)
   })
 
   // Handle SIGINT signals
-  process.on('SIGINT', async () => {
+  process.on(PROCESS_EVENTS.SIGINT, async () => {
     logger.info('📴 Shutting down bot...')
 
     try {
