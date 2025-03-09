@@ -26,7 +26,7 @@ export class ClientProvider implements ClientProviderI {
 
       return client
     } catch (error) {
-      this.logger.error('Failed to initialize client: %o', error)
+      this.logger.error('Failed to initialize client', error)
       throw error
     }
   }
@@ -51,7 +51,7 @@ export class ClientProvider implements ClientProviderI {
 
       this.client = null
     } catch (error) {
-      this.logger.error('Failed to close client: %o', error)
+      this.logger.error('Failed to close client', error)
       throw error
     }
   }

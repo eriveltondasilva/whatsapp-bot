@@ -29,7 +29,7 @@ export class MessageSender {
       sendAction && (await sendAction())
       this.logger.info('📬 Message sent successfully', { phone, type })
     } catch (error) {
-      this.logger.error('Failed to send message:', { phone, type, error })
+      this.logger.error('Failed to send message', { phone, type, error })
       throw error
     }
   }
@@ -51,7 +51,7 @@ export class MessageSender {
     const [title, description, ...rows] = content
 
     if (!title || !rows?.length) {
-      this.logger.error('🚫 Invalid list data: %o', { title, rows })
+      this.logger.error('Invalid list data', { title, rows })
       return
     }
 
@@ -74,7 +74,7 @@ export class MessageSender {
   // ###
   private createListSections(rows: string[]) {
     if (!rows?.length) {
-      this.logger.error('🚫 Empty list')
+      this.logger.error('Empty list')
       return []
     }
 

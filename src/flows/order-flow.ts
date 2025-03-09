@@ -21,7 +21,7 @@ export class OrderFlow implements FlowHandler {
   ) {}
 
   handle(phone: string, message: string) {
-    this.logger.info('👋 Order Flow: %o', { phone, message })
+    this.logger.info('👋 Order Flow', { phone, message })
 
     const actions: FlowActions = {
       1: () => this.handlePizzaSelection(phone, message),

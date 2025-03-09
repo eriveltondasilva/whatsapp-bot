@@ -14,7 +14,7 @@ export class ConversationManager {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  public async handle(phone: string, message: string) {
+  public async handle(phone: string, message: string): Promise<Response> {
     this.logger.info('👋 Handling Message', { phone, message })
 
     const { step } = this.stateManager.getState(phone)

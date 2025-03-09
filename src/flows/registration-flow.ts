@@ -80,7 +80,7 @@ export class RegistrationFlow implements FlowHandler {
       name: data?.name || '',
       address,
     })
-    this.logger.info('📝 New customer registered: %o', { newCustomer })
+    this.logger.ok('New customer registered', { newCustomer })
 
     this.stateManager.resetState(phone)
     this.stateManager.updateStep(phone, FlowStep.MAIN_MENU)
