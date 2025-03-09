@@ -17,9 +17,9 @@ export class ConversationManager {
   public async handle(phone: string, message: string): Promise<Response> {
     this.logger.info('👋 Handling Message', { phone, message })
 
-    const { step } = this.stateManager.getState(phone)
-    const flow = this.flowManager.getFlow(step)
+    const state = this.stateManager.getState(phone)
+    const flow = this.flowManager.getFlow(state.step)
 
-    return await flow.handle(phone, message)
+    return await flow.handle({ state, phone, message })
   }
 }

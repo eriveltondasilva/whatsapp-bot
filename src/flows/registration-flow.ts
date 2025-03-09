@@ -7,7 +7,7 @@ import { CustomerRepository } from '@/repositories/@index.js'
 import { mainMenu } from '@/templates/main-menu.js'
 import { createResponse, getGreeting, isValidAddress, isValidName } from '@/utils/@index.js'
 
-import type { FlowActions, FlowHandler } from '@/types/index.js'
+import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/types/index.js'
 
 @injectable()
 export class RegistrationFlow implements FlowHandler {
@@ -18,14 +18,14 @@ export class RegistrationFlow implements FlowHandler {
   ) {}
 
   // ###
-  public handle(phone: string, message: string) {
+  public handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('👋 Registration Flow: %o', { phone, message })
-    const { step } = this.stateManager.getState(phone)
+    const { step, customer } = state
 
     const actions: FlowActions<FlowStep> = {
       [FlowStep.REGISTRATION]: () => this.initializeFlow(phone),
       [FlowStep.COLLECT_NAME]: () => this.handleNameInput(phone, message),
-      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(phone, message),
+      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(customer, phone, message),
     }
 
     return actions[step]?.() || this.resetFlow(phone)
@@ -64,8 +64,8 @@ export class RegistrationFlow implements FlowHandler {
     )
   }
 
-  private handleAddressInput(phone: string, address: string) {
-    if (!isValidAddress(address)) {
+  private handleAddressInput(customer: FlowState['customer'], phone: string, message: string) {
+    if (!isValidAddress(message)) {
       return createResponse(
         '❌ *ENDEREÇO INVÁLIDO*',
         'Por favor, informe seu endereço completo:',
@@ -73,12 +73,10 @@ export class RegistrationFlow implements FlowHandler {
       )
     }
 
-    const { data } = this.stateManager.getState(phone)
-
     const newCustomer = this.customerRepository.create({
       phone: phone,
-      name: data?.name || '',
-      address,
+      name: customer?.name || '',
+      address: message,
     })
     this.logger.ok('New customer registered', { newCustomer })
 
@@ -86,7 +84,7 @@ export class RegistrationFlow implements FlowHandler {
     this.stateManager.updateStep(phone, FlowStep.MAIN_MENU)
 
     return createResponse(
-      `🎉 Cadastro concluído com sucesso, ${this.getFirstName(data?.name || 'cliente')}!`,
+      `🎉 Cadastro concluído com sucesso, ${this.getFirstName(customer?.name || 'cliente')}!`,
       'Agora, vamos ao que interessa: _*escolher algo gostoso*_! 😋\n',
       //
       ...mainMenu,

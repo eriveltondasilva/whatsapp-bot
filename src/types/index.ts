@@ -17,13 +17,19 @@ export type FlowState = {
   order?: {
     id: string
     status: string
-  },
+  }
   pizza?: Partial<Record<string, unknown>>
   drink?: Partial<Record<string, unknown>>
 }
 
+export type FlowHandlerProps = {
+  state: FlowState
+  phone: string
+  message: string
+}
+
 export interface FlowHandler {
-  handle(phone: string, message: string): Promise<Response> | Response
+  handle({ state, phone, message }: FlowHandlerProps): Promise<Response> | Response
 }
 
 type ActionMap = () => Promise<void> | void
