@@ -8,7 +8,7 @@ import { mainMenu, orderMenu } from '@/templates/@index.js'
 import type { FlowActions, FlowHandler } from '@/types/index.js'
 
 @injectable()
-export class MainMenuFlow implements FlowHandler {
+export class MenuFlow implements FlowHandler {
   constructor(@inject(StateManager) private flowStateManager: StateManager) {}
 
   // ###

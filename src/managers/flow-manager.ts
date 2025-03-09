@@ -3,7 +3,7 @@ import { inject, singleton } from 'tsyringe'
 import { FlowKeys, FlowStep } from '@/config/enums.js'
 import {
   DrinkFlow,
-  MainMenuFlow,
+  MenuFlow,
   OrderFlow,
   PizzaFlow,
   RegistrationFlow,
@@ -14,29 +14,33 @@ import type { FlowHandler } from '@/types/index.js'
 
 @singleton()
 export class FlowManager {
-  private handlers: Map<string, FlowHandler>
+  private readonly flows: Map<FlowKeys, FlowHandler>
 
   constructor(
-    @inject(DrinkFlow) drinkFlow: DrinkFlow,
-    @inject(MainMenuFlow) menuFlow: MainMenuFlow,
-    @inject(OrderFlow) orderFlow: OrderFlow,
-    @inject(PizzaFlow) pizzaFlow: PizzaFlow,
-    @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
-    @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
+    @inject(DrinkFlow) private drinkFlow: DrinkFlow,
+    @inject(MenuFlow) private menuFlow: MenuFlow,
+    @inject(OrderFlow) private orderFlow: OrderFlow,
+    @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
+    @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
+    @inject(WelcomeFlow) private welcomeFlow: WelcomeFlow,
   ) {
-    this.handlers = new Map<string, FlowHandler>([
-      [FlowKeys.DRINK, drinkFlow],
-      [FlowKeys.MAIN_MENU, menuFlow],
-      [FlowKeys.ORDER, orderFlow],
-      [FlowKeys.PIZZA, pizzaFlow],
-      [FlowKeys.REGISTRATION, registrationFlow],
-      [FlowKeys.WELCOME, welcomeFlow],
+    this.flows = new Map<FlowKeys, FlowHandler>([
+      [FlowKeys.REGISTRATION, this.registrationFlow],
+      [FlowKeys.WELCOME, this.welcomeFlow],
+      [FlowKeys.MENU, this.menuFlow],
+      [FlowKeys.ORDER, this.orderFlow],
+      [FlowKeys.PIZZA, this.pizzaFlow],
+      [FlowKeys.DRINK, this.drinkFlow],
     ])
   }
 
-  public getHandler(step: FlowStep): FlowHandler | undefined {
+  public getFlow(step: FlowStep): FlowHandler {
     const flowKey = this.extractFlowKey(step)
-    return this.handlers.get(flowKey)
+    const flow = this.flows.get(flowKey as FlowKeys)
+
+    if (!flow) throw new Error(`No flow found: ${step}`)
+
+    return flow
   }
 
   private extractFlowKey(step: string): string {

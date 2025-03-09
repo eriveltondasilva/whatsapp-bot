@@ -80,7 +80,7 @@ export type FlowStep = (typeof FlowStep)[keyof typeof FlowStep]
 export const FlowKeys = {
   WELCOME: 'welcome',
   REGISTRATION: 'registration',
-  MAIN_MENU: 'main-menu',
+  MENU: 'menu',
   ORDER: 'order',
   PIZZA: 'pizza',
   DRINK: 'drink',

@@ -15,14 +15,10 @@ export class ConversationManager {
 
   public async handle(phone: string, message: string): Promise<string[]> {
     this.logger.info('👋 Handling Message', { phone, message })
+
     const { step } = this.stateManager.getState(phone)
-    const handler = this.flowManager.getHandler(step)
+    const flow = this.flowManager.getFlow(step)
 
-    if (!handler) {
-      this.logger.error('No handler found for current step:', { phone, step })
-      return ['❌ Fluxo inválido']
-    }
-
-    return handler.handle(phone, message)
+    return await flow.handle(phone, message)
   }
 }
