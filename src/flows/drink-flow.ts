@@ -5,20 +5,26 @@ import { FlowStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { orderMenu } from '@/templates/order-menu.js'
-import { formatCurrency, isValidQuantity } from '@/utils/@index.js'
+import {
+  createResponse,
+  createResponseWithList,
+  formatCurrency,
+  isValidQuantity,
+} from '@/utils/@index.js'
 
+import { LoggerProvider } from '@/providers/@index.js'
 import type { FlowActions, FlowHandler } from '@/types/index.js'
-import { MessageType } from '@wppconnect-team/wppconnect'
 
 @injectable()
 export class DrinkFlow implements FlowHandler {
   constructor(
     @inject(StateManager) private flowStateManager: StateManager,
     @inject(DrinkRepository) private drinkRepository: DrinkRepository,
+    @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
   handle(phone: string, message: string) {
-    logger.info('🍹 Drink Flow: %o', { phone, message })
+    this.logger.info('🍹 Drink Flow', { phone, message })
     const { step } = this.flowStateManager.getState(phone)
 
     const actions: FlowActions<FlowStep> = {
@@ -35,16 +41,16 @@ export class DrinkFlow implements FlowHandler {
     const drinks = await this.drinkRepository.getAllDrinks()
 
     if (!drinks?.length) {
-      this.flowStateManager.clearState(phone)
-      return ['❌ Desculpe, não encontramos bebidas disponíveis no momento.']
+      this.flowStateManager.resetState(phone)
+      return createResponse('❌ Desculpe, não encontramos bebidas disponíveis no momento.')
     }
 
-    this.flowStateManager.updateState(phone, { step: FlowStep.DRINK_TYPE })
+    this.flowStateManager.updateStep(phone, FlowStep.DRINK_TYPE)
 
     const title = '🍹 *ESCOLHA SUA BEBIDA*'
     const description = '\n> Por favor, aperte no botão abaixo para escolher a sua bebida.'
 
-    return [MessageType.LIST, title, description, ...this.buildDrinkList(drinks)]
+    return createResponse(title, description, ...this.buildDrinkList(drinks))
   }
 
   private async handleDrinkType(phone: string, message: string) {
@@ -55,33 +61,31 @@ export class DrinkFlow implements FlowHandler {
       const title = '❌ *OPÇÃO INVÁLIDA!*'
       const description = 'Selecione uma opção válida.'
 
-      return [MessageType.LIST, title, description, ...this.buildDrinkList(drinks)]
+      return createResponseWithList(title, description, ...this.buildDrinkList(drinks))
     }
 
     const selectedDrink = drinks[selectedIndex]
 
-    this.flowStateManager.updateState(phone, {
-      step: FlowStep.DRINK_QUANTITY,
-      data: { selectedDrink },
-    })
+    this.flowStateManager.updateStep(phone, FlowStep.DRINK_QUANTITY)
+    this.flowStateManager.updateState(phone, 'drink', { selectedDrink })
 
-    return ['🔢 Digite a quantidade desejada (1-5):']
+    return createResponse('🔢 Digite a quantidade desejada (1-5):')
   }
 
   private handleDrinkQuantity(phone: string, message: string) {
     const quantity = Number.parseInt(message, 10)
 
     if (!isValidQuantity(quantity)) {
-      return ['❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.']
+      return createResponse('❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.')
     }
 
-    this.flowStateManager.updateState(phone, { step: FlowStep.ORDER })
+    this.flowStateManager.updateStep(phone, FlowStep.ORDER)
 
-    return ['✅ Bebida adicionada ao carrinho com sucesso!\n', ...orderMenu]
+    return createResponse('✅ Bebida adicionada ao carrinho com sucesso!\n', ...orderMenu)
   }
 
   private handleDefaultAction() {
-    return ['❌ Ocorreu um erro no fluxo da conversa. Por favor, tente novamente.']
+    return createResponse('❌ Ocorreu um erro no fluxo da conversa. Por favor, tente novamente.')
   }
 
   // ###

@@ -2,8 +2,9 @@ import { inject, injectable } from 'tsyringe'
 
 import { StateManager } from '@/managers/state-manager.js'
 import { LoggerProvider } from '@/providers/@index.js'
-
 import { FlowManager } from './flow-manager.js'
+
+import type { Response } from '@/types/index.js'
 
 @injectable()
 export class ConversationManager {
@@ -13,7 +14,7 @@ export class ConversationManager {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  public async handle(phone: string, message: string): Promise<string[]> {
+  public async handle(phone: string, message: string) {
     this.logger.info('👋 Handling Message', { phone, message })
 
     const { step } = this.stateManager.getState(phone)

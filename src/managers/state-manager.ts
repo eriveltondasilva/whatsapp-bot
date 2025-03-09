@@ -7,12 +7,12 @@ import type { FlowState } from '@/types/index.js'
 
 @singleton()
 export class StateManager {
-  private readonly states = new Map<string, FlowState>()
+  private readonly stateStore = new Map<string, FlowState>()
   private readonly initialState: FlowState = { step: FlowStep.WELCOME }
 
   constructor(@inject(LoggerProvider) private logger: LoggerProvider) {}
 
-  private updateState<K extends keyof FlowState>(
+  public updateState<K extends keyof FlowState>(
     phone: string,
     key: K,
     newValue: FlowState[K],
@@ -27,14 +27,15 @@ export class StateManager {
 
     const updatedState = { ...currentState, [key]: updatedValue }
 
-    this.states.set(phone, updatedState)
+    this.stateStore.set(phone, updatedState)
     this.logger.ok('Flow state updated', { phone, updatedState })
   }
 
+  // ###
   public getState(phone: string): FlowState {
-    const state = this.states.get(phone) || this.initialState
+    const state = this.stateStore.get(phone) || this.initialState
 
-    if (!this.states.has(phone)) this.states.set(phone, state)
+    if (!this.stateStore.has(phone)) this.stateStore.set(phone, state)
 
     this.logger.ok('Flow state requested', { state })
     return state
@@ -49,12 +50,12 @@ export class StateManager {
   }
 
   public resetState(phone: string): void {
-    this.states.set(phone, this.initialState)
+    this.stateStore.set(phone, this.initialState)
     this.logger.ok('Flow state reset', { phone })
   }
 
   public clearAllStates(): void {
-    this.states.clear()
+    this.stateStore.clear()
     this.logger.info('🧹 Flow states cleared')
   }
 }

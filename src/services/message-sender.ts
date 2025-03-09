@@ -4,12 +4,8 @@ import { MessageType } from '@/config/enums.js'
 import { ClientProvider, LoggerProvider } from '@/providers/@index.js'
 import { getDelay } from '@/utils/@index.js'
 
-import type { ActionsMap } from '@/types/index.js'
+import type { ActionsMap, Response } from '@/types/index.js'
 
-type MessageResponse = {
-  type: MessageType
-  content: string[]
-}
 
 @injectable()
 export class MessageSender {
@@ -18,10 +14,8 @@ export class MessageSender {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  public async send(phone: string, response: string[]) {
-    // const { type = '', content = []} = response
-    const type = 'text'
-    const content = ['']
+  public async send(phone: string, response: Response) {
+    const { type, content} = response
 
     const sendActions: ActionsMap<MessageType> = {
       [MessageType.TEXT]: () => this.sendText(phone, content),
@@ -33,9 +27,9 @@ export class MessageSender {
 
     try {
       sendAction && (await sendAction())
-      this.logger.info('📬 Message sent successfully: %o', { phone, type })
+      this.logger.info('📬 Message sent successfully', { phone, type })
     } catch (error) {
-      this.logger.error('❌ Failed to send message: %o', { phone, type, error })
+      this.logger.error('Failed to send message:', { phone, type, error })
       throw error
     }
   }

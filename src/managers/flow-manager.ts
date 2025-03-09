@@ -38,7 +38,7 @@ export class FlowManager {
     const flowKey = this.extractFlowKey(step)
     const flow = this.flows.get(flowKey as FlowKeys)
 
-    if (!flow) throw new Error(`No flow found: ${step}`)
+    if (!flow) throw new Error('No flow found.', { cause: step })
 
     return flow
   }

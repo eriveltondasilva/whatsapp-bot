@@ -1,9 +1,14 @@
-import type { FlowStep } from '@/config/enums.js'
+import type { FlowStep, MessageType } from '@/config/enums.js'
 import type { Customer } from '@prisma/client'
 
 type User = {
   name: string
   age: number
+}
+
+export type Response = {
+  type: MessageType
+  content: string[]
 }
 
 export type FlowState = {
@@ -12,15 +17,17 @@ export type FlowState = {
   order?: {
     id: string
     status: string
-  }
+  },
+  pizza?: Partial<Record<string, unknown>>
+  drink?: Partial<Record<string, unknown>>
 }
 
 export interface FlowHandler {
-  handle(phone: string, message: string): Promise<string[]> | string[]
+  handle(phone: string, message: string): Promise<Response> | Response
 }
 
 type ActionMap = () => Promise<void> | void
 export type ActionsMap<K extends string = string> = Partial<Record<K, ActionMap>>
 
-type FlowAction = () => Promise<string[]> | string[]
+type FlowAction = () => Promise<Response> | Response
 export type FlowActions<K extends string = string> = Partial<Record<K, FlowAction>>
