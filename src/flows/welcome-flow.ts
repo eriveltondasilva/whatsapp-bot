@@ -25,7 +25,7 @@ export class WelcomeFlow implements FlowHandler {
 
     if (!customer) {
       this.flowStateManager.updateStep(phone, FlowStep.REGISTRATION)
-      return this.registrationFlow.handle({state, phone, message})
+      return this.registrationFlow.handle({ state, phone, message })
     }
 
     this.flowStateManager.updateStep(phone, FlowStep.MAIN_MENU)

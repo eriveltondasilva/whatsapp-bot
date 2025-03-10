@@ -1,10 +1,10 @@
 import { type CreateOptions, type Whatsapp, create } from '@wppconnect-team/wppconnect'
-import { inject, injectable, singleton } from 'tsyringe'
+import { inject, singleton } from 'tsyringe'
 
 import { PHONE_NUMBER, SESSION_NAME } from '@/config/constants.js'
 import { LoggerProvider } from './logger.provider.js'
 
-interface ClientProviderI {
+export interface ClientProviderI {
   getClient(): Promise<Whatsapp>
   closeClient(): Promise<void>
 }
@@ -32,16 +32,14 @@ export class ClientProvider implements ClientProviderI {
   }
 
   public async getClient(): Promise<Whatsapp> {
-    if (!this.client) {
-      this.client = await this.createClient()
-    }
+    if (!this.client) this.client = await this.createClient()
 
     return this.client
   }
 
   public async closeClient(): Promise<void> {
     if (!this.client) {
-      this.logger.warn('Client not initialized')
+      this.logger.warn('No client to close - client not initialized')
       return
     }
 

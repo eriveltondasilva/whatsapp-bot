@@ -6,7 +6,6 @@ import { getDelay } from '@/utils/@index.js'
 
 import type { ActionsMap, Response } from '@/types/index.js'
 
-
 @injectable()
 export class MessageSender {
   constructor(
@@ -15,7 +14,7 @@ export class MessageSender {
   ) {}
 
   public async send(phone: string, response: Response): Promise<void> {
-    const { type, content} = response
+    const { type, content } = response
 
     const sendActions: ActionsMap<MessageType> = {
       [MessageType.TEXT]: () => this.sendText(phone, content),
