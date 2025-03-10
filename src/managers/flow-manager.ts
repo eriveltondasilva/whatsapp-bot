@@ -14,23 +14,23 @@ import type { FlowHandler } from '@/types/index.js'
 
 @singleton()
 export class FlowManager {
-  private readonly flows: Map<FlowKeys, FlowHandler>
+  private flows: Map<FlowKeys, FlowHandler>
 
   constructor(
-    @inject(DrinkFlow) private drinkFlow: DrinkFlow,
-    @inject(MenuFlow) private menuFlow: MenuFlow,
-    @inject(OrderFlow) private orderFlow: OrderFlow,
-    @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
-    @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
-    @inject(WelcomeFlow) private welcomeFlow: WelcomeFlow,
+    @inject(DrinkFlow) drinkFlow: DrinkFlow,
+    @inject(MenuFlow) menuFlow: MenuFlow,
+    @inject(OrderFlow) orderFlow: OrderFlow,
+    @inject(PizzaFlow) pizzaFlow: PizzaFlow,
+    @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
+    @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
   ) {
     this.flows = new Map<FlowKeys, FlowHandler>([
-      [FlowKeys.REGISTRATION, this.registrationFlow],
-      [FlowKeys.WELCOME, this.welcomeFlow],
-      [FlowKeys.MENU, this.menuFlow],
-      [FlowKeys.ORDER, this.orderFlow],
-      [FlowKeys.PIZZA, this.pizzaFlow],
-      [FlowKeys.DRINK, this.drinkFlow],
+      [FlowKeys.REGISTRATION, registrationFlow],
+      [FlowKeys.WELCOME, welcomeFlow],
+      [FlowKeys.MENU, menuFlow],
+      [FlowKeys.ORDER, orderFlow],
+      [FlowKeys.PIZZA, pizzaFlow],
+      [FlowKeys.DRINK, drinkFlow],
     ])
   }
 
@@ -38,7 +38,7 @@ export class FlowManager {
     const flowKey = this.extractFlowKey(step)
     const flow = this.flows.get(flowKey as FlowKeys)
 
-    if (!flow) throw new Error('No flow found.', { cause: step })
+    if (!flow) throw new Error(`Flow not found for step: ${step}`)
 
     return flow
   }

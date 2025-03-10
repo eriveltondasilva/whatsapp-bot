@@ -15,9 +15,6 @@ export class WhatsappBot {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  /*
-   * Initialize bot
-   */
   public async initialize(): Promise<void> {
     try {
       const client = await this.client.getClient()
@@ -30,9 +27,6 @@ export class WhatsappBot {
     }
   }
 
-  /*
-   * Process message from WhatsApp
-   */
   private async processMessage(message: Message) {
     if (!isValidMessage(message)) return
 

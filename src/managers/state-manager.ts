@@ -31,12 +31,10 @@ export class StateManager {
     this.logger.ok('Flow state updated', { phone, updatedState })
   }
 
-  // ###
   public getState(phone: string): FlowState {
-    const state = this.stateStore.get(phone) || this.initialState
+    if (!this.stateStore.has(phone)) this.stateStore.set(phone, this.initialState)
 
-    if (!this.stateStore.has(phone)) this.stateStore.set(phone, state)
-
+    const state = this.stateStore.get(phone) as FlowState
     this.logger.ok('Flow state requested', { state })
     return state
   }

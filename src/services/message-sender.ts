@@ -10,11 +10,11 @@ import type { ActionsMap, Response } from '@/types/index.js'
 @injectable()
 export class MessageSender {
   constructor(
-    @inject(ClientProvider) private clientService: ClientProvider,
+    @inject(ClientProvider) private client: ClientProvider,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  public async send(phone: string, response: Response) {
+  public async send(phone: string, response: Response): Promise<void> {
     const { type, content} = response
 
     const sendActions: ActionsMap<MessageType> = {
@@ -23,7 +23,7 @@ export class MessageSender {
       [MessageType.IMAGE]: () => this.sendImage(phone, content),
     }
 
-    const sendAction = sendActions[type] || sendActions[MessageType.TEXT]
+    const sendAction = sendActions[type]
 
     try {
       sendAction && (await sendAction())
@@ -35,19 +35,19 @@ export class MessageSender {
   }
 
   // ###
-  public async sendErrorMessage(phone: string) {
+  public async sendErrorMessage(phone: string): Promise<void> {
     await this.sendText(phone, [
       '❌ Desculpe, ocorreu um erro ao processar sua mensagem.',
       'Por favor, tente novamente em alguns instantes.',
     ])
   }
 
-  private async sendText(phone: string, content: string[]) {
-    const client = await this.clientService.getClient()
-    client.sendText(phone, content.join('\n'), { delay: getDelay() })
+  private async sendText(phone: string, content: string[]): Promise<void> {
+    const client = await this.client.getClient()
+    await client.sendText(phone, content.join('\n'), { delay: getDelay() })
   }
 
-  private async sendList(phone: string, content: string[]) {
+  private async sendList(phone: string, content: string[]): Promise<void> {
     const [title, description, ...rows] = content
 
     if (!title || !rows?.length) {
@@ -55,8 +55,8 @@ export class MessageSender {
       return
     }
 
-    const client = await this.clientService.getClient()
-    client.sendListMessage(phone, {
+    const client = await this.client.getClient()
+    await client.sendListMessage(phone, {
       buttonText: 'Clique Aqui',
       title,
       description,
@@ -64,11 +64,11 @@ export class MessageSender {
     })
   }
 
-  private async sendImage(phone: string, content: string[]) {
+  private async sendImage(phone: string, content: string[]): Promise<void> {
     const [path, title = 'imagem', caption = ''] = content
 
-    const client = await this.clientService.getClient()
-    client.sendImage(phone, path, title, caption)
+    const client = await this.client.getClient()
+    await client.sendImage(phone, path, title, caption)
   }
 
   // ###
