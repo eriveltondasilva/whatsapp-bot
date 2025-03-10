@@ -24,7 +24,7 @@ export class PizzaFlow implements FlowHandler {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  handle({state, phone, message}: FlowHandlerProps) {
+  handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('🍕 Pizza Flow', { phone, message })
 
     const actions: Partial<FlowActions<FlowStep>> = {

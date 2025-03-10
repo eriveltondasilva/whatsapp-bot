@@ -52,7 +52,7 @@ export class MenuFlow implements FlowHandler {
   }
 
   private contactSupport(phone: string) {
-    return createResponse(...this.invalidOptionMessage )
+    return createResponse(...this.invalidOptionMessage)
   }
 
   private exitFlow(phone: string) {

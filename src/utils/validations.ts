@@ -1,8 +1,8 @@
 import { type Message, MessageType } from '@wppconnect-team/wppconnect'
+import { container } from 'tsyringe'
 
 import { Validation } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/@index.js'
-import { container } from 'tsyringe'
 
 const logger = container.resolve(LoggerProvider)
 
@@ -38,7 +38,7 @@ export function isValidQuantity(quantity: number): boolean {
 
   if (quantity < Validation.QUANTITY_MIN || quantity > Validation.QUANTITY_MAX) {
     logger.warn(
-      `Quantity validation failed: quantity is out of range (${Validation.QUANTITY_MIN} - ${Validation.QUANTITY_MAX})`,
+      `Quantity validation failed: quantity must be between (${Validation.QUANTITY_MIN} - ${Validation.QUANTITY_MAX})`,
       { quantity },
     )
     return false
@@ -48,36 +48,37 @@ export function isValidQuantity(quantity: number): boolean {
 }
 
 export function isValidMessage(message: Message): boolean {
-  if (!message || !message.body) {
-    logger.error('Message validation failed: message object or body is missing', { message })
+  if (!message || !message?.body) {
+    logger.warn('Message validation failed: message object or body is missing', { message })
     return false
   }
 
   if (message.fromMe || message.isGroupMsg) {
-    logger.error('Message validation failed: message is sent by self or is a group message', {
+    logger.warn('Message validation failed: message is sent by self or is a group message', {
       from: message.from,
     })
     return false
   }
 
   if (![MessageType.CHAT, MessageType.LIST_RESPONSE].includes(message.type)) {
-    logger.error('Message validation failed: unsupported message type', { type: message.type })
+    logger.warn('Message validation failed: unsupported message type', { type: message.type })
     return false
   }
 
   if (!message.isNewMsg) {
-    logger.error('Message validation failed: message is not marked as new', {
+    logger.warn('Message validation failed: message is not marked as new', {
       isNewMsg: message.isNewMsg,
     })
     return false
   }
 
   const messageLength = message.body.length
-
   if (messageLength < Validation.MIN_LENGTH || messageLength > Validation.MAX_LENGTH) {
-    logger.error(
-      `Message validation failed: message length is outside the allowed range (${Validation.MIN_LENGTH} - ${Validation.MAX_LENGTH})`,
+    logger.warn(
+      `Message validation failed: message length must be between (${Validation.MIN_LENGTH} - ${Validation.MAX_LENGTH})`,
       {
+        from: message.from,
+        message: message.body.slice(0, 100),
         length: messageLength,
       },
     )

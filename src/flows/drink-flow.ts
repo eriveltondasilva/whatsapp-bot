@@ -23,7 +23,7 @@ export class DrinkFlow implements FlowHandler {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  handle({state, phone, message}: FlowHandlerProps) {
+  handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('🍹 Drink Flow', { phone, message })
 
     const actions: Partial<FlowActions<FlowStep>> = {

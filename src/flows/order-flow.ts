@@ -37,12 +37,12 @@ export class OrderFlow implements FlowHandler {
   // ###
   private handlePizzaSelection(state: FlowState, phone: string, message: string) {
     this.flowStateManager.updateStep(phone, FlowStep.PIZZA_TYPE)
-    return this.pizzaFlow.handle({state, phone, message})
+    return this.pizzaFlow.handle({ state, phone, message })
   }
 
-  private handleDrinkSelection(state: FlowState,phone: string, message: string) {
+  private handleDrinkSelection(state: FlowState, phone: string, message: string) {
     this.flowStateManager.updateStep(phone, FlowStep.DRINK)
-    return this.drinkFlow.handle({state, phone, message})
+    return this.drinkFlow.handle({ state, phone, message })
   }
 
   private finalizeOrder(phone: string) {
