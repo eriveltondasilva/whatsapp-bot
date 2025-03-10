@@ -45,6 +45,22 @@ export const Validation = {
 } as const
 export type Validation = (typeof Validation)[keyof typeof Validation]
 
+
+export enum MenuOption {
+  ORDER = '1',
+  // ORDER_HISTORY = '2',
+  // UPDATE_PROFILE = '3',
+  EXIT = '0',
+}
+
+export enum OrderOption {
+  FULL_PIZZA = '1',
+  HALF_PIZZA = '2',
+  DRINK = '3',
+  COMPLETE = '4',
+  CANCEL = '0',
+}
+
 export const FlowStep = {
   WELCOME: 'welcome',
   //

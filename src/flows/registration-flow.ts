@@ -20,15 +20,14 @@ export class RegistrationFlow implements FlowHandler {
   // ###
   public handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('👋 Registration Flow: %o', { phone, message })
-    const { step, customer } = state
 
-    const actions: FlowActions<FlowStep> = {
+    const actions: Partial<FlowActions<FlowStep>> = {
       [FlowStep.REGISTRATION]: () => this.initializeFlow(phone),
       [FlowStep.COLLECT_NAME]: () => this.handleNameInput(phone, message),
-      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(customer, phone, message),
+      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(state.customer, phone, message),
     }
 
-    return actions[step]?.() || this.resetFlow(phone)
+    return actions[state.step]?.() || this.resetFlow(phone)
   }
 
   // ###

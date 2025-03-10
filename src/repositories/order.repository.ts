@@ -1,4 +1,4 @@
-import { prisma } from '@/providers/prisma.provider.js'
+import { prisma } from '@/providers/prisma.js'
 import type { Prisma } from '@prisma/client'
 
 export class OrderRepository {

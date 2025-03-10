@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStep } from '@/config/enums.js'
+import { FlowStep, OrderOption } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { orderMenu } from '@/templates/order-menu.js'
 
@@ -8,7 +8,7 @@ import { DrinkFlow } from './drink-flow.js'
 import { PizzaFlow } from './pizza-flow.js'
 
 import { LoggerProvider } from '@/providers/logger.provider.js'
-import type { FlowActions, FlowHandler } from '@/types/index.js'
+import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/types/index.js'
 import { createResponse } from '@/utils/create-response.js'
 
 @injectable()
@@ -20,29 +20,29 @@ export class OrderFlow implements FlowHandler {
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
   ) {}
 
-  handle(phone: string, message: string) {
+  handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('👋 Order Flow', { phone, message })
 
-    const actions: FlowActions = {
-      1: () => this.handlePizzaSelection(phone, message),
-      2: () => this.handlePizzaSelection(phone, message),
-      3: () => this.handleDrinkSelection(phone, message),
-      4: () => this.finalizeOrder(phone),
-      0: () => this.cancelOrder(phone),
+    const actions: FlowActions<OrderOption> = {
+      [OrderOption.FULL_PIZZA]: () => this.handlePizzaSelection(state, phone, message),
+      [OrderOption.HALF_PIZZA]: () => this.handlePizzaSelection(state, phone, message),
+      [OrderOption.DRINK]: () => this.handleDrinkSelection(state, phone, message),
+      [OrderOption.COMPLETE]: () => this.finalizeOrder(phone),
+      [OrderOption.CANCEL]: () => this.cancelOrder(phone),
     }
 
-    return actions[message]?.() || this.handleInvalidOption()
+    return actions[message as OrderOption]?.() || this.handleInvalidOption()
   }
 
   // ###
-  private handlePizzaSelection(phone: string, message: string) {
+  private handlePizzaSelection(state: FlowState, phone: string, message: string) {
     this.flowStateManager.updateStep(phone, FlowStep.PIZZA_TYPE)
-    return this.pizzaFlow.handle(phone, message)
+    return this.pizzaFlow.handle({state, phone, message})
   }
 
-  private handleDrinkSelection(phone: string, message: string) {
+  private handleDrinkSelection(state: FlowState,phone: string, message: string) {
     this.flowStateManager.updateStep(phone, FlowStep.DRINK)
-    return this.drinkFlow.handle(phone, message)
+    return this.drinkFlow.handle({state, phone, message})
   }
 
   private finalizeOrder(phone: string) {

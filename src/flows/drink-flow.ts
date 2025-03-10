@@ -13,7 +13,7 @@ import {
 } from '@/utils/@index.js'
 
 import { LoggerProvider } from '@/providers/@index.js'
-import type { FlowActions, FlowHandler } from '@/types/index.js'
+import type { FlowActions, FlowHandler, FlowHandlerProps } from '@/types/index.js'
 
 @injectable()
 export class DrinkFlow implements FlowHandler {
@@ -23,17 +23,16 @@ export class DrinkFlow implements FlowHandler {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  handle(phone: string, message: string) {
+  handle({state, phone, message}: FlowHandlerProps) {
     this.logger.info('🍹 Drink Flow', { phone, message })
-    const { step } = this.flowStateManager.getState(phone)
 
-    const actions: FlowActions<FlowStep> = {
+    const actions: Partial<FlowActions<FlowStep>> = {
       [FlowStep.DRINK]: () => this.handleDrinkList(phone, message),
       [FlowStep.DRINK_TYPE]: () => this.handleDrinkType(phone, message),
       [FlowStep.DRINK_QUANTITY]: () => this.handleDrinkQuantity(phone, message),
     }
 
-    return actions[step]?.() || this.handleDefaultAction()
+    return actions[state.step]?.() || this.handleDefaultAction()
   }
 
   // ###

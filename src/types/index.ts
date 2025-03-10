@@ -12,7 +12,7 @@ export type Response = {
 
 export type FlowState = {
   step: FlowStep
-  customer?: CustomerData
+  customer?: Partial<CustomerData>
   order?: StateData
   pizza?: StateData
   drink?: StateData
@@ -31,5 +31,4 @@ export interface FlowHandler {
 type ActionMap = () => Promise<void> | void
 export type ActionsMap<K extends string = string> = Partial<Record<K, ActionMap>>
 
-type FlowAction = () => Promise<Response> | Response
-export type FlowActions<K extends string = string> = Partial<Record<K, FlowAction>>
+export type FlowActions<K extends string = string> = Record<K, () => Response | Promise<Response>>

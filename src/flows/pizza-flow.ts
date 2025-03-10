@@ -13,7 +13,7 @@ import {
   isValidQuantity,
 } from '@/utils/@index.js'
 
-import type { FlowActions, FlowHandler } from '@/types/index.js'
+import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/types/index.js'
 
 @injectable()
 export class PizzaFlow implements FlowHandler {
@@ -24,19 +24,18 @@ export class PizzaFlow implements FlowHandler {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  handle(phone: string, message: string) {
+  handle({state, phone, message}: FlowHandlerProps) {
     this.logger.info('🍕 Pizza Flow', { phone, message })
-    const { step } = this.flowStateManager.getState(phone)
 
-    const actions: FlowActions<FlowStep> = {
+    const actions: Partial<FlowActions<FlowStep>> = {
       [FlowStep.PIZZA_TYPE]: () => this.handlePizzaType(phone, message),
-      [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(phone, message),
+      [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(state.pizza, phone, message),
       [FlowStep.PIZZA_CRUST]: () => this.handlePizzaCrust(phone, message),
       [FlowStep.PIZZA_QUANTITY]: () => this.handlePizzaQuantity(phone, message),
       [FlowStep.PIZZA_NOTES]: () => this.handlePizzaNotes(phone, message),
     }
 
-    return actions[step as FlowStep]?.() || this.handleInvalidOption()
+    return actions[state.step as FlowStep]?.() || this.handleInvalidOption()
   }
   // ###
   private async handlePizzaType(phone: string, message: string) {
@@ -57,8 +56,7 @@ export class PizzaFlow implements FlowHandler {
     return createResponseWithList(title, description, ...this.buildFlavorList(flavors))
   }
 
-  private async handlePizzaFlavor(phone: string, message: string) {
-    const { data } = this.flowStateManager.getState(phone)
+  private async handlePizzaFlavor(data: FlowState['pizza'], phone: string, message: string) {
     const flavors = await this.flavorRepository.getAllFlavors()
     const crusts = await this.crustRepository.getAllCrusts()
 
