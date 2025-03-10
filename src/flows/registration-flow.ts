@@ -20,6 +20,7 @@ export class RegistrationFlow implements FlowHandler {
   // ###
   public handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('👋 Registration Flow: %o', { phone, message })
+    // const {current, option = 'initial'} = state.step
 
     const actions: Partial<FlowActions<FlowStep>> = {
       [FlowStep.REGISTRATION]: () => this.initializeFlow(phone),

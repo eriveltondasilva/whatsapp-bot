@@ -2,7 +2,7 @@ import { join } from 'node:path'
 import { singleton } from 'tsyringe'
 import { type Logger as WinstonLogger, createLogger, format, transports } from 'winston'
 
-import { LOG_LEVEL, SESSION_NAME } from '@/config/constants.js'
+import { LOG_LEVEL } from '@/config/constants.js'
 
 type LogMeta = Record<string, unknown>
 
@@ -15,7 +15,7 @@ interface LoggerI {
 
 @singleton()
 export class LoggerProvider implements LoggerI {
-  private logger: WinstonLogger
+  private readonly logger: WinstonLogger
   private readonly logDir: string = 'logs'
   private readonly maxFiles: number = 5
   private readonly maxSize: number = 5 * 1_024 * 1_024 // 5MB
@@ -25,9 +25,21 @@ export class LoggerProvider implements LoggerI {
   }
 
   private createLogger(): WinstonLogger {
+    const logger = createLogger({
+      level: LOG_LEVEL,
+      // defaultMeta: { service: SESSION_NAME },
+      transports: this.createFileTransports(),
+    })
+
+    if (process.env.NODE_ENV !== 'production') logger.add(this.createConsoleTransport())
+
+    return logger
+  }
+
+  private createFileTransports() {
     const logFormat = format.combine(
-      format.timestamp(),
       format.errors(),
+      format.timestamp(),
       format.metadata({
         key: 'meta',
         fillExcept: ['level', 'message', 'timestamp'],
@@ -35,27 +47,16 @@ export class LoggerProvider implements LoggerI {
       format.prettyPrint(),
     )
 
-    const logger = createLogger({
-      level: LOG_LEVEL,
-      format: logFormat,
-      defaultMeta: { service: SESSION_NAME },
-      transports: this.createFileTransports(),
-    })
-
-    if (process.env.NODE_ENV !== 'production') this.logger.add(this.createConsoleTransport())
-
-    return logger
-  }
-
-  private createFileTransports() {
     return [
       new transports.File({
+        format: logFormat,
         filename: join(this.logDir, 'error.log'),
         level: 'error',
         maxsize: this.maxSize,
         maxFiles: this.maxFiles,
       }),
       new transports.File({
+        format: logFormat,
         filename: join(this.logDir, 'combined.log'),
         maxsize: this.maxSize,
         maxFiles: this.maxFiles,
@@ -67,7 +68,6 @@ export class LoggerProvider implements LoggerI {
     return new transports.Console({
       format: format.combine(
         format.colorize({ all: true }),
-        format.timestamp(),
         format.errors(),
         format.align(),
         format.simple(),

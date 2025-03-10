@@ -12,6 +12,14 @@ export class StateManager {
 
   constructor(@inject(LoggerProvider) private logger: LoggerProvider) {}
 
+  public getState(phone: string): FlowState {
+    if (!this.stateStore.has(phone)) this.stateStore.set(phone, this.initialState)
+
+    const state = this.stateStore.get(phone) as FlowState
+    this.logger.ok('Flow state requested', { state })
+    return state
+  }
+
   public updateState<K extends keyof FlowState>(
     phone: string,
     key: K,
@@ -29,14 +37,6 @@ export class StateManager {
 
     this.stateStore.set(phone, updatedState)
     this.logger.ok('Flow state updated', { phone, updatedState })
-  }
-
-  public getState(phone: string): FlowState {
-    if (!this.stateStore.has(phone)) this.stateStore.set(phone, this.initialState)
-
-    const state = this.stateStore.get(phone) as FlowState
-    this.logger.ok('Flow state requested', { state })
-    return state
   }
 
   public updateStep(phone: string, step: FlowStep): void {

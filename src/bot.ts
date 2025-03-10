@@ -20,7 +20,7 @@ export class WhatsappBot {
       const client = await this.client.getClient()
       client.onMessage((message) => this.processMessage(message))
 
-      this.logger.info('\n🤖 WhatsApp bot initialized successfully 🚀\n')
+      this.logger.info('🤖 WhatsApp bot initialized successfully')
     } catch (error) {
       this.logger.error('Failed to initialize bot', error)
       process.exitCode = 1

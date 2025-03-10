@@ -28,7 +28,6 @@ export interface FlowHandler {
   handle(props: FlowHandlerProps): Promise<Response> | Response
 }
 
-type ActionMap = () => Promise<void> | void
-export type ActionsMap<K extends string = string> = Partial<Record<K, ActionMap>>
+export type ActionsMap<K extends string = string> = Partial<Record<K, () => Promise<void> | void>>
 
 export type FlowActions<K extends string = string> = Record<K, () => Response | Promise<Response>>

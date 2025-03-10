@@ -32,7 +32,9 @@ export class ClientProvider implements ClientProviderI {
   }
 
   public async getClient(): Promise<Whatsapp> {
-    if (!this.client) this.client = await this.createClient()
+    if (!this.client) {
+      this.client = await this.createClient()
+    }
 
     return this.client
   }
@@ -43,14 +45,6 @@ export class ClientProvider implements ClientProviderI {
       return
     }
 
-    try {
-      await this.client.close()
-      this.logger.ok('Client closed successfully')
-
-      this.client = null
-    } catch (error) {
-      this.logger.error('Failed to close client', error)
-      throw error
-    }
+    await this.client.close()
   }
 }

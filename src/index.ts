@@ -15,15 +15,13 @@ const PROCESS_EVENTS = {
  */
 async function bootstrap(): Promise<void> {
   const logger = container.resolve(LoggerProvider)
-  logger.info('🤖 Initializing bot...')
+  logger.info('🟢 Initializing bot...')
 
   try {
     setupProcessHandlers()
 
     const bot = container.resolve(WhatsappBot)
     await bot.initialize()
-
-    logger.info('🤖 Bot initialized successfully.')
   } catch (error) {
     logger.error('Failed to initialize bot: %o', error)
     process.exitCode = 1
@@ -48,13 +46,14 @@ function setupProcessHandlers(): void {
 
   // Handle SIGINT signals
   process.on(PROCESS_EVENTS.SIGINT, async () => {
-    logger.info('📴 Shutting down bot...')
+    logger.info('🔴 Shutting down bot...')
 
     try {
       const client = container.resolve(ClientProvider)
+      logger.info('🤖 Bot shutdown successfully.')
+
       await client.closeClient()
 
-      logger.info('🤖 Bot shutdown successfully.')
       process.exit(0)
     } catch (error) {
       logger.error('❌ Failed to shutdown bot: %o', error)
