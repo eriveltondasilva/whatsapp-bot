@@ -1,17 +1,11 @@
-import type { Drink } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
 import { DrinkStep, FlowKeys } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { DrinkRepository } from '@/repositories/@index.js'
-import { orderMenu } from '@/templates/order-menu.js'
-import {
-  createResponse,
-  createResponseWithList,
-  formatCurrency,
-  isValidQuantity,
-} from '@/utils/@index.js'
+import { buildDrinkList, orderMenu } from '@/templates/@index.js'
+import { createResponse, createResponseWithList, isValidQuantity } from '@/utils/@index.js'
 
 import type { FlowActions, FlowHandler, FlowHandlerProps } from '@/types/index.js'
 
@@ -50,7 +44,7 @@ export class DrinkFlow implements FlowHandler {
     const title = '🍹 *ESCOLHA SUA BEBIDA*'
     const description = '\n> Por favor, aperte no botão abaixo para escolher a sua bebida.'
 
-    return createResponse(title, description, ...this.buildDrinkList(drinks))
+    return createResponse(title, description, ...buildDrinkList(drinks))
   }
 
   private async handleDrinkType(phone: string, message: string) {
@@ -61,7 +55,7 @@ export class DrinkFlow implements FlowHandler {
       const title = '❌ *OPÇÃO INVÁLIDA!*'
       const description = 'Selecione uma opção válida.'
 
-      return createResponseWithList(title, description, ...this.buildDrinkList(drinks))
+      return createResponseWithList(title, description, ...buildDrinkList(drinks))
     }
 
     const selectedDrink = drinks[selectedIndex]
@@ -82,23 +76,5 @@ export class DrinkFlow implements FlowHandler {
     this.stateManager.updateStep(phone, FlowKeys.ORDER)
 
     return createResponse('✅ Bebida adicionada ao carrinho com sucesso!\n', ...orderMenu)
-  }
-
-  private handleDefaultAction() {
-    return createResponse('❌ Ocorreu um erro no fluxo da conversa. Por favor, tente novamente.')
-  }
-
-  // ###
-  private buildDrinkList(drinks: Drink[]) {
-    return drinks.map(({ name, description, price }, index) => {
-      const drinkPrice = formatCurrency(Number(price))
-
-      const rowId = index + 1
-      const title = `${rowId} - ${name} (${drinkPrice})`
-      const category = 'bebidas'
-
-      // rowId :: title :: description :: category
-      return [rowId, title, description, category].join('::')
-    })
   }
 }
