@@ -9,7 +9,7 @@ import { createResponse } from '@/utils/create-response.js'
 import type { FlowActions, FlowHandler, FlowHandlerProps } from '@/types/index.js'
 
 @injectable()
-export class MenuFlow implements FlowHandler {
+export class MainMenuFlow implements FlowHandler {
   private readonly inProgressMessage = [
     '🚧 Esta funcionalidade está em desenvolvimento.',
     'Por favor, aguarde novidades!',
@@ -22,7 +22,7 @@ export class MenuFlow implements FlowHandler {
 
   // ###
   public handle({ phone, message }: FlowHandlerProps) {
-    this.logger.info('👋 Main Menu Flow', { phone, message })
+    this.logger.info('📌 Main Menu Flow')
 
     const actions: FlowActions<MenuOption> = {
       [MenuOption.ORDER]: () => this.showOrderMenu(phone),

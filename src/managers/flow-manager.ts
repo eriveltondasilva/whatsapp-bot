@@ -3,7 +3,7 @@ import { inject, singleton } from 'tsyringe'
 import { FlowKeys } from '@/config/enums.js'
 import {
   DrinkFlow,
-  MenuFlow,
+  MainMenuFlow,
   OrderFlow,
   PizzaFlow,
   RegistrationFlow,
@@ -19,7 +19,7 @@ export class FlowManager {
 
   constructor(
     @inject(DrinkFlow) drinkFlow: DrinkFlow,
-    @inject(MenuFlow) menuFlow: MenuFlow,
+    @inject(MainMenuFlow) menuFlow: MainMenuFlow,
     @inject(OrderFlow) orderFlow: OrderFlow,
     @inject(PizzaFlow) pizzaFlow: PizzaFlow,
     @inject(RegistrationFlow) registrationFlow: RegistrationFlow,

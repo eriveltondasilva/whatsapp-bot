@@ -26,7 +26,7 @@ export class PizzaFlow implements FlowHandler {
 
   // ###
   handle({ state, phone, message }: FlowHandlerProps) {
-    this.logger.info('🍕 Pizza Flow', { phone, message })
+    this.logger.info('📌 Pizza Flow')
 
     const actions: FlowActions<PizzaStep> = {
       [PizzaStep.TYPE]: () => this.handlePizzaType(phone, message),

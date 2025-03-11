@@ -25,7 +25,7 @@ export class DrinkFlow implements FlowHandler {
 
   // ###
   handle({ state, phone, message }: FlowHandlerProps) {
-    this.logger.info('🍹 Drink Flow', { phone, message })
+    this.logger.info('📌 Drink Flow')
 
     const actions: FlowActions<DrinkStep> = {
       [DrinkStep.MENU]: () => this.handleDrinkList(phone, message),

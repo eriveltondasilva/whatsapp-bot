@@ -41,7 +41,7 @@ export class LoggerProvider implements ILogger {
   }
 
   debug(message: string, meta?: LogMeta): void {
-    this.logger.warn(`⚙️ ${message}`, meta)
+    this.logger.debug(`⚙️ ${message}`, meta)
   }
 
   error(message: string, meta?: unknown): void {

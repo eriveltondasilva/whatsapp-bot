@@ -36,6 +36,7 @@ export class ClientProvider implements ClientProviderI {
       this.client = await this.createClient()
     }
 
+    this.logger.debug('Client retrieved successfully')
     return this.client
   }
 

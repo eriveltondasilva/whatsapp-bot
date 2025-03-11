@@ -22,7 +22,7 @@ export class OrderFlow implements FlowHandler {
 
   // ###
   handle({ state, phone, message }: FlowHandlerProps) {
-    this.logger.info('👋 Order Flow', { phone, message })
+    this.logger.info('📌 Order Flow')
 
     const actions: FlowActions<OrderOption> = {
       [OrderOption.FULL_PIZZA]: () => this.handlePizzaSelection(state, phone, message),
