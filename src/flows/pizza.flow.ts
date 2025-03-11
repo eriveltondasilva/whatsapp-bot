@@ -1,4 +1,4 @@
-import type { Flavor } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
 import { FlowKeys, PizzaStep, PizzaType } from '@/config/enums.js'
@@ -68,7 +68,7 @@ export class PizzaFlow implements FlowHandler {
       return createResponseWithList(title, description, ...buildFlavorList(flavors))
     }
 
-    const selectedFlavor: Flavor[] = (data.selectedFlavor as Flavor[]) || []
+    const selectedFlavor = (data.selectedFlavor as Prisma.FlavorCreateInput[]) || []
     selectedFlavor.push(flavors[selectedIndex])
 
     if (data.pizzaType === PizzaType.HALF && selectedFlavor.length === 1) {
@@ -85,7 +85,7 @@ export class PizzaFlow implements FlowHandler {
     this.stateManager.updateStep(phone, PizzaStep.CRUST)
     this.stateManager.updateContextData(phone, { selectedFlavor })
 
-    const title = '⭕🍕 *ESCOLHA A BORDA DA SUA PIZZA*'
+    const title = '🍕 *ESCOLHA A BORDA DA SUA PIZZA*'
     const description = '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
 
     return createResponseWithList(title, description, ...buildCrustList(crusts))

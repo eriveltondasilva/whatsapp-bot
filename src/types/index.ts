@@ -1,7 +1,5 @@
 import type { ItemType, MessageType } from '@/config/enums.js'
-import type { Customer } from '@prisma/client'
-
-type CustomerData = Pick<Customer, 'name' | 'address'>
+import type { Customer, Prisma } from '@prisma/client'
 
 export type FlowContext = {
   flow: string
@@ -11,7 +9,7 @@ export type FlowContext = {
 
 export type FlowState = {
   context: FlowContext
-  customer: Partial<CustomerData>
+  customer: Prisma.CustomerCreateInput
   cart: Array<{
     id: string
     type: ItemType

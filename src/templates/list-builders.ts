@@ -1,7 +1,7 @@
-import type { Crust, Drink, Flavor } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 import { formatCurrency } from '../utils/format-currency.js'
 
-export function buildFlavorList(flavors: Flavor[]): string[] {
+export function buildFlavorList(flavors: Prisma.FlavorCreateInput[]): string[] {
   return flavors.map(({ name, description, price, category }, index) => {
     const flavorPrice = formatCurrency(Number(price))
 
@@ -12,7 +12,7 @@ export function buildFlavorList(flavors: Flavor[]): string[] {
   })
 }
 
-export function buildCrustList(crusts: Crust[]): string[] {
+export function buildCrustList(crusts: Prisma.CrustCreateInput[]): string[] {
   return crusts.map(({ name, price }, index) => {
     const crustPrice = Number(price) === 0 ? 'grátis' : formatCurrency(Number(price))
 
@@ -26,7 +26,7 @@ export function buildCrustList(crusts: Crust[]): string[] {
 }
 
 // ###
-export function buildDrinkList(drinks: Drink[]) {
+export function buildDrinkList(drinks: Prisma.DrinkCreateInput[]): string[] {
   return drinks.map(({ name, description, price }, index) => {
     const drinkPrice = formatCurrency(Number(price))
 

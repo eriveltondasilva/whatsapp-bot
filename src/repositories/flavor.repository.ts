@@ -4,6 +4,13 @@ export class FlavorRepository {
   async getAllFlavors() {
     return await prisma.flavor.findMany({
       where: { active: true },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        price: true,
+        category: true,
+      }
     })
   }
 
