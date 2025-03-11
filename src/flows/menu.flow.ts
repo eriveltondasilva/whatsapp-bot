@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStep, MenuOption } from '@/config/enums.js'
+import { FlowKeys, MenuOption } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { mainMenu, orderMenu } from '@/templates/@index.js'
@@ -29,12 +29,12 @@ export class MenuFlow implements FlowHandler {
       [MenuOption.EXIT]: () => this.exitFlow(phone),
     }
 
-    return actions[message as MenuOption]?.() || this.handleInvalidOption()
+    return actions[message as MenuOption]() || this.handleInvalidOption()
   }
 
   // ###
   private showOrderMenu(phone: string) {
-    this.stateManager.updateStep(phone, FlowStep.ORDER)
+    this.stateManager.updateStep(phone, FlowKeys.ORDER)
     return createResponse(...orderMenu)
   }
 

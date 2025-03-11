@@ -35,6 +35,7 @@ export enum Validation {
   QUANTITY_MAX = 10,
 }
 
+// ###
 export enum MenuOption {
   ORDER = '1',
   EXIT = '0',
@@ -48,28 +49,38 @@ export enum OrderOption {
   CANCEL = '0',
 }
 
-export enum FlowStep {
-  WELCOME = 'welcome',
-  REGISTRATION = 'registration',
+export enum PizzaStep {
+  TYPE = 'pizza::type',
+  FLAVOR = 'pizza::flavor',
+  CRUST = 'pizza::crust',
+  QUANTITY = 'pizza::quantity',
+  NOTES = 'pizza::notes',
+}
+
+export enum DrinkStep {
+  MENU = 'drink::menu',
+  TYPE = 'drink::type',
+  QUANTITY = 'drink::quantity',
+  // NAME = 'drink::name',
+}
+
+export enum RegistrationStep {
+  INITIAL = 'registration::initial',
   COLLECT_NAME = 'registration::collect-name',
   COLLECT_ADDRESS = 'registration::collect-address',
-  MAIN_MENU = 'main-menu',
-  ORDER = 'order',
-  PIZZA_TYPE = 'pizza::type',
-  PIZZA_FLAVOR = 'pizza::flavor',
-  PIZZA_CRUST = 'pizza::crust',
-  PIZZA_QUANTITY = 'pizza::quantity',
-  PIZZA_NOTES = 'pizza::notes',
-  DRINK = 'drink',
-  DRINK_TYPE = 'drink::type',
-  DRINK_QUANTITY = 'drink::quantity',
-  CONFIRM_ORDER = 'order::confirm-order',
-  PAYMENT = 'payment',
-  PAYMENT_METHOD = 'payment::method',
-  AWAITING_CHANGE = 'payment::await-change',
-  PAYMENT_CONFIRMATION = 'payment::confirmation',
-  SEPARATOR = '::',
 }
+
+// export enum FlowStep {
+//   WELCOME = 'welcome',
+//   MAIN_MENU = 'main-menu',
+//   ORDER = 'order',
+//   CONFIRM_ORDER = 'order::confirm-order',
+//   PAYMENT = 'payment',
+//   PAYMENT_METHOD = 'payment::method',
+//   AWAITING_CHANGE = 'payment::await-change',
+//   PAYMENT_CONFIRMATION = 'payment::confirmation',
+//   SEPARATOR = '::',
+// }
 
 export enum FlowKeys {
   WELCOME = 'welcome',

@@ -1,11 +1,11 @@
-import type { FlowStep, ItemType, MessageType } from '@/config/enums.js'
+import type { ItemType, MessageType } from '@/config/enums.js'
 import type { Customer } from '@prisma/client'
 
 type CustomerData = Pick<Customer, 'name' | 'address'>
 
 export type FlowContext = {
   flow: string
-  step: FlowStep
+  step: string
   data: Record<string, unknown>
 }
 

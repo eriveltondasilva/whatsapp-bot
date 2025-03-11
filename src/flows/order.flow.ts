@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStep, OrderOption } from '@/config/enums.js'
+import { DrinkStep, OrderOption, PizzaStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { orderMenu } from '@/templates/order-menu.js'
@@ -32,17 +32,17 @@ export class OrderFlow implements FlowHandler {
       [OrderOption.CANCEL]: () => this.cancelOrder(phone),
     }
 
-    return actions[message as OrderOption]?.() || this.handleInvalidOption()
+    return actions[message as OrderOption]() || this.handleInvalidOption()
   }
 
   // ###
   private handlePizzaSelection(state: FlowState, phone: string, message: string) {
-    this.stateManager.updateStep(phone, FlowStep.PIZZA_TYPE)
+    this.stateManager.updateStep(phone, PizzaStep.TYPE)
     return this.pizzaFlow.handle({ state, phone, message })
   }
 
   private handleDrinkSelection(state: FlowState, phone: string, message: string) {
-    this.stateManager.updateStep(phone, FlowStep.DRINK)
+    this.stateManager.updateStep(phone, DrinkStep.MENU)
     return this.drinkFlow.handle({ state, phone, message })
   }
 

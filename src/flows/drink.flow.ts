@@ -1,7 +1,7 @@
 import type { Drink } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStep } from '@/config/enums.js'
+import { DrinkStep, FlowKeys } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { DrinkRepository } from '@/repositories/@index.js'
@@ -27,13 +27,13 @@ export class DrinkFlow implements FlowHandler {
   handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('🍹 Drink Flow', { phone, message })
 
-    const actions: Partial<FlowActions<FlowStep>> = {
-      [FlowStep.DRINK]: () => this.handleDrinkList(phone, message),
-      [FlowStep.DRINK_TYPE]: () => this.handleDrinkType(phone, message),
-      [FlowStep.DRINK_QUANTITY]: () => this.handleDrinkQuantity(phone, message),
+    const actions: FlowActions<DrinkStep> = {
+      [DrinkStep.MENU]: () => this.handleDrinkList(phone, message),
+      [DrinkStep.TYPE]: () => this.handleDrinkType(phone, message),
+      [DrinkStep.QUANTITY]: () => this.handleDrinkQuantity(phone, message),
     }
 
-    return actions[state.step]?.() || this.handleDefaultAction()
+    return actions[state.context.step as DrinkStep]()
   }
 
   // ###
@@ -45,7 +45,7 @@ export class DrinkFlow implements FlowHandler {
       return createResponse('❌ Desculpe, não encontramos bebidas disponíveis no momento.')
     }
 
-    this.stateManager.updateStep(phone, FlowStep.DRINK_TYPE)
+    this.stateManager.updateStep(phone, DrinkStep.TYPE)
 
     const title = '🍹 *ESCOLHA SUA BEBIDA*'
     const description = '\n> Por favor, aperte no botão abaixo para escolher a sua bebida.'
@@ -66,8 +66,8 @@ export class DrinkFlow implements FlowHandler {
 
     const selectedDrink = drinks[selectedIndex]
 
-    this.stateManager.updateStep(phone, FlowStep.DRINK_QUANTITY)
-    this.stateManager.updateState(phone, 'drink', { selectedDrink })
+    this.stateManager.updateStep(phone, DrinkStep.QUANTITY)
+    this.stateManager.updateContextData(phone, { selectedDrink })
 
     return createResponse('🔢 Digite a quantidade desejada (1-5):')
   }
@@ -79,7 +79,7 @@ export class DrinkFlow implements FlowHandler {
       return createResponse('❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.')
     }
 
-    this.stateManager.updateStep(phone, FlowStep.ORDER)
+    this.stateManager.updateStep(phone, FlowKeys.ORDER)
 
     return createResponse('✅ Bebida adicionada ao carrinho com sucesso!\n', ...orderMenu)
   }

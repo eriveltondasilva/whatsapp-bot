@@ -1,6 +1,6 @@
 import { inject, singleton } from 'tsyringe'
 
-import { FlowKeys, FlowStep } from '@/config/enums.js'
+import { FlowKeys } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/@index.js'
 
 import type { FlowContext, FlowState } from '@/types/index.js'
@@ -8,6 +8,11 @@ import type { FlowContext, FlowState } from '@/types/index.js'
 export interface IStateManager {
   getState(phone: string): FlowState
   updateContext(phone: string, context: FlowContext): void
+  updateStep(phone: string, step: string): void
+  updateContextData(phone: string, data: FlowContext['data']): void
+  updateCustomer(phone: string, customer: FlowState['customer']): void
+  resetState(phone: string): void
+  clearAllStates(): void
 }
 
 @singleton()
@@ -48,7 +53,7 @@ export class StateManager implements IStateManager {
     this.logger.debug('Flow state updated: context', { phone, updatedState })
   }
 
-  updateStep(phone: string, step: FlowStep): void {
+  updateStep(phone: string, step: string): void {
     const flow = this.extractFlow(step)
     this.updateContext(phone, { flow, step })
   }
@@ -99,7 +104,7 @@ export class StateManager implements IStateManager {
   // ###
   private initializeState(phone: string) {
     const initialState: FlowState = {
-      context: { flow: FlowKeys.WELCOME, step: FlowStep.WELCOME, data: {} },
+      context: { flow: FlowKeys.WELCOME, step: FlowKeys.WELCOME, data: {} },
       customer: {},
       cart: [],
       history: [],

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowStep } from '@/config/enums.js'
+import { FlowKeys, RegistrationStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
@@ -27,18 +27,18 @@ export class RegistrationFlow implements FlowHandler {
   public handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('👋 Registration Flow', { phone, message })
 
-    const actions: Partial<FlowActions<FlowStep>> = {
-      [FlowStep.REGISTRATION]: () => this.initializeFlow(phone),
-      [FlowStep.COLLECT_NAME]: () => this.handleNameInput(phone, message),
-      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(state, phone, message),
+    const actions: FlowActions<RegistrationStep> = {
+      [RegistrationStep.INITIAL]: () => this.initializeFlow(phone),
+      [RegistrationStep.COLLECT_NAME]: () => this.handleNameInput(phone, message),
+      [RegistrationStep.COLLECT_ADDRESS]: () => this.handleAddressInput(state, phone, message),
     }
 
-    return actions[state.step]?.() || this.resetFlow(phone)
+    return actions[state.context.step as RegistrationStep]()
   }
 
   // ###
   private initializeFlow(phone: string) {
-    this.stateManager.updateStep(phone, FlowStep.COLLECT_NAME)
+    this.stateManager.updateStep(phone, RegistrationStep.COLLECT_NAME)
 
     return createResponse(
       '🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!',
@@ -58,7 +58,7 @@ export class RegistrationFlow implements FlowHandler {
       )
     }
 
-    this.stateManager.updateStep(phone, FlowStep.COLLECT_ADDRESS)
+    this.stateManager.updateStep(phone, RegistrationStep.COLLECT_ADDRESS)
     this.stateManager.updateCustomer(phone, { name })
 
     return createResponse(
@@ -80,7 +80,7 @@ export class RegistrationFlow implements FlowHandler {
 
     const customer = state.customer
 
-    if ( !customer?.name) {
+    if (!customer?.name) {
       return this.resetFlow(phone)
     }
 
@@ -92,7 +92,7 @@ export class RegistrationFlow implements FlowHandler {
     this.logger.ok('New customer registered', { newCustomer })
 
     this.stateManager.resetState(phone)
-    this.stateManager.updateStep(phone, FlowStep.MAIN_MENU)
+    this.stateManager.updateStep(phone, FlowKeys.MENU)
 
     return createResponse(
       `🎉 Cadastro concluído com sucesso, ${getFirstName(customer?.name || 'cliente')}!`,
