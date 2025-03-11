@@ -21,13 +21,13 @@ export class OrderFlow implements FlowHandler {
   ) {}
 
   // ###
-  handle({ state, phone, message }: FlowHandlerProps) {
+  handle({ phone, message }: FlowHandlerProps) {
     this.logger.info('📌 Order Flow')
 
     const actions: FlowActions<OrderOption> = {
-      [OrderOption.FULL_PIZZA]: () => this.handlePizzaSelection(state, phone, message),
-      [OrderOption.HALF_PIZZA]: () => this.handlePizzaSelection(state, phone, message),
-      [OrderOption.DRINK]: () => this.handleDrinkSelection(state, phone, message),
+      [OrderOption.FULL_PIZZA]: () => this.handlePizzaSelection(phone, message),
+      [OrderOption.HALF_PIZZA]: () => this.handlePizzaSelection(phone, message),
+      [OrderOption.DRINK]: () => this.handleDrinkSelection(phone, message),
       [OrderOption.COMPLETE]: () => this.finalizeOrder(phone),
       [OrderOption.CANCEL]: () => this.cancelOrder(phone),
     }
@@ -36,13 +36,13 @@ export class OrderFlow implements FlowHandler {
   }
 
   // ###
-  private handlePizzaSelection(state: FlowState, phone: string, message: string) {
-    this.stateManager.updateStep(phone, PizzaStep.TYPE)
+  private handlePizzaSelection(phone: string, message: string) {
+    const state = this.stateManager.updateStep(phone, PizzaStep.TYPE)
     return this.pizzaFlow.handle({ state, phone, message })
   }
 
-  private handleDrinkSelection(state: FlowState, phone: string, message: string) {
-    this.stateManager.updateStep(phone, DrinkStep.MENU)
+  private handleDrinkSelection(phone: string, message: string) {
+    const state = this.stateManager.updateStep(phone, DrinkStep.MENU)
     return this.drinkFlow.handle({ state, phone, message })
   }
 

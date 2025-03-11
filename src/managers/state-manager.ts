@@ -33,7 +33,7 @@ export class StateManager implements IStateManager {
     return state
   }
 
-  updateContext(phone: string, context: Partial<FlowContext>): void {
+  updateContext(phone: string, context: Partial<FlowContext>): FlowState {
     const currentState = this.getState(phone)
 
     const newHistory = [...currentState.history]
@@ -56,14 +56,16 @@ export class StateManager implements IStateManager {
 
     this.stateStore.set(phone, updatedState)
     this.logger.debug('State updated: CONTEXT', { newContext })
+
+    return updatedState
   }
 
-  updateStep(phone: string, step: string): void {
+  updateStep(phone: string, step: string): FlowState {
     const flow = this.extractFlow(step)
-    this.updateContext(phone, { flow, step })
+    return this.updateContext(phone, { flow, step })
   }
 
-  updateContextData(phone: string, data: FlowContext['data']): void {
+  updateContextData(phone: string, data: FlowContext['data']): FlowState {
     const currentState = this.getState(phone)
 
     const newContextData = {
@@ -75,15 +77,18 @@ export class StateManager implements IStateManager {
       ...currentState,
       context: {
         ...currentState.context,
-        data: newContextData
+        data: newContextData,
       },
+      lastInteraction: new Date(),
     }
 
     this.stateStore.set(phone, updatedState)
     this.logger.debug('State updated: CONTEXT DATA', { newContextData })
+
+    return updatedState
   }
 
-  updateCustomer(phone: string, customer: FlowState['customer']): void {
+  updateCustomer(phone: string, customer: FlowState['customer']): FlowState {
     const currentState = this.getState(phone)
 
     const newCustomer = {
@@ -93,11 +98,14 @@ export class StateManager implements IStateManager {
 
     const updatedState: FlowState = {
       ...currentState,
-      customer: newCustomer
+      customer: newCustomer,
+      lastInteraction: new Date(),
     }
 
     this.stateStore.set(phone, updatedState)
     this.logger.debug('State updated: CUSTOMER', { newCustomer })
+
+    return updatedState
   }
 
   resetState(phone: string): void {
@@ -127,7 +135,7 @@ export class StateManager implements IStateManager {
   }
 
   private extractFlow(step: string): string {
-    const [flow] = step.split('::')
+    const flow = step.includes('::') ? step.split('::')[0] : step
     return flow.toLowerCase()
   }
 }

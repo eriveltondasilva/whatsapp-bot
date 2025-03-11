@@ -20,12 +20,12 @@ export class WelcomeFlow implements FlowHandler {
   ) {}
 
   // ###
-  public async handle({ state, phone, message }: FlowHandlerProps) {
+  public async handle({ phone, message }: FlowHandlerProps) {
     this.logger.info('📌 Welcome Flow')
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {
-      this.stateManager.updateStep(phone, RegistrationStep.INITIAL)
+      const state = this.stateManager.updateStep(phone, RegistrationStep.INITIAL)
       return this.registrationFlow.handle({ state, phone, message })
     }
 
