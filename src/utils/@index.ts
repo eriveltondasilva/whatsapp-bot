@@ -1,6 +1,7 @@
 export * from './create-response.js'
 export * from './dayjs.js'
 export * from './format-currency.js'
+export * from './get-first-name.js'
 export * from './get-delay.js'
 export * from './get-greeting.js'
 export * from './validations.js'

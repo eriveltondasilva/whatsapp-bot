@@ -5,7 +5,7 @@ import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
 import { mainMenu } from '@/templates/main-menu.js'
-import { createResponse, getGreeting } from '@/utils/@index.js'
+import { createResponse, getGreeting, getFirstName } from '@/utils/@index.js'
 import { RegistrationFlow } from './registration.flow.js'
 
 import type { FlowHandler, FlowHandlerProps } from '@/types/index.js'
@@ -30,10 +30,9 @@ export class WelcomeFlow implements FlowHandler {
     }
 
     this.stateManager.updateStep(phone, FlowStep.MAIN_MENU)
-    const customerName = customer.name.split(' ')[0]
 
     return createResponse(
-      `🍕 ${getGreeting()}, ${customerName}!`,
+      `🍕 ${getGreeting()}, ${getFirstName(customer.name)}!`,
       'Que bom ter você de volta por aqui! Estamos ansiosos para preparar algo delicioso para você. 😋🍽\n',
       //
       ...mainMenu,

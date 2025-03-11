@@ -5,7 +5,13 @@ import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
 import { mainMenu } from '@/templates/main-menu.js'
-import { createResponse, getGreeting, isValidAddress, isValidName } from '@/utils/@index.js'
+import {
+  createResponse,
+  getFirstName,
+  getGreeting,
+  isValidAddress,
+  isValidName,
+} from '@/utils/@index.js'
 
 import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/types/index.js'
 
@@ -57,7 +63,7 @@ export class RegistrationFlow implements FlowHandler {
     this.stateManager.updateCustomer(phone, { name })
 
     return createResponse(
-      `${getGreeting()}, ${this.getFirstName(name)}!`,
+      `${getGreeting()}, ${getFirstName(name)}!`,
       'Agora me diga onde vamos entregar suas delícias?\n',
       '✍️ Qual o seu endereço completo?',
       '> Exemplo: _"Rua das Flores, n° 83, Centro"_',
@@ -84,7 +90,7 @@ export class RegistrationFlow implements FlowHandler {
     this.stateManager.updateStep(phone, FlowStep.MAIN_MENU)
 
     return createResponse(
-      `🎉 Cadastro concluído com sucesso, ${this.getFirstName(customer?.name || 'cliente')}!`,
+      `🎉 Cadastro concluído com sucesso, ${getFirstName(customer?.name || 'cliente')}!`,
       'Agora, vamos ao que interessa: _*escolher algo gostoso*_! 😋\n',
       //
       ...mainMenu,
@@ -94,10 +100,5 @@ export class RegistrationFlow implements FlowHandler {
   private resetFlow(phone: string) {
     this.stateManager.resetState(phone)
     return createResponse('❌ Ops! Algo deu errado. Por favor, tente novamente.')
-  }
-
-  // ###
-  private getFirstName(name: string): string {
-    return name.split(' ')[0]
   }
 }
