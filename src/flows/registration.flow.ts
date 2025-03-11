@@ -25,13 +25,12 @@ export class RegistrationFlow implements FlowHandler {
 
   // ###
   public handle({ state, phone, message }: FlowHandlerProps) {
-    this.logger.info('👋 Registration Flow: %o', { phone, message })
-    // const {current, option = 'initial'} = state.step
+    this.logger.info('👋 Registration Flow', { phone, message })
 
     const actions: Partial<FlowActions<FlowStep>> = {
       [FlowStep.REGISTRATION]: () => this.initializeFlow(phone),
       [FlowStep.COLLECT_NAME]: () => this.handleNameInput(phone, message),
-      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(state.customer, phone, message),
+      [FlowStep.COLLECT_ADDRESS]: () => this.handleAddressInput(state, phone, message),
     }
 
     return actions[state.step]?.() || this.resetFlow(phone)
@@ -70,7 +69,7 @@ export class RegistrationFlow implements FlowHandler {
     )
   }
 
-  private handleAddressInput(customer: FlowState['customer'], phone: string, message: string) {
+  private handleAddressInput(state: FlowState, phone: string, message: string) {
     if (!isValidAddress(message)) {
       return createResponse(
         '❌ *ENDEREÇO INVÁLIDO*',
@@ -79,9 +78,15 @@ export class RegistrationFlow implements FlowHandler {
       )
     }
 
+    const customer = state.customer
+
+    if ( !customer?.name) {
+      return this.resetFlow(phone)
+    }
+
     const newCustomer = this.customerRepository.create({
       phone: phone,
-      name: customer?.name || '',
+      name: customer.name,
       address: message,
     })
     this.logger.ok('New customer registered', { newCustomer })

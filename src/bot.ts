@@ -36,7 +36,7 @@ export class WhatsappBot {
       const response = await this.conversation.handle(message.from, message.body || '')
       await this.message.send(message.from, response)
     } catch (error) {
-      this.logger.error('Message processing error:', error)
+      this.logger.error('Message processing error', error)
       await this.message.sendErrorMessage(message.from)
     }
   }

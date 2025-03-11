@@ -17,9 +17,16 @@ export class ConversationManager {
   public async handle(phone: string, message: string): Promise<Response> {
     this.logger.info('👋 Handling Message', { phone, message })
 
-    const state = this.stateManager.getState(phone)
-    const flow = this.flowManager.getFlow(state.step)
+    try {
+      const state = this.stateManager.getState(phone)
+      const flow = this.flowManager.getFlow(state.context)
 
-    return await flow.handle({ state, phone, message })
+      return await flow.handle({ state, phone, message })
+    } catch (error) {
+      this.logger.error('Error handling message', error)
+      this.stateManager.resetState(phone)
+
+      throw error
+    }
   }
 }

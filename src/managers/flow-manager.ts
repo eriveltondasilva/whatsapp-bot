@@ -1,6 +1,6 @@
 import { inject, singleton } from 'tsyringe'
 
-import { FlowKeys, FlowStep } from '@/config/enums.js'
+import { FlowKeys } from '@/config/enums.js'
 import {
   DrinkFlow,
   MenuFlow,
@@ -10,11 +10,12 @@ import {
   WelcomeFlow,
 } from '@/flows/@index.js'
 
-import type { FlowHandler } from '@/types/index.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
+import type { FlowContext, FlowHandler } from '@/types/index.js'
 
 @singleton()
 export class FlowManager {
-  private flows: Map<FlowKeys, FlowHandler>
+  private flows: Map<string, FlowHandler>
 
   constructor(
     @inject(DrinkFlow) drinkFlow: DrinkFlow,
@@ -23,8 +24,9 @@ export class FlowManager {
     @inject(PizzaFlow) pizzaFlow: PizzaFlow,
     @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
     @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
+    @inject(LoggerProvider) private logger: LoggerProvider,
   ) {
-    this.flows = new Map<FlowKeys, FlowHandler>([
+    this.flows = new Map<string, FlowHandler>([
       [FlowKeys.REGISTRATION, registrationFlow],
       [FlowKeys.WELCOME, welcomeFlow],
       [FlowKeys.MENU, menuFlow],
@@ -34,16 +36,15 @@ export class FlowManager {
     ])
   }
 
-  public getFlow(step: FlowStep): FlowHandler {
-    const flowKey = this.extractFlowKey(step)
-    const flow = this.flows.get(flowKey as FlowKeys)
+  getFlow(context: FlowContext): FlowHandler {
+    const flow = this.flows.get(context.flow)
 
-    if (!flow) throw new Error(`Flow not found for step: ${step}`)
+    if (!flow) {
+      this.logger.error('Flow not found', { flow: context.flow, step: context.step })
+      throw new Error(`Flow not found for step: ${context.step}`)
+    }
 
+    this.logger.debug('Flow selected', { flow: context.flow, step: context.step })
     return flow
-  }
-
-  private extractFlowKey(step: string): string {
-    return step.split(FlowStep.SEPARATOR)[0].toLowerCase()
   }
 }
