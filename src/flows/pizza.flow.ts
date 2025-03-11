@@ -68,7 +68,8 @@ export class PizzaFlow implements FlowHandler {
       return createResponseWithList(title, description, ...buildFlavorList(flavors))
     }
 
-    const selectedFlavor = [...((data.selectedFlavors as Flavor[]) || []), flavors[selectedIndex]]
+    const selectedFlavor: Flavor[] = (data.selectedFlavor as Flavor[]) || []
+    selectedFlavor.push(flavors[selectedIndex])
 
     if (data.pizzaType === PizzaType.HALF && selectedFlavor.length === 1) {
       this.stateManager.updateStep(phone, PizzaStep.FLAVOR)

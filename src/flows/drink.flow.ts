@@ -22,7 +22,7 @@ export class DrinkFlow implements FlowHandler {
     this.logger.info('📌 Drink Flow')
 
     const actions: FlowActions<DrinkStep> = {
-      [DrinkStep.MENU]: () => this.handleDrinkList(phone, message),
+      [DrinkStep.MENU]: () => this.handleDrinkMenu(phone, message),
       [DrinkStep.TYPE]: () => this.handleDrinkType(phone, message),
       [DrinkStep.QUANTITY]: () => this.handleDrinkQuantity(phone, message),
     }
@@ -31,7 +31,7 @@ export class DrinkFlow implements FlowHandler {
   }
 
   // ###
-  private async handleDrinkList(phone: string, message: string) {
+  private async handleDrinkMenu(phone: string, message: string) {
     const drinks = await this.drinkRepository.getAllDrinks()
 
     if (!drinks?.length) {
@@ -44,7 +44,7 @@ export class DrinkFlow implements FlowHandler {
     const title = '🍹 *ESCOLHA SUA BEBIDA*'
     const description = '\n> Por favor, aperte no botão abaixo para escolher a sua bebida.'
 
-    return createResponse(title, description, ...buildDrinkList(drinks))
+    return createResponseWithList(title, description, ...buildDrinkList(drinks))
   }
 
   private async handleDrinkType(phone: string, message: string) {
