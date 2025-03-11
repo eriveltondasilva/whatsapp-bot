@@ -27,6 +27,7 @@ export class PizzaFlow implements FlowHandler {
   // ###
   handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('📌 Pizza Flow')
+    const { step } = state.context
 
     const actions: FlowActions<PizzaStep> = {
       [PizzaStep.TYPE]: () => this.handlePizzaType(phone, message),
@@ -36,7 +37,7 @@ export class PizzaFlow implements FlowHandler {
       [PizzaStep.NOTES]: () => this.handlePizzaNotes(phone, message),
     }
 
-    return actions[state.context.step as PizzaStep]()
+    return actions[step as PizzaStep]?.() || this.handleInvalidOption()
   }
   // ###
   private async handlePizzaType(phone: string, message: string) {

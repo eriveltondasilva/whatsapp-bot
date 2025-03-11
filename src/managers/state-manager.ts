@@ -28,7 +28,7 @@ export class StateManager implements IStateManager {
     }
 
     const state = this.stateStore.get(phone) as FlowState
-    this.logger.debug('Flow state requested', { state })
+    this.logger.debug('State requested', { state })
 
     return state
   }
@@ -42,15 +42,20 @@ export class StateManager implements IStateManager {
       newHistory.push(currentState.context.step)
     }
 
+    const newContext = {
+      ...currentState.context,
+      ...context,
+    }
+
     const updatedState: FlowState = {
       ...currentState,
-      context: { ...currentState.context, ...context },
+      context: newContext,
       history: newHistory,
       lastInteraction: new Date(),
     }
 
     this.stateStore.set(phone, updatedState)
-    this.logger.debug('Flow state updated: context', { phone, updatedState })
+    this.logger.debug('State updated: CONTEXT', { newContext })
   }
 
   updateStep(phone: string, step: string): void {
@@ -61,44 +66,48 @@ export class StateManager implements IStateManager {
   updateContextData(phone: string, data: FlowContext['data']): void {
     const currentState = this.getState(phone)
 
+    const newContextData = {
+      ...currentState.context.data,
+      ...data,
+    }
+
     const updatedState: FlowState = {
       ...currentState,
       context: {
         ...currentState.context,
-        data: {
-          ...currentState.context.data,
-          ...data,
-        },
+        data: newContextData
       },
     }
 
     this.stateStore.set(phone, updatedState)
-    this.logger.debug('Flow state updated: context data', { phone, updatedState })
+    this.logger.debug('State updated: CONTEXT DATA', { newContextData })
   }
 
   updateCustomer(phone: string, customer: FlowState['customer']): void {
     const currentState = this.getState(phone)
 
+    const newCustomer = {
+      ...currentState.customer,
+      ...customer,
+    }
+
     const updatedState: FlowState = {
       ...currentState,
-      customer: {
-        ...currentState.customer,
-        ...customer,
-      },
+      customer: newCustomer
     }
 
     this.stateStore.set(phone, updatedState)
-    this.logger.debug('Flow state updated: customer', { phone, updatedState })
+    this.logger.debug('State updated: CUSTOMER', { newCustomer })
   }
 
   resetState(phone: string): void {
     this.initializeState(phone)
-    this.logger.ok('Flow state reset', { phone })
+    this.logger.ok('State reset', { phone })
   }
 
   clearAllStates(): void {
     this.stateStore.clear()
-    this.logger.info('🧹 Flow states cleared')
+    this.logger.info('🚫 States cleared')
   }
 
   // ###
@@ -112,7 +121,7 @@ export class StateManager implements IStateManager {
     }
 
     this.stateStore.set(phone, initialState)
-    this.logger.debug('Flow state initialized', { phone, initialState })
+    this.logger.debug('State initialized', { initialState })
 
     return initialState
   }

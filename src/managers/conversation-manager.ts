@@ -23,7 +23,7 @@ export class ConversationManager {
 
       return await flow.handle({ state, phone, message })
     } catch (error) {
-      this.logger.error('Error handling message', error)
+      this.logger.error('Error handling message:', error)
       this.stateManager.resetState(phone)
 
       throw error
