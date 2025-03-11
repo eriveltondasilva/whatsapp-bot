@@ -6,8 +6,8 @@ import { LoggerProvider } from '@/providers/logger.provider.js'
 import { orderMenu } from '@/templates/order-menu.js'
 import { createResponse } from '@/utils/create-response.js'
 
-import { DrinkFlow } from './drink-flow.js'
-import { PizzaFlow } from './pizza-flow.js'
+import { DrinkFlow } from './drink.flow.js'
+import { PizzaFlow } from './pizza.flow.js'
 
 import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/types/index.js'
 
