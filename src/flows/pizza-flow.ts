@@ -18,18 +18,19 @@ import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/ty
 @injectable()
 export class PizzaFlow implements FlowHandler {
   constructor(
-    @inject(StateManager) private flowStateManager: StateManager,
+    @inject(StateManager) private stateManager: StateManager,
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(CrustRepository) private crustRepository: CrustRepository,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
+  // ###
   handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('🍕 Pizza Flow', { phone, message })
 
     const actions: Partial<FlowActions<FlowStep>> = {
       [FlowStep.PIZZA_TYPE]: () => this.handlePizzaType(phone, message),
-      [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(state.pizza, phone, message),
+      [FlowStep.PIZZA_FLAVOR]: () => this.handlePizzaFlavor(state, phone, message),
       [FlowStep.PIZZA_CRUST]: () => this.handlePizzaCrust(phone, message),
       [FlowStep.PIZZA_QUANTITY]: () => this.handlePizzaQuantity(phone, message),
       [FlowStep.PIZZA_NOTES]: () => this.handlePizzaNotes(phone, message),
@@ -43,12 +44,12 @@ export class PizzaFlow implements FlowHandler {
     const flavors = await this.flavorRepository.getAllFlavors()
 
     if (!flavors?.length) {
-      this.flowStateManager.resetState(phone)
+      this.stateManager.resetState(phone)
       return createResponse('❌ Desculpe, não encontramos sabores disponíveis no momento.')
     }
 
-    this.flowStateManager.updateStep(phone, FlowStep.PIZZA_FLAVOR)
-    this.flowStateManager.updateState(phone, 'pizza', { pizzaType })
+    this.stateManager.updateStep(phone, FlowStep.PIZZA_FLAVOR)
+    this.stateManager.updateState(phone, 'pizza', { pizzaType })
 
     const title = `🍕 *ESCOLHA ${pizzaType === PizzaType.FULL ? 'O SABOR' : 'O PRIMEIRO SABOR'} DA SUA PIZZA*`
     const description = '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
@@ -56,7 +57,7 @@ export class PizzaFlow implements FlowHandler {
     return createResponseWithList(title, description, ...this.buildFlavorList(flavors))
   }
 
-  private async handlePizzaFlavor(data: FlowState['pizza'], phone: string, message: string) {
+  private async handlePizzaFlavor(state: FlowState, phone: string, message: string) {
     const flavors = await this.flavorRepository.getAllFlavors()
     const crusts = await this.crustRepository.getAllCrusts()
 
@@ -69,11 +70,11 @@ export class PizzaFlow implements FlowHandler {
       return createResponseWithList(title, description, ...this.buildFlavorList(flavors))
     }
 
-    const selectedFlavors = [...(data?.selectedFlavors || []), flavors[selectedIndex]]
+    const selectedFlavors = [...(state.pizza?.selectedFlavors || []), flavors[selectedIndex]]
 
-    if (data?.pizzaType === PizzaType.HALF && selectedFlavors.length === 1) {
-      this.flowStateManager.updateStep(phone, FlowStep.PIZZA_FLAVOR)
-      this.flowStateManager.updateState(phone, 'pizza', { selectedFlavors })
+    if (state.pizza?.pizzaType === PizzaType.HALF && selectedFlavors.length === 1) {
+      this.stateManager.updateStep(phone, FlowStep.PIZZA_FLAVOR)
+      this.stateManager.updateState(phone, 'pizza', { selectedFlavors })
 
       const title = '🍕🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA*'
       const description =
@@ -82,8 +83,8 @@ export class PizzaFlow implements FlowHandler {
       return createResponseWithList(title, description, ...this.buildFlavorList(flavors))
     }
 
-    this.flowStateManager.updateStep(phone, FlowStep.PIZZA_CRUST)
-    this.flowStateManager.updateState(phone, 'pizza', { selectedFlavors })
+    this.stateManager.updateStep(phone, FlowStep.PIZZA_CRUST)
+    this.stateManager.updateState(phone, 'pizza', { selectedFlavors })
 
     const title = '⭕🍕 *ESCOLHA A BORDA DA SUA PIZZA*'
     const description = '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
@@ -103,8 +104,8 @@ export class PizzaFlow implements FlowHandler {
 
     const selectedCrust = crusts[selectedIndex]
 
-    this.flowStateManager.updateStep(phoneNumber, FlowStep.PIZZA_QUANTITY)
-    this.flowStateManager.updateState(phoneNumber, 'pizza', { selectedCrust })
+    this.stateManager.updateStep(phoneNumber, FlowStep.PIZZA_QUANTITY)
+    this.stateManager.updateState(phoneNumber, 'pizza', { selectedCrust })
 
     return createResponse('🔢 Digite a quantidade desejada (1-5):')
   }
@@ -116,8 +117,8 @@ export class PizzaFlow implements FlowHandler {
       return createResponse('❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.')
     }
 
-    this.flowStateManager.updateStep(phone, FlowStep.PIZZA_NOTES)
-    this.flowStateManager.updateState(phone, 'pizza', { quantity })
+    this.stateManager.updateStep(phone, FlowStep.PIZZA_NOTES)
+    this.stateManager.updateState(phone, 'pizza', { quantity })
 
     return createResponse(
       '✍️ Deseja adicionar alguma observação?',
@@ -129,8 +130,8 @@ export class PizzaFlow implements FlowHandler {
   private handlePizzaNotes(phone: string, message: string) {
     const notes = message === '0' ? undefined : message
 
-    this.flowStateManager.updateStep(phone, FlowStep.ORDER)
-    this.flowStateManager.updateState(phone, 'pizza', { notes })
+    this.stateManager.updateStep(phone, FlowStep.ORDER)
+    this.stateManager.updateState(phone, 'pizza', { notes })
 
     return createResponse('✅ Pizza adicionada ao carrinho com sucesso!\n', ...orderMenu)
   }

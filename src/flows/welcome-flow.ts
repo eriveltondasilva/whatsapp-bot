@@ -13,22 +13,23 @@ import type { FlowHandler, FlowHandlerProps } from '@/types/index.js'
 @injectable()
 export class WelcomeFlow implements FlowHandler {
   constructor(
-    @inject(StateManager) private flowStateManager: StateManager,
+    @inject(StateManager) private stateManager: StateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
+  // ###
   public async handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('👋 Welcome Flow', { phone, message })
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {
-      this.flowStateManager.updateStep(phone, FlowStep.REGISTRATION)
+      this.stateManager.updateStep(phone, FlowStep.REGISTRATION)
       return this.registrationFlow.handle({ state, phone, message })
     }
 
-    this.flowStateManager.updateStep(phone, FlowStep.MAIN_MENU)
+    this.stateManager.updateStep(phone, FlowStep.MAIN_MENU)
     const customerName = customer.name.split(' ')[0]
 
     return createResponse(

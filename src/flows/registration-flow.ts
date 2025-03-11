@@ -93,7 +93,6 @@ export class RegistrationFlow implements FlowHandler {
 
   private resetFlow(phone: string) {
     this.stateManager.resetState(phone)
-
     return createResponse('❌ Ops! Algo deu errado. Por favor, tente novamente.')
   }
 

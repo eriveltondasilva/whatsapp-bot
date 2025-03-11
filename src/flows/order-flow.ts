@@ -2,24 +2,25 @@ import { inject, injectable } from 'tsyringe'
 
 import { FlowStep, OrderOption } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
 import { orderMenu } from '@/templates/order-menu.js'
+import { createResponse } from '@/utils/create-response.js'
 
 import { DrinkFlow } from './drink-flow.js'
 import { PizzaFlow } from './pizza-flow.js'
 
-import { LoggerProvider } from '@/providers/logger.provider.js'
 import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/types/index.js'
-import { createResponse } from '@/utils/create-response.js'
 
 @injectable()
 export class OrderFlow implements FlowHandler {
   constructor(
-    @inject(StateManager) private flowStateManager: StateManager,
-    @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(DrinkFlow) private drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
+    @inject(StateManager) private stateManager: StateManager,
+    @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
+  // ###
   handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.info('👋 Order Flow', { phone, message })
 
@@ -36,12 +37,12 @@ export class OrderFlow implements FlowHandler {
 
   // ###
   private handlePizzaSelection(state: FlowState, phone: string, message: string) {
-    this.flowStateManager.updateStep(phone, FlowStep.PIZZA_TYPE)
+    this.stateManager.updateStep(phone, FlowStep.PIZZA_TYPE)
     return this.pizzaFlow.handle({ state, phone, message })
   }
 
   private handleDrinkSelection(state: FlowState, phone: string, message: string) {
-    this.flowStateManager.updateStep(phone, FlowStep.DRINK)
+    this.stateManager.updateStep(phone, FlowStep.DRINK)
     return this.drinkFlow.handle({ state, phone, message })
   }
 
@@ -50,7 +51,7 @@ export class OrderFlow implements FlowHandler {
   }
 
   private cancelOrder(phone: string) {
-    this.flowStateManager.resetState(phone)
+    this.stateManager.resetState(phone)
     return createResponse(
       '✨ Obrigado por utilizar nossos serviços!',
       'Se precisar de algo, estamos aqui para ajudar.',

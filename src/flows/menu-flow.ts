@@ -10,7 +10,7 @@ import type { FlowActions, FlowHandler, FlowHandlerProps } from '@/types/index.j
 
 @injectable()
 export class MenuFlow implements FlowHandler {
-  private readonly invalidOptionMessage = [
+  private readonly inProgressMessage  = [
     '🚧 Esta funcionalidade está em desenvolvimento.',
     'Por favor, aguarde novidades!',
   ]
@@ -35,24 +35,23 @@ export class MenuFlow implements FlowHandler {
   // ###
   private showOrderMenu(phone: string) {
     this.stateManager.updateStep(phone, FlowStep.ORDER)
-
     return createResponse(...orderMenu)
   }
 
   private tackOrder(phone: string) {
-    return createResponse(...this.invalidOptionMessage)
+    return createResponse(...this.inProgressMessage )
   }
 
   private showOrderHistory(phone: string) {
-    return createResponse(...this.invalidOptionMessage)
+    return createResponse(...this.inProgressMessage )
   }
 
   private updateProfile(phone: string) {
-    return createResponse(...this.invalidOptionMessage)
+    return createResponse(...this.inProgressMessage )
   }
 
   private contactSupport(phone: string) {
-    return createResponse(...this.invalidOptionMessage)
+    return createResponse(...this.inProgressMessage )
   }
 
   private exitFlow(phone: string) {
