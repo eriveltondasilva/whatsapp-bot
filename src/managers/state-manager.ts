@@ -1,59 +1,119 @@
 import { inject, singleton } from 'tsyringe'
 
-import { FlowStep } from '@/config/enums.js'
+import { FlowKeys, FlowStep } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/@index.js'
 
-import type { FlowState } from '@/types/index.js'
+import type { FlowContext, FlowState } from '@/types/index.js'
+
+export interface IStateManager {
+  getState(phone: string): FlowState
+  updateContext(phone: string, context: FlowContext): void
+}
 
 @singleton()
-export class StateManager {
+export class StateManager implements IStateManager {
   private readonly stateStore = new Map<string, FlowState>()
-  private readonly initialState: FlowState = { step: FlowStep.WELCOME }
 
   constructor(@inject(LoggerProvider) private logger: LoggerProvider) {}
 
-  public getState(phone: string): FlowState {
-    if (!this.stateStore.has(phone)) this.stateStore.set(phone, this.initialState)
+  // ###
+  getState(phone: string): FlowState {
+    if (!this.stateStore.has(phone)) {
+      return this.initializeState(phone)
+    }
 
     const state = this.stateStore.get(phone) as FlowState
-    this.logger.ok('Flow state requested', { state })
+    this.logger.debug('Flow state requested', { state })
+
     return state
   }
 
-  public updateState<K extends keyof FlowState>(
-    phone: string,
-    key: K,
-    newValue: FlowState[K],
-  ): void {
+  updateContext(phone: string, context: Partial<FlowContext>): void {
     const currentState = this.getState(phone)
-    const previousValue = currentState[key]
 
-    const updatedValue =
-      previousValue && typeof previousValue === 'object'
-        ? { ...previousValue, ...(newValue as object) }
-        : newValue
+    const newHistory = [...currentState.history]
 
-    const updatedState = { ...currentState, [key]: updatedValue }
+    if (context.step && context.step !== currentState.context.step) {
+      newHistory.push(currentState.context.step)
+    }
+
+    const updatedState: FlowState = {
+      ...currentState,
+      context: { ...currentState.context, ...context },
+      history: newHistory,
+      lastInteraction: new Date(),
+    }
 
     this.stateStore.set(phone, updatedState)
-    this.logger.ok('Flow state updated', { phone, updatedState })
+    this.logger.debug('Flow state updated: context', { phone, updatedState })
   }
 
-  public updateStep(phone: string, step: FlowStep): void {
-    this.updateState(phone, 'step', step)
+  updateStep(phone: string, step: FlowStep): void {
+    const flow = this.extractFlow(step)
+    this.updateContext(phone, { flow, step })
   }
 
-  public updateCustomer(phone: string, customer: FlowState['customer']): void {
-    this.updateState(phone, 'customer', customer)
+  updateContextData(phone: string, data: FlowContext['data']): void {
+    const currentState = this.getState(phone)
+
+    const updatedState: FlowState = {
+      ...currentState,
+      context: {
+        ...currentState.context,
+        data: {
+          ...currentState.context.data,
+          ...data,
+        },
+      },
+    }
+
+    this.stateStore.set(phone, updatedState)
+    this.logger.debug('Flow state updated: context data', { phone, updatedState })
   }
 
-  public resetState(phone: string): void {
-    this.stateStore.set(phone, this.initialState)
+  updateCustomer(phone: string, customer: FlowState['customer']): void {
+    const currentState = this.getState(phone)
+
+    const updatedState: FlowState = {
+      ...currentState,
+      customer: {
+        ...currentState.customer,
+        ...customer,
+      },
+    }
+
+    this.stateStore.set(phone, updatedState)
+    this.logger.debug('Flow state updated: customer', { phone, updatedState })
+  }
+
+  resetState(phone: string): void {
+    this.initializeState(phone)
     this.logger.ok('Flow state reset', { phone })
   }
 
-  public clearAllStates(): void {
+  clearAllStates(): void {
     this.stateStore.clear()
     this.logger.info('🧹 Flow states cleared')
+  }
+
+  // ###
+  private initializeState(phone: string) {
+    const initialState: FlowState = {
+      context: { flow: FlowKeys.WELCOME, step: FlowStep.WELCOME, data: {} },
+      customer: {},
+      cart: [],
+      history: [],
+      lastInteraction: new Date(),
+    }
+
+    this.stateStore.set(phone, initialState)
+    this.logger.debug('Flow state initialized', { phone, initialState })
+
+    return initialState
+  }
+
+  private extractFlow(step: string): string {
+    const [flow] = step.split('::')
+    return flow.toLowerCase()
   }
 }

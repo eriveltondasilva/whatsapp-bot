@@ -5,7 +5,7 @@ import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
 import { mainMenu } from '@/templates/main-menu.js'
-import { createResponse, getGreeting, getFirstName } from '@/utils/@index.js'
+import { createResponse, getFirstName, getGreeting } from '@/utils/@index.js'
 import { RegistrationFlow } from './registration.flow.js'
 
 import type { FlowHandler, FlowHandlerProps } from '@/types/index.js'

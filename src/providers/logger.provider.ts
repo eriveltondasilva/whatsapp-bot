@@ -1,4 +1,5 @@
 import { join } from 'node:path'
+import { env } from 'node:process'
 import { singleton } from 'tsyringe'
 import { type Logger as WinstonLogger, createLogger, format, transports } from 'winston'
 
@@ -6,32 +7,56 @@ import { LOG_LEVEL } from '@/config/constants.js'
 
 type LogMeta = Record<string, unknown>
 
-interface LoggerI {
+interface ILogger {
   info(message: string, meta?: LogMeta): void
   ok(message: string, meta?: LogMeta): void
   warn(message: string, meta?: LogMeta): void
+  debug(message: string, meta?: LogMeta): void
   error(message: string, meta?: unknown): void
 }
 
 @singleton()
-export class LoggerProvider implements LoggerI {
+export class LoggerProvider implements ILogger {
   private readonly logger: WinstonLogger
   private readonly logDir: string = 'logs'
   private readonly maxFiles: number = 5
   private readonly maxSize: number = 5 * 1_024 * 1_024 // 5MB
+  private readonly isProduction: boolean = env.NODE_ENV === 'production'
 
   constructor() {
     this.logger = this.createLogger()
   }
 
+  // ###
+  info(message: string, meta?: LogMeta): void {
+    this.logger.info(message, meta)
+  }
+
+  ok(message: string, meta?: LogMeta): void {
+    this.logger.info(`✅ ${message}`, meta)
+  }
+
+  warn(message: string, meta?: LogMeta): void {
+    this.logger.warn(`⚠️ ${message}`, meta)
+  }
+
+  debug(message: string, meta?: LogMeta): void {
+    this.logger.warn(`⚙️ ${message}`, meta)
+  }
+
+  error(message: string, meta?: unknown): void {
+    this.logger.error(`❌ ${message}`, meta)
+  }
+
+  // ###
   private createLogger(): WinstonLogger {
     const logger = createLogger({
-      level: LOG_LEVEL,
+      level: this.isProduction ? LOG_LEVEL : 'debug',
       // defaultMeta: { service: SESSION_NAME },
       transports: this.createFileTransports(),
     })
 
-    if (process.env.NODE_ENV !== 'production') logger.add(this.createConsoleTransport())
+    if (!this.isProduction) logger.add(this.createConsoleTransport())
 
     return logger
   }
@@ -49,15 +74,16 @@ export class LoggerProvider implements LoggerI {
 
     return [
       new transports.File({
-        format: logFormat,
-        filename: join(this.logDir, 'error.log'),
         level: 'error',
+        filename: join(this.logDir, 'error.log'),
+        format: logFormat,
         maxsize: this.maxSize,
         maxFiles: this.maxFiles,
       }),
       new transports.File({
-        format: logFormat,
+        level: 'info',
         filename: join(this.logDir, 'combined.log'),
+        format: logFormat,
         maxsize: this.maxSize,
         maxFiles: this.maxFiles,
       }),
@@ -73,22 +99,5 @@ export class LoggerProvider implements LoggerI {
         format.simple(),
       ),
     })
-  }
-
-  // ###
-  public info(message: string, meta?: LogMeta): void {
-    this.logger.info(message, meta)
-  }
-
-  public ok(message: string, meta?: LogMeta): void {
-    this.logger.info(`✅ ${message}`, meta)
-  }
-
-  public warn(message: string, meta?: LogMeta): void {
-    this.logger.warn(`⚠️ ${message}`, meta)
-  }
-
-  public error(message: string, meta?: unknown): void {
-    this.logger.error(`❌ ${message}`, meta)
   }
 }
