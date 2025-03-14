@@ -8,7 +8,7 @@ export const orderMenu = [
   '0️⃣ - Cancelar pedido ❌',
   //
   '\n🔢 Digite o número da opção desejada:',
-] as const
+]
 
 export const orderMessage = {
   PLACED: '🍕 Pedido realizado com sucesso!',

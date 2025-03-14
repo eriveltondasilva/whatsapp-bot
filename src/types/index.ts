@@ -1,5 +1,5 @@
 import type { ItemType, MessageType } from '@/config/enums.js'
-import type { Customer, Prisma } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 export type FlowContext = {
   flow: string
@@ -32,7 +32,7 @@ export type Response = {
   content: string[]
 }
 
-export interface FlowHandler {
+export interface IFlowHandler {
   handle(props: FlowHandlerProps): Response | Promise<Response>
 }
 

@@ -1,26 +1,28 @@
 import { inject, injectable } from 'tsyringe'
 
+import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { FlowKeys, RegistrationStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
-import { mainMenu } from '@/templates/main-menu.js'
-import { createResponse, getFirstName, getGreeting } from '@/utils/@index.js'
+import { getFirstName, getGreeting } from '@/utils/@index.js'
 import { RegistrationFlow } from './registration.flow.js'
 
-import type { FlowHandler, FlowHandlerProps } from '@/types/index.js'
+import { mainMenu } from '@/templates/@index.js'
+import type { FlowHandlerProps, IFlowHandler, Response } from '@/types/index.js'
 
 @injectable()
-export class WelcomeFlow implements FlowHandler {
+export class WelcomeFlow implements IFlowHandler {
   constructor(
     @inject(StateManager) private stateManager: StateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
     @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
   ) {}
 
   // ###
-  public async handle({ phone, message }: FlowHandlerProps) {
+  public async handle({ phone, message }: FlowHandlerProps): Promise<Response> {
     this.logger.info('📌 Welcome Flow')
     const customer = await this.customerRepository.findByPhone(phone)
 
@@ -31,11 +33,14 @@ export class WelcomeFlow implements FlowHandler {
 
     this.stateManager.updateStep(phone, FlowKeys.MENU)
 
-    return createResponse(
-      `🍕 ${getGreeting()}, ${getFirstName(customer.name)}!`,
-      'Que bom ter você de volta por aqui! Estamos ansiosos para preparar algo delicioso para você. 😋🍽\n',
-      //
-      ...mainMenu,
-    )
+    return this.responseBuilder
+      .addText(`🍕 ${getGreeting()}, ${getFirstName(String(customer.name))}!`)
+      .addText(
+        'Que bom ter você de volta por aqui! Estamos ansiosos para preparar algo delicioso para você. 😋🍽',
+      )
+      .addText('Para começar, escolha uma das opções abaixo:')
+      .addLineBreak()
+      .addMenu(mainMenu)
+      .build()
   }
 }

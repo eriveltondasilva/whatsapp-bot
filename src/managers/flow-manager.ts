@@ -11,11 +11,11 @@ import {
 } from '@/flows/@index.js'
 
 import { LoggerProvider } from '@/providers/logger.provider.js'
-import type { FlowContext, FlowHandler } from '@/types/index.js'
+import type { FlowContext, IFlowHandler } from '@/types/index.js'
 
 @singleton()
 export class FlowManager {
-  private flows: Map<string, FlowHandler>
+  private flows: Map<string, IFlowHandler>
 
   constructor(
     @inject(DrinkFlow) drinkFlow: DrinkFlow,
@@ -26,7 +26,7 @@ export class FlowManager {
     @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {
-    this.flows = new Map<string, FlowHandler>([
+    this.flows = new Map<string, IFlowHandler>([
       [FlowKeys.REGISTRATION, registrationFlow],
       [FlowKeys.WELCOME, welcomeFlow],
       [FlowKeys.MENU, menuFlow],
@@ -36,7 +36,7 @@ export class FlowManager {
     ])
   }
 
-  getFlow(context: FlowContext): FlowHandler {
+  getFlow(context: FlowContext): IFlowHandler {
     const flow = this.flows.get(context.flow)
 
     if (!flow) {

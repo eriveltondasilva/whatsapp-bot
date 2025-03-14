@@ -10,7 +10,7 @@ export class FlavorRepository {
         description: true,
         price: true,
         category: true,
-      }
+      },
     })
   }
 

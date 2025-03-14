@@ -1,26 +1,22 @@
 import { inject, injectable } from 'tsyringe'
 
+import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { FlowKeys, RegistrationStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
 import { mainMenu } from '@/templates/main-menu.js'
-import {
-  createResponse,
-  getFirstName,
-  getGreeting,
-  isValidAddress,
-  isValidName,
-} from '@/utils/@index.js'
+import { getFirstName, getGreeting, isValidAddress, isValidName } from '@/utils/@index.js'
 
-import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/types/index.js'
+import type { FlowActions, FlowHandlerProps, FlowState, IFlowHandler } from '@/types/index.js'
 
 @injectable()
-export class RegistrationFlow implements FlowHandler {
+export class RegistrationFlow implements IFlowHandler {
   constructor(
     @inject(StateManager) private stateManager: StateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
   ) {}
 
   // ###
@@ -40,42 +36,46 @@ export class RegistrationFlow implements FlowHandler {
   private initializeFlow(phone: string) {
     this.stateManager.updateStep(phone, RegistrationStep.COLLECT_NAME)
 
-    return createResponse(
-      '🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!',
-      'Estamos prontos para transformar a sua fome em felicidade.',
-      'Antes de começar, precisamos fazer um _*rápido*_ cadastro. 🏃💨\n',
-      '✍️ Qual o seu nome completo?',
-      '> Exemplo: _"João da Silva"_',
-    )
+    return this.responseBuilder
+      .addText('🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!')
+      .addText('Estamos prontos para transformar a sua fome em felicidade.')
+      .addText('Antes de começar, precisamos fazer um _*rápido*_ cadastro. 🏃💨')
+      .addLineBreak()
+      .addText('Por favor, me informe o seu nome completo:')
+      .addText('> exemplo: _"João da Silva"_')
+      .build()
   }
 
   private handleNameInput(phone: string, name: string) {
     if (!isValidName(name)) {
-      return createResponse(
-        '❌ *NOME INVÁLIDO*',
-        'Por favor, informe seu nome completo:',
-        '> Exemplo: _"João da Silva"_',
-      )
+      return this.responseBuilder
+        .addTitle('❌ NOME INVÁLIDO')
+        .addLineBreak()
+        .addText('Por favor, informe seu nome completo:')
+        .addText('> exemplo: _"João da Silva"_')
+        .build()
     }
 
     this.stateManager.updateStep(phone, RegistrationStep.COLLECT_ADDRESS)
     this.stateManager.updateCustomer(phone, { name })
 
-    return createResponse(
-      `${getGreeting()}, ${getFirstName(name)}!`,
-      'Agora me diga onde vamos entregar suas delícias?\n',
-      '✍️ Qual o seu endereço completo?',
-      '> Exemplo: _"Rua das Flores, n° 83, Centro"_',
-    )
+    return this.responseBuilder
+      .addText(`${getGreeting()}, ${getFirstName(name)}!`)
+      .addText('Agora me diga onde vamos entregar suas delícias?')
+      .addLineBreak()
+      .addText('Qual o seu endereço completo?')
+      .addText('> exemplo: _"Rua das Flores, n° 83, Centro"_')
+      .build()
   }
 
   private handleAddressInput(state: FlowState, phone: string, message: string) {
     if (!isValidAddress(message)) {
-      return createResponse(
-        '❌ *ENDEREÇO INVÁLIDO*',
-        'Por favor, informe seu endereço completo:',
-        '> Exemplo: _"Rua das Flores, n° 83, Centro"_',
-      )
+      return this.responseBuilder
+        .addTitle('❌ ENDEREÇO INVÁLIDO')
+        .addLineBreak()
+        .addText('Por favor, informe seu endereço completo:')
+        .addText('> exemplo: _"Rua das Flores, n° 83, Centro"_')
+        .build()
     }
 
     const customer = state.customer
@@ -94,16 +94,18 @@ export class RegistrationFlow implements FlowHandler {
     this.stateManager.resetState(phone)
     this.stateManager.updateStep(phone, FlowKeys.MENU)
 
-    return createResponse(
-      `🎉 Cadastro concluído com sucesso, ${getFirstName(customer?.name || 'cliente')}!`,
-      'Agora, vamos ao que interessa: _*escolher algo gostoso*_! 😋\n',
-      //
-      ...mainMenu,
-    )
+    return this.responseBuilder
+      .addText(`🎉 Cadastro concluído com sucesso, ${getFirstName(customer?.name || 'cliente')}!`)
+      .addText('Agora, vamos ao que interessa: _*escolher algo gostoso*_! 😋')
+      .addLineBreak()
+      .addMenu(mainMenu)
+      .build()
   }
 
   private resetFlow(phone: string) {
     this.stateManager.resetState(phone)
-    return createResponse('❌ Ops! Algo deu errado. Por favor, tente novamente.')
+    return this.responseBuilder
+      .addText('❌ Ops! Algo deu errado. Por favor, tente novamente.')
+      .build()
   }
 }

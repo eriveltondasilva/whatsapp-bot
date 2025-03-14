@@ -1,23 +1,24 @@
 import { inject, injectable } from 'tsyringe'
 
+import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { FlowKeys, MenuOption } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { mainMenu, orderMenu } from '@/templates/@index.js'
-import { createResponse } from '@/utils/create-response.js'
 
-import type { FlowActions, FlowHandler, FlowHandlerProps } from '@/types/index.js'
+import type { FlowActions, FlowHandlerProps, IFlowHandler } from '@/types/index.js'
 
 @injectable()
-export class MainMenuFlow implements FlowHandler {
+export class MainMenuFlow implements IFlowHandler {
   private readonly inProgressMessage = [
     '🚧 Esta funcionalidade está em desenvolvimento.',
     'Por favor, aguarde novidades!',
-  ]
+  ].join()
 
   constructor(
     @inject(StateManager) private stateManager: StateManager,
     @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
   ) {}
 
   // ###
@@ -35,40 +36,42 @@ export class MainMenuFlow implements FlowHandler {
   // ###
   private showOrderMenu(phone: string) {
     this.stateManager.updateStep(phone, FlowKeys.ORDER)
-    return createResponse(...orderMenu)
+    return this.responseBuilder.addMenu(orderMenu).build()
   }
 
   private tackOrder(phone: string) {
-    return createResponse(...this.inProgressMessage)
+    return this.responseBuilder.addText(this.inProgressMessage).build()
   }
 
   private showOrderHistory(phone: string) {
-    return createResponse(...this.inProgressMessage)
+    return this.responseBuilder.addText(this.inProgressMessage).build()
   }
 
   private updateProfile(phone: string) {
-    return createResponse(...this.inProgressMessage)
+    return this.responseBuilder.addText(this.inProgressMessage).build()
   }
 
   private contactSupport(phone: string) {
-    return createResponse(...this.inProgressMessage)
+    return this.responseBuilder.addText(this.inProgressMessage).build()
   }
 
   private exitFlow(phone: string) {
     this.stateManager.resetState(phone)
-    return createResponse(
-      '✨ Obrigado por utilizar nossos serviços!',
-      'Se precisar de algo, estamos aqui para ajudar.\n',
-      '👋 Até a próxima!',
-    )
+
+    return this.responseBuilder
+      .addText('✨ Obrigado por utilizar nossos serviços!')
+      .addText('Se precisar de algo, estamos aqui para ajudar.')
+      .addLineBreak()
+      .addText('👋 Até a próxima!')
+      .build()
   }
 
   // ###
   private handleInvalidOption() {
-    return createResponse(
-      '❌ OPÇÃO INVÁLIDA:\n',
-      //
-      ...mainMenu,
-    )
+    return this.responseBuilder
+      .addTitle('❌ OPÇÃO INVÁLIDA')
+      .addLineBreak()
+      .addMenu(mainMenu)
+      .build()
   }
 }

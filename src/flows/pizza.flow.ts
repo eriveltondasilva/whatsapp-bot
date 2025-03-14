@@ -1,22 +1,25 @@
 import type { Prisma } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
+import { ListResponseBuilder, TextResponseBuilder } from '@/builder/@index.js'
 import { FlowKeys, PizzaStep, PizzaType } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/@index.js'
 import { buildCrustList, buildFlavorList, orderMenu } from '@/templates/@index.js'
-import { createResponse, createResponseWithList, isValidQuantity } from '@/utils/@index.js'
+import { isValidQuantity } from '@/utils/@index.js'
 
-import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/types/index.js'
+import type { FlowActions, FlowHandlerProps, FlowState, IFlowHandler } from '@/types/index.js'
 
 @injectable()
-export class PizzaFlow implements FlowHandler {
+export class PizzaFlow implements IFlowHandler {
   constructor(
     @inject(StateManager) private stateManager: StateManager,
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(CrustRepository) private crustRepository: CrustRepository,
     @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
+    @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
   ) {}
 
   // ###
@@ -42,16 +45,21 @@ export class PizzaFlow implements FlowHandler {
 
     if (!flavors?.length) {
       this.stateManager.resetState(phone)
-      return createResponse('❌ Desculpe, não encontramos sabores disponíveis no momento.')
+      return this.responseBuilder
+        .addText('❌ Desculpe, não encontramos sabores disponíveis no momento.')
+        .build()
     }
 
     this.stateManager.updateStep(phone, PizzaStep.FLAVOR)
     this.stateManager.updateContextData(phone, { pizzaType })
 
-    const title = `🍕 *ESCOLHA ${pizzaType === PizzaType.FULL ? 'O SABOR' : 'O PRIMEIRO SABOR'} DA SUA PIZZA*`
-    const description = '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
-
-    return createResponseWithList(title, description, ...buildFlavorList(flavors))
+    return this.listResponseBuilder
+      .addTitle(
+        `🍕 *ESCOLHA ${pizzaType === PizzaType.FULL ? 'O SABOR' : 'O PRIMEIRO SABOR'} DA SUA PIZZA*`,
+      )
+      .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+      .addList(buildFlavorList(flavors))
+      .build()
   }
 
   private async handlePizzaFlavor(state: FlowState, phone: string, message: string) {
@@ -62,10 +70,11 @@ export class PizzaFlow implements FlowHandler {
     const selectedIndex = Number.parseInt(message, 10) - 1
 
     if (Number.isNaN(selectedIndex) || !flavors?.[selectedIndex]) {
-      const title = '❌ *OPÇÃO INVÁLIDA!*'
-      const description = 'Por favor, escolha uma opção válida.'
-
-      return createResponseWithList(title, description, ...buildFlavorList(flavors))
+      return this.listResponseBuilder
+        .addTitle('❌ OPÇÃO INVÁLIDA!')
+        .addDescription('Por favor, escolha uma opção válida.')
+        .addList(buildFlavorList(flavors))
+        .build()
     }
 
     const selectedFlavor = (data.selectedFlavor as Prisma.FlavorCreateInput[]) || []
@@ -75,20 +84,21 @@ export class PizzaFlow implements FlowHandler {
       this.stateManager.updateStep(phone, PizzaStep.FLAVOR)
       this.stateManager.updateContextData(phone, { selectedFlavor })
 
-      const title = '🍕🍕 *ESCOLHA O SEGUNDO SABOR DA PIZZA*'
-      const description =
-        '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
-
-      return createResponseWithList(title, description, ...buildFlavorList(flavors))
+      return this.listResponseBuilder
+        .addTitle('🍕🍕 ESCOLHA O SEGUNDO SABOR DA PIZZA')
+        .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+        .addList(buildFlavorList(flavors))
+        .build()
     }
 
     this.stateManager.updateStep(phone, PizzaStep.CRUST)
     this.stateManager.updateContextData(phone, { selectedFlavor })
 
-    const title = '🍕 *ESCOLHA A BORDA DA SUA PIZZA*'
-    const description = '\n> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.'
-
-    return createResponseWithList(title, description, ...buildCrustList(crusts))
+    return this.listResponseBuilder
+      .addTitle('🍕 *ESCOLHA A BORDA DA SUA PIZZA*')
+      .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+      .addList(buildCrustList(crusts))
+      .build()
   }
 
   private async handlePizzaCrust(phone: string, message: string) {
@@ -96,9 +106,11 @@ export class PizzaFlow implements FlowHandler {
     const selectedIndex = Number.parseInt(message, 10) - 1
 
     if (Number.isNaN(selectedIndex) || !crusts?.[selectedIndex]) {
-      const title = '❌ *BORDA INVÁLIDA!*'
-      const description = 'Por favor, escolha uma opção válida.'
-      return createResponseWithList(title, description, ...buildCrustList(crusts))
+      return this.listResponseBuilder
+        .addTitle('❌ BORDA INVÁLIDA!')
+        .addDescription('Por favor, escolha uma opção válida.')
+        .addList(buildCrustList(crusts))
+        .build()
     }
 
     const selectedCrust = crusts[selectedIndex]
@@ -106,24 +118,28 @@ export class PizzaFlow implements FlowHandler {
     this.stateManager.updateStep(phone, PizzaStep.QUANTITY)
     this.stateManager.updateContextData(phone, { selectedCrust })
 
-    return createResponse('🔢 Digite a quantidade desejada (1-5):')
+    return this.responseBuilder.addText('🔢 Digite a quantidade desejada (1-5):').build()
   }
 
   private handlePizzaQuantity(phone: string, message: string) {
     const quantity = Number.parseInt(message, 10)
 
     if (!isValidQuantity(quantity)) {
-      return createResponse('❌ *QUANTIDADE INVÁLIDA!*', 'Por favor, digite um número entre 1 e 5.')
+      return this.responseBuilder
+        .addTitle('❌ QUANTIDADE INVÁLIDA!')
+        .addText('Por favor, digite um número entre 1 e 5.')
+        .build()
     }
 
     this.stateManager.updateStep(phone, PizzaStep.NOTES)
     this.stateManager.updateContextData(phone, { quantity })
 
-    return createResponse(
-      '✍️ Deseja adicionar alguma observação?',
-      '> Exemplo: retirar cebola, mais queijo, etc.\n',
-      '0 - Não desejo adicionar observações',
-    )
+    return this.responseBuilder
+      .addText('Deseja adicionar alguma observação?')
+      .addText('> Exemplo: retirar cebola, mais queijo, etc.')
+      .addLineBreak()
+      .addText('0 - Não desejo adicionar observações')
+      .build()
   }
 
   private handlePizzaNotes(phone: string, message: string) {
@@ -132,6 +148,10 @@ export class PizzaFlow implements FlowHandler {
     this.stateManager.updateStep(phone, FlowKeys.ORDER)
     this.stateManager.updateContextData(phone, { notes })
 
-    return createResponse('✅ Pizza adicionada ao carrinho com sucesso!\n', ...orderMenu)
+    return this.responseBuilder
+      .addText('✅ Pizza adicionada ao carrinho com sucesso!')
+      .addLineBreak()
+      .addMenu(orderMenu)
+      .build()
   }
 }

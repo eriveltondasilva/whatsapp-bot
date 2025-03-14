@@ -1,23 +1,24 @@
 import { inject, injectable } from 'tsyringe'
 
+import { TextResponseBuilder } from '@/builder/@index.js'
 import { DrinkStep, OrderOption, PizzaStep } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { orderMenu } from '@/templates/order-menu.js'
-import { createResponse } from '@/utils/create-response.js'
 
 import { DrinkFlow } from './drink.flow.js'
 import { PizzaFlow } from './pizza.flow.js'
 
-import type { FlowActions, FlowHandler, FlowHandlerProps, FlowState } from '@/types/index.js'
+import type { FlowActions, FlowHandlerProps, IFlowHandler } from '@/types/index.js'
 
 @injectable()
-export class OrderFlow implements FlowHandler {
+export class OrderFlow implements IFlowHandler {
   constructor(
     @inject(DrinkFlow) private drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
     @inject(StateManager) private stateManager: StateManager,
     @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
   ) {}
 
   // ###
@@ -47,24 +48,28 @@ export class OrderFlow implements FlowHandler {
   }
 
   private finalizeOrder(phone: string) {
-    return createResponse('🍕 Order Flow: finalize order')
+    return this.responseBuilder.addTitle('🍕 *Pedido Finalizado*').build()
   }
 
   private cancelOrder(phone: string) {
     this.stateManager.resetState(phone)
-    return createResponse(
-      '✨ Obrigado por utilizar nossos serviços!',
-      'Se precisar de algo, estamos aqui para ajudar.',
-      '\n👋 Até a próxima!',
-    )
+
+    return this.responseBuilder
+      .addTitle('🍕 Pedido Cancelado')
+      .addLineBreak()
+      .addText('✨ Obrigado por utilizar nossos serviços!')
+      .addText('Se precisar de algo, estamos aqui para ajudar.')
+      .addLineBreak()
+      .addText('👋 Até a próxima!')
+      .build()
   }
 
   // ###
   private handleInvalidOption() {
-    return createResponse(
-      '❌ *OPÇÃO INVÁLIDA:*\n',
-      //
-      ...orderMenu,
-    )
+    return this.responseBuilder
+      .addTitle('🍕 OPÇÃO INVÁLIDA')
+      .addLineBreak()
+      .addMenu(orderMenu)
+      .build()
   }
 }

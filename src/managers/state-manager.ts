@@ -88,7 +88,7 @@ export class StateManager implements IStateManager {
     return updatedState
   }
 
-  updateCustomer(phone: string, customer: FlowState['customer']): FlowState {
+  updateCustomer(phone: string, customer: Partial<FlowState['customer']>): FlowState {
     const currentState = this.getState(phone)
 
     const newCustomer = {
@@ -122,7 +122,11 @@ export class StateManager implements IStateManager {
   private initializeState(phone: string) {
     const initialState: FlowState = {
       context: { flow: FlowKeys.WELCOME, step: FlowKeys.WELCOME, data: {} },
-      customer: {},
+      customer: {
+        name: '',
+        phone: '',
+        address: '',
+      },
       cart: [],
       history: [],
       lastInteraction: new Date(),
