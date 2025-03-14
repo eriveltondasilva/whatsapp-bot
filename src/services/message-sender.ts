@@ -26,7 +26,7 @@ export class MessageSender {
 
     try {
       sendAction && (await sendAction())
-      this.logger.info('📬 Message sent successfully', { phone, type })
+      this.logger.debug('📬 Message sent successfully', { phone, type })
     } catch (error) {
       this.logger.error('Failed to send message', { phone, type, error })
       throw error

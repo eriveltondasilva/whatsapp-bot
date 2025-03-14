@@ -21,7 +21,7 @@ export class RegistrationFlow implements IFlowHandler {
 
   // ###
   public handle({ state, phone, message }: FlowHandlerProps) {
-    this.logger.info('📌 Registration Flow')
+    this.logger.debug('📌 Registration Flow')
 
     const actions: FlowActions<RegistrationStep> = {
       [RegistrationStep.INITIAL]: () => this.initializeFlow(phone),

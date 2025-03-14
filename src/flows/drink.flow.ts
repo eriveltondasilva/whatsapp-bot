@@ -22,7 +22,7 @@ export class DrinkFlow implements IFlowHandler {
 
   // ###
   handle({ state, phone, message }: FlowHandlerProps) {
-    this.logger.info('📌 Drink Flow')
+    this.logger.debug('📌 Drink Flow')
 
     const actions: FlowActions<DrinkStep> = {
       [DrinkStep.MENU]: () => this.handleDrinkMenu(phone, message),

@@ -13,7 +13,7 @@ export class MainMenuFlow implements IFlowHandler {
   private readonly inProgressMessage = [
     '🚧 Esta funcionalidade está em desenvolvimento.',
     'Por favor, aguarde novidades!',
-  ].join()
+  ].join(',')
 
   constructor(
     @inject(StateManager) private stateManager: StateManager,
@@ -23,7 +23,7 @@ export class MainMenuFlow implements IFlowHandler {
 
   // ###
   public handle({ phone, message }: FlowHandlerProps) {
-    this.logger.info('📌 Main Menu Flow')
+    this.logger.debug('📌 Main Menu Flow')
 
     const actions: FlowActions<MenuOption> = {
       [MenuOption.ORDER]: () => this.showOrderMenu(phone),

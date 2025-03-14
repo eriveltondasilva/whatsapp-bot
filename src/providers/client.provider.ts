@@ -22,7 +22,7 @@ export class ClientProvider implements ClientProviderI {
   private async createClient(): Promise<Whatsapp> {
     try {
       const client = await create(this.clientOptions)
-      this.logger.ok('Client initialized successfully')
+      this.logger.debug('Client initialized successfully')
 
       return client
     } catch (error) {

@@ -30,7 +30,7 @@ export class WhatsappBot {
   private async processMessage(message: Message) {
     if (!isValidMessage(message)) return
 
-    this.logger.info('📬 Received message', { from: message.from, body: message.body })
+    this.logger.debug('📬 Received message', { from: message.from, body: message.body })
 
     try {
       const response = await this.conversation.handle(message.from, message.body || '')

@@ -23,7 +23,7 @@ export class OrderFlow implements IFlowHandler {
 
   // ###
   handle({ phone, message }: FlowHandlerProps) {
-    this.logger.info('📌 Order Flow')
+    this.logger.debug('📌 Order Flow')
 
     const actions: FlowActions<OrderOption> = {
       [OrderOption.FULL_PIZZA]: () => this.handlePizzaSelection(phone, message),
