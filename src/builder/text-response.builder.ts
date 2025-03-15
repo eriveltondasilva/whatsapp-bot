@@ -4,8 +4,17 @@ import type { ResponseBuilder } from './response-builder.js'
 export class TextResponseBuilder implements ResponseBuilder {
   private parts: string[] = []
 
+  constructor() {
+    this.reset()
+  }
+
   private addPart(text: string): this {
     this.parts.push(text)
+    return this
+  }
+
+  private reset(): this {
+    this.parts = []
     return this
   }
 
@@ -32,9 +41,9 @@ export class TextResponseBuilder implements ResponseBuilder {
 
   // ###
   build() {
-    return {
-      type: MessageType.TEXT,
-      content: this.parts,
-    }
+    const content = this.parts
+    this.reset()
+
+    return { type: MessageType.TEXT, content }
   }
 }
