@@ -14,6 +14,18 @@ export class ListResponseBuilder implements ResponseBuilder {
     items: [],
   }
 
+  constructor() {
+    this.reset()
+  }
+
+  private reset() {
+    this.section = {
+      title: '',
+      description: '',
+      items: [],
+    }
+  }
+
   // ###
   addTitle(text: string): this {
     this.section.title = `*${text.toUpperCase()}*\n`
@@ -32,11 +44,11 @@ export class ListResponseBuilder implements ResponseBuilder {
 
   // ###
   build() {
-    if (this.section.items.length === 0) {
+    if (this.section.items.length === 0)
       throw new Error('You must add list items before building the response.')
-    }
 
     const { title, description, items } = this.section
+    this.reset()
     return {
       type: MessageType.LIST,
       content: [title, description, ...items],
