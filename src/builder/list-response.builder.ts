@@ -1,5 +1,5 @@
 import { MessageType } from '@/config/enums.js'
-import type { Response } from '@/types/index.js'
+import type { ResponseBuilder } from './response-builder.js'
 
 type Section = {
   title: string
@@ -7,7 +7,7 @@ type Section = {
   items: string[]
 }
 
-export class ListResponseBuilder {
+export class ListResponseBuilder implements ResponseBuilder {
   private section: Section = {
     title: '',
     description: '',
@@ -15,23 +15,23 @@ export class ListResponseBuilder {
   }
 
   // ###
-  addTitle(text: string): ListResponseBuilder {
+  addTitle(text: string): this {
     this.section.title = `*${text.toUpperCase()}*\n`
     return this
   }
 
-  addDescription(text: string): ListResponseBuilder {
+  addDescription(text: string): this {
     this.section.description = text
     return this
   }
 
-  addList(list: string[]): ListResponseBuilder {
+  addList(list: string[]): this {
     this.section.items = [...list]
     return this
   }
 
   // ###
-  build(): Response {
+  build() {
     if (this.section.items.length === 0) {
       throw new Error('You must add list items before building the response.')
     }
