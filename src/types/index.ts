@@ -1,22 +1,29 @@
-import type { ItemType, MessageType } from '@/config/enums.js'
-import type { Prisma } from '@prisma/client'
+import type { FlowKeys, ItemType, MessageType } from '@/config/enums.js'
 
 export type FlowContext = {
-  flow: string
+  flow: FlowKeys
   step: string
   data: Record<string, unknown>
 }
 
+type Customer = {
+  name: string
+  phone: string
+  address: string
+}
+
+type CartItem = {
+  id: string
+  type: ItemType
+  name: string
+  price: number
+  quantity: number
+}
+
 export type FlowState = {
   context: FlowContext
-  customer: Prisma.CustomerCreateInput
-  cart: Array<{
-    id: string
-    type: ItemType
-    name: string
-    price: number
-    quantity: number
-  }>
+  customer: Partial<Customer>
+  cart: CartItem[]
   history: string[]
   lastInteraction: Date
 }
@@ -32,10 +39,14 @@ export type Response = {
   content: string[]
 }
 
+export type ActionsMap<K extends string = string> = Partial<Record<K, () => Promise<void> | void>>
+
+export type FlowActions<K extends string = string> = Record<K, () => Response | Promise<Response>>
+
 export interface IFlowHandler {
   handle(props: FlowHandlerProps): Response | Promise<Response>
 }
 
-export type ActionsMap<K extends string = string> = Partial<Record<K, () => Promise<void> | void>>
-
-export type FlowActions<K extends string = string> = Record<K, () => Response | Promise<Response>>
+export interface IFlowFactory {
+  createFlow(flow: string): IFlowHandler
+}

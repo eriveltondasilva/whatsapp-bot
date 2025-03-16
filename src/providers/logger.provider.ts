@@ -28,23 +28,23 @@ export class LoggerProvider implements ILogger {
   }
 
   // ###
-  info(message: string, meta?: LogMeta): void {
+  public info(message: string, meta?: LogMeta): void {
     this.logger.info(message, meta)
   }
 
-  ok(message: string, meta?: LogMeta): void {
+  public ok(message: string, meta?: LogMeta): void {
     this.logger.info(`✅ ${message}`, meta)
   }
 
-  warn(message: string, meta?: LogMeta): void {
+  public warn(message: string, meta?: LogMeta): void {
     this.logger.warn(`⚠️ ${message}`, meta)
   }
 
-  debug(message: string, meta?: LogMeta): void {
+  public debug(message: string, meta?: LogMeta): void {
     this.logger.debug(`⚙️ ${message}`, meta)
   }
 
-  error(message: string, meta?: unknown): void {
+  public error(message: string, meta?: unknown): void {
     this.logger.error(`❌ ${message}`, meta)
   }
 
@@ -93,10 +93,11 @@ export class LoggerProvider implements ILogger {
   private createConsoleTransport() {
     return new transports.Console({
       format: format.combine(
-        format.colorize({ all: true }),
         format.errors(),
         format.align(),
-        format.simple(),
+        format.prettyPrint(),
+        // format.colorize({ all: true }),
+        // format.simple(),
       ),
     })
   }

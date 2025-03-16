@@ -2,15 +2,15 @@ import { inject, injectable } from 'tsyringe'
 
 import { StateManager } from '@/managers/state-manager.js'
 import { LoggerProvider } from '@/providers/@index.js'
-import { FlowManager } from './flow-manager.js'
+import { FlowFactory } from './flow-factory.js'
 
 import type { Response } from '@/types/index.js'
 
 @injectable()
 export class ConversationManager {
   constructor(
+    @inject(FlowFactory) private flowFactory: FlowFactory,
     @inject(StateManager) private stateManager: StateManager,
-    @inject(FlowManager) private flowManager: FlowManager,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
@@ -19,7 +19,7 @@ export class ConversationManager {
 
     try {
       const state = this.stateManager.getState(phone)
-      const flow = this.flowManager.getFlow(state.context)
+      const flow = this.flowFactory.createFlow(state.context.flow)
 
       return await flow.handle({ state, phone, message })
     } catch (error) {

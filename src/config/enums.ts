@@ -79,7 +79,6 @@ export enum RegistrationSteps {
   INITIAL = 'registration::initial',
   COLLECT_NAME = 'registration::collect-name',
   COLLECT_ADDRESS = 'registration::collect-address',
-  _FLOW = 'registration',
 }
 
 // export enum FlowStep {

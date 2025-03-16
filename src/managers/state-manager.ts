@@ -138,8 +138,13 @@ export class StateManager implements IStateManager {
     return initialState
   }
 
-  private extractFlow(step: string): string {
+  private extractFlow(step: string): FlowKeys {
     const flow = step.includes('::') ? step.split('::')[0] : step
-    return flow.toLowerCase()
+
+    if (!Object.values(FlowKeys).includes(flow as FlowKeys)) {
+      throw new Error(`Invalid flow: ${flow}`)
+    }
+
+    return flow as FlowKeys
   }
 }
