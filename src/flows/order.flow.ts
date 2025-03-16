@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/@index.js'
-import { DrinkStep, OrderOption, PizzaStep } from '@/config/enums.js'
+import { DrinkSteps, OrderOptions, PizzaSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { orderMenu } from '@/templates/order-menu.js'
@@ -25,25 +25,25 @@ export class OrderFlow implements IFlowHandler {
   handle({ phone, message }: FlowHandlerProps) {
     this.logger.debug('📌 Order Flow')
 
-    const actions: FlowActions<OrderOption> = {
-      [OrderOption.FULL_PIZZA]: () => this.handlePizzaSelection(phone, message),
-      [OrderOption.HALF_PIZZA]: () => this.handlePizzaSelection(phone, message),
-      [OrderOption.DRINK]: () => this.handleDrinkSelection(phone, message),
-      [OrderOption.COMPLETE]: () => this.finalizeOrder(phone),
-      [OrderOption.CANCEL]: () => this.cancelOrder(phone),
+    const actions: FlowActions<OrderOptions> = {
+      [OrderOptions.FULL_PIZZA]: () => this.handlePizzaSelection(phone, message),
+      [OrderOptions.HALF_PIZZA]: () => this.handlePizzaSelection(phone, message),
+      [OrderOptions.DRINK]: () => this.handleDrinkSelection(phone, message),
+      [OrderOptions.COMPLETE]: () => this.finalizeOrder(phone),
+      [OrderOptions.CANCEL]: () => this.cancelOrder(phone),
     }
 
-    return actions[message as OrderOption]() || this.handleInvalidOption()
+    return actions[message as OrderOptions]() || this.handleInvalidOption()
   }
 
   // ###
   private handlePizzaSelection(phone: string, message: string) {
-    const state = this.stateManager.updateStep(phone, PizzaStep.TYPE)
+    const state = this.stateManager.updateStep(phone, PizzaSteps.TYPE)
     return this.pizzaFlow.handle({ state, phone, message })
   }
 
   private handleDrinkSelection(phone: string, message: string) {
-    const state = this.stateManager.updateStep(phone, DrinkStep.MENU)
+    const state = this.stateManager.updateStep(phone, DrinkSteps.MENU)
     return this.drinkFlow.handle({ state, phone, message })
   }
 

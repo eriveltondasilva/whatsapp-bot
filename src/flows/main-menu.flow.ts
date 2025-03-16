@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
-import { FlowKeys, MenuOption } from '@/config/enums.js'
+import { FlowKeys, MenuOptions } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { mainMenu, orderMenu } from '@/templates/@index.js'
@@ -25,12 +25,12 @@ export class MainMenuFlow implements IFlowHandler {
   public handle({ phone, message }: FlowHandlerProps) {
     this.logger.debug('📌 Main Menu Flow')
 
-    const actions: FlowActions<MenuOption> = {
-      [MenuOption.ORDER]: () => this.showOrderMenu(phone),
-      [MenuOption.EXIT]: () => this.exitFlow(phone),
+    const actions: FlowActions<MenuOptions> = {
+      [MenuOptions.ORDER]: () => this.showOrderMenu(phone),
+      [MenuOptions.EXIT]: () => this.exitFlow(phone),
     }
 
-    return actions[message as MenuOption]() || this.handleInvalidOption()
+    return actions[message as MenuOptions]() || this.handleInvalidOption()
   }
 
   // ###

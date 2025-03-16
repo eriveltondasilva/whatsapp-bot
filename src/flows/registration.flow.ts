@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
-import { FlowKeys, RegistrationStep } from '@/config/enums.js'
+import { FlowKeys, RegistrationSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
@@ -23,18 +23,18 @@ export class RegistrationFlow implements IFlowHandler {
   public handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.debug('📌 Registration Flow')
 
-    const actions: FlowActions<RegistrationStep> = {
-      [RegistrationStep.INITIAL]: () => this.initializeFlow(phone),
-      [RegistrationStep.COLLECT_NAME]: () => this.handleNameInput(phone, message),
-      [RegistrationStep.COLLECT_ADDRESS]: () => this.handleAddressInput(state, phone, message),
+    const actions: FlowActions<RegistrationSteps> = {
+      [RegistrationSteps.INITIAL]: () => this.initializeFlow(phone),
+      [RegistrationSteps.COLLECT_NAME]: () => this.handleNameInput(phone, message),
+      [RegistrationSteps.COLLECT_ADDRESS]: () => this.handleAddressInput(state, phone, message),
     }
 
-    return actions[state.context.step as RegistrationStep]()
+    return actions[state.context.step as RegistrationSteps]()
   }
 
   // ###
   private initializeFlow(phone: string) {
-    this.stateManager.updateStep(phone, RegistrationStep.COLLECT_NAME)
+    this.stateManager.updateStep(phone, RegistrationSteps.COLLECT_NAME)
 
     return this.responseBuilder
       .addText('🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!')
@@ -56,7 +56,7 @@ export class RegistrationFlow implements IFlowHandler {
         .build()
     }
 
-    this.stateManager.updateStep(phone, RegistrationStep.COLLECT_ADDRESS)
+    this.stateManager.updateStep(phone, RegistrationSteps.COLLECT_ADDRESS)
     this.stateManager.updateCustomer(phone, { name })
 
     return this.responseBuilder

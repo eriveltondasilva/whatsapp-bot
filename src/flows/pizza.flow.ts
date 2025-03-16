@@ -2,7 +2,7 @@ import type { Prisma } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder, TextResponseBuilder } from '@/builder/@index.js'
-import { FlowKeys, PizzaStep, PizzaType } from '@/config/enums.js'
+import { FlowKeys, PizzaSteps, PizzaType } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/@index.js'
@@ -27,15 +27,15 @@ export class PizzaFlow implements IFlowHandler {
     this.logger.debug('📌 Pizza Flow')
     const { step } = state.context
 
-    const actions: FlowActions<PizzaStep> = {
-      [PizzaStep.TYPE]: () => this.handlePizzaType(phone, message),
-      [PizzaStep.FLAVOR]: () => this.handlePizzaFlavor(state, phone, message),
-      [PizzaStep.CRUST]: () => this.handlePizzaCrust(phone, message),
-      [PizzaStep.QUANTITY]: () => this.handlePizzaQuantity(phone, message),
-      [PizzaStep.NOTES]: () => this.handlePizzaNotes(phone, message),
+    const actions: FlowActions<PizzaSteps> = {
+      [PizzaSteps.TYPE]: () => this.handlePizzaType(phone, message),
+      [PizzaSteps.FLAVOR]: () => this.handlePizzaFlavor(state, phone, message),
+      [PizzaSteps.CRUST]: () => this.handlePizzaCrust(phone, message),
+      [PizzaSteps.QUANTITY]: () => this.handlePizzaQuantity(phone, message),
+      [PizzaSteps.NOTES]: () => this.handlePizzaNotes(phone, message),
     }
 
-    return actions[step as PizzaStep]()
+    return actions[step as PizzaSteps]()
   }
 
   // ###
@@ -50,7 +50,7 @@ export class PizzaFlow implements IFlowHandler {
         .build()
     }
 
-    this.stateManager.updateStep(phone, PizzaStep.FLAVOR)
+    this.stateManager.updateStep(phone, PizzaSteps.FLAVOR)
     this.stateManager.updateContextData(phone, { pizzaType })
 
     return this.listResponseBuilder
@@ -81,7 +81,7 @@ export class PizzaFlow implements IFlowHandler {
     selectedFlavor.push(flavors[selectedIndex])
 
     if (data.pizzaType === PizzaType.HALF && selectedFlavor.length === 1) {
-      this.stateManager.updateStep(phone, PizzaStep.FLAVOR)
+      this.stateManager.updateStep(phone, PizzaSteps.FLAVOR)
       this.stateManager.updateContextData(phone, { selectedFlavor })
 
       return this.listResponseBuilder
@@ -91,7 +91,7 @@ export class PizzaFlow implements IFlowHandler {
         .build()
     }
 
-    this.stateManager.updateStep(phone, PizzaStep.CRUST)
+    this.stateManager.updateStep(phone, PizzaSteps.CRUST)
     this.stateManager.updateContextData(phone, { selectedFlavor })
 
     return this.listResponseBuilder
@@ -115,7 +115,7 @@ export class PizzaFlow implements IFlowHandler {
 
     const selectedCrust = crusts[selectedIndex]
 
-    this.stateManager.updateStep(phone, PizzaStep.QUANTITY)
+    this.stateManager.updateStep(phone, PizzaSteps.QUANTITY)
     this.stateManager.updateContextData(phone, { selectedCrust })
 
     return this.responseBuilder.addText('🔢 Digite a quantidade desejada (1-5):').build()
@@ -131,7 +131,7 @@ export class PizzaFlow implements IFlowHandler {
         .build()
     }
 
-    this.stateManager.updateStep(phone, PizzaStep.NOTES)
+    this.stateManager.updateStep(phone, PizzaSteps.NOTES)
     this.stateManager.updateContextData(phone, { quantity })
 
     return this.responseBuilder

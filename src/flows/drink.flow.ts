@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder, TextResponseBuilder } from '@/builder/@index.js'
-import { DrinkStep, FlowKeys } from '@/config/enums.js'
+import { DrinkSteps, FlowKeys } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { DrinkRepository } from '@/repositories/@index.js'
@@ -24,13 +24,13 @@ export class DrinkFlow implements IFlowHandler {
   handle({ state, phone, message }: FlowHandlerProps) {
     this.logger.debug('📌 Drink Flow')
 
-    const actions: FlowActions<DrinkStep> = {
-      [DrinkStep.MENU]: () => this.handleDrinkMenu(phone, message),
-      [DrinkStep.TYPE]: () => this.handleDrinkType(phone, message),
-      [DrinkStep.QUANTITY]: () => this.handleDrinkQuantity(phone, message),
+    const actions: FlowActions<DrinkSteps> = {
+      [DrinkSteps.MENU]: () => this.handleDrinkMenu(phone, message),
+      [DrinkSteps.TYPE]: () => this.handleDrinkType(phone, message),
+      [DrinkSteps.QUANTITY]: () => this.handleDrinkQuantity(phone, message),
     }
 
-    return actions[state.context.step as DrinkStep]()
+    return actions[state.context.step as DrinkSteps]()
   }
 
   // ###
@@ -44,7 +44,7 @@ export class DrinkFlow implements IFlowHandler {
         .build()
     }
 
-    this.stateManager.updateStep(phone, DrinkStep.TYPE)
+    this.stateManager.updateStep(phone, DrinkSteps.TYPE)
 
     return this.listResponseBuilder
       .addTitle('🍹 ESCOLHA SUA BEBIDA')
@@ -67,7 +67,7 @@ export class DrinkFlow implements IFlowHandler {
 
     const selectedDrink = drinks[selectedIndex]
 
-    this.stateManager.updateStep(phone, DrinkStep.QUANTITY)
+    this.stateManager.updateStep(phone, DrinkSteps.QUANTITY)
     this.stateManager.updateContextData(phone, { selectedDrink })
 
     return this.responseBuilder.addText('🔢 Digite a quantidade desejada (1-5):').build()

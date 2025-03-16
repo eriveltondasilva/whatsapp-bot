@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
-import { FlowKeys, RegistrationStep } from '@/config/enums.js'
+import { FlowKeys, RegistrationSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
@@ -27,7 +27,7 @@ export class WelcomeFlow implements IFlowHandler {
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {
-      const state = this.stateManager.updateStep(phone, RegistrationStep.INITIAL)
+      const state = this.stateManager.updateStep(phone, RegistrationSteps.INITIAL)
       return this.registrationFlow.handle({ state, phone, message })
     }
 
