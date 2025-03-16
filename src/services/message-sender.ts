@@ -43,7 +43,7 @@ export class MessageSender {
 
   private async sendText(phone: string, content: string[]): Promise<void> {
     const client = await this.client.getClient()
-    await client.sendText(phone, content.join('\n'), { delay: getDelay() })
+    await client.sendText(phone, `[BOT]\n\n${content.join('\n')}`, { delay: getDelay() })
   }
 
   private async sendList(phone: string, content: string[]): Promise<void> {
@@ -57,7 +57,7 @@ export class MessageSender {
     const client = await this.client.getClient()
     await client.sendListMessage(phone, {
       buttonText: 'Clique Aqui',
-      title,
+      title: `[BOT]\n\n${title}`,
       description,
       sections: this.createListSections(rows),
     })

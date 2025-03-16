@@ -48,37 +48,62 @@ export function isValidQuantity(quantity: number): boolean {
 }
 
 export function isValidMessage(message: Message): boolean {
-  if (!message || !message?.body) {
-    logger.warn('Message validation failed: message object or body is missing', { message })
-    return false
-  }
+  // TODO: add validation for message.from
+  // if (message.fromMe) {
+  //   logger.warn('Message validation failed: message is sent by self', {
+  //     from: message.from,
+  //     body: message.body,
+  //   })
+  //   return false
+  // }
 
-  if (message.fromMe || message.isGroupMsg) {
-    logger.warn('Message validation failed: message is sent by self or is a group message', {
+  if (message.isGroupMsg) {
+    logger.warn('Message validation failed: group messages are not supported', {
       from: message.from,
     })
     return false
   }
 
   if (![MessageType.CHAT, MessageType.LIST_RESPONSE].includes(message.type)) {
-    logger.warn('Message validation failed: unsupported message type', { type: message.type })
+    logger.warn('Message validation failed: unsupported message type', {
+      type: message.type,
+      body: message.body,
+    })
+    return false
+  }
+
+  if (message.isPSA || message.isMMS || message.isMedia) {
+    logger.warn('Message validation failed: message is a PSA, MMS or media', {
+      from: message.from,
+      type: message.type,
+      body: message.body,
+    })
     return false
   }
 
   if (!message.isNewMsg) {
     logger.warn('Message validation failed: message is not marked as new', {
       isNewMsg: message.isNewMsg,
+      from: message.from,
+      body: message.body,
     })
     return false
   }
 
-  const messageLength = message.body.length
+  if (message.body?.startsWith('[BOT]')) {
+    logger.warn('Message validation failed: message starts with [BOT]', {
+      from: message.from,
+    })
+    return false
+  }
+
+  const messageLength = message.body?.length || 0
   if (messageLength < Validation.MIN_LENGTH || messageLength > Validation.MAX_LENGTH) {
     logger.warn(
       `Message validation failed: message length must be between (${Validation.MIN_LENGTH} - ${Validation.MAX_LENGTH})`,
       {
         from: message.from,
-        message: message.body.slice(0, 100),
+        message: message.body?.slice(0, 50),
         length: messageLength,
       },
     )

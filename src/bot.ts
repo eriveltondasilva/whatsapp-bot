@@ -5,7 +5,7 @@ import { ConversationManager } from '@/managers/@index.js'
 import { ClientProvider, LoggerProvider } from '@/providers/@index.js'
 import { MessageSender } from '@/services/@index.js'
 import { isValidMessage } from '@/utils/@index.js'
-import { INGRID_NUMBER } from './config/constants.js'
+import { ERIVELTON_NUMBER } from './config/constants.js'
 
 @injectable()
 export class WhatsappBot {
@@ -19,7 +19,8 @@ export class WhatsappBot {
   public async initialize(): Promise<void> {
     try {
       const client = await this.client.getClient()
-      client.onMessage((message) => this.processMessage(message))
+      // TODO: Remove onAnyMessage
+      client.onAnyMessage((message) => this.processMessage(message))
 
       this.logger.info('🤖 WhatsApp bot initialized successfully')
     } catch (error) {
@@ -29,12 +30,18 @@ export class WhatsappBot {
   }
 
   private async processMessage(message: Message) {
-    if (!isValidMessage(message)) return
-    if (!message.body) return
-
     // TODO: Remove validation
-    if (message.from === INGRID_NUMBER) return
+    if (message.from !== ERIVELTON_NUMBER) {
+      this.logger.warn('Message validation failed: message is not from Erivelton', {
+        from: message.from,
+      })
+      return
+    }
 
+    if (!message.body) return
+    if (!isValidMessage(message)) return
+
+    this.logger.info('📌 Process Message', { message })
     this.logger.debug('📬 Received message', { from: message.from, body: message.body })
 
     try {

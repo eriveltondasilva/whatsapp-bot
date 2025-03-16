@@ -23,7 +23,7 @@ export class MainMenuFlow implements IFlowHandler {
 
   // ###
   public handle({ phone, message }: FlowHandlerProps) {
-    this.logger.debug('📌 Main Menu Flow')
+    this.logger.info('📌 Main Menu Flow')
 
     const actions: FlowActions<MenuOptions> = {
       [MenuOptions.ORDER]: () => this.showOrderMenu(phone),

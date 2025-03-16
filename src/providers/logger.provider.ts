@@ -94,10 +94,10 @@ export class LoggerProvider implements ILogger {
     return new transports.Console({
       format: format.combine(
         format.errors(),
+        // format.prettyPrint(),
         format.align(),
-        format.prettyPrint(),
-        // format.colorize({ all: true }),
-        // format.simple(),
+        format.colorize({ all: true }),
+        format.simple(),
       ),
     })
   }

@@ -28,7 +28,7 @@ export class StateManager implements IStateManager {
     }
 
     const state = this.stateStore.get(phone) as FlowState
-    this.logger.debug('State requested', { state })
+    this.logger.debug('State requested')
 
     return state
   }
@@ -133,7 +133,7 @@ export class StateManager implements IStateManager {
     }
 
     this.stateStore.set(phone, initialState)
-    this.logger.debug('State initialized', { initialState })
+    this.logger.debug('State initialized')
 
     return initialState
   }
