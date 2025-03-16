@@ -5,7 +5,7 @@ import { ConversationManager } from '@/managers/@index.js'
 import { ClientProvider, LoggerProvider } from '@/providers/@index.js'
 import { MessageSender } from '@/services/@index.js'
 import { isValidMessage } from '@/utils/@index.js'
-import { INGRID_NUMBER, PHONE_NUMBER } from './config/constants.js'
+import { INGRID_NUMBER } from './config/constants.js'
 
 @injectable()
 export class WhatsappBot {
@@ -30,6 +30,7 @@ export class WhatsappBot {
 
   private async processMessage(message: Message) {
     if (!isValidMessage(message)) return
+    if (!message.body) return
 
     // TODO: Remove validation
     if (message.from === INGRID_NUMBER) return
@@ -37,7 +38,7 @@ export class WhatsappBot {
     this.logger.debug('📬 Received message', { from: message.from, body: message.body })
 
     try {
-      const response = await this.conversation.handle(message.from, message.body || '')
+      const response = await this.conversation.handle(message.from, message.body)
       await this.message.send(message.from, response)
     } catch (error) {
       this.logger.error('Message processing error', error)
