@@ -60,7 +60,6 @@ export enum FlowKeys {
   PAYMENT = 'payment',
 }
 
-
 export enum PizzaSteps {
   TYPE = 'pizza::type',
   FLAVOR = 'pizza::flavor',
