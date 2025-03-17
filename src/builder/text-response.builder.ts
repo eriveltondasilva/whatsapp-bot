@@ -23,8 +23,8 @@ export class TextResponseBuilder implements ResponseBuilder {
     return this.addPart(`*${title.toUpperCase()}*`)
   }
 
-  addText(text: string): this {
-    return this.addPart(text)
+  addText(...text: string[]): this {
+    return this.addPart(text.join(' '))
   }
 
   addLineBreak(): this {

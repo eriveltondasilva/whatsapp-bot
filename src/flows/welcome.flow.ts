@@ -37,8 +37,8 @@ export class WelcomeFlow implements IFlowHandler {
       .addText(`🍕 ${getGreeting()}, ${getFirstName(String(customer.name))}!`)
       .addText(
         'Que bom ter você de volta por aqui! Estamos ansiosos para preparar algo delicioso para você. 😋🍽',
+        'Para começar, escolha uma das opções abaixo:',
       )
-      .addText('Para começar, escolha uma das opções abaixo:')
       .addLineBreak()
       .addMenu(mainMenu)
       .build()
