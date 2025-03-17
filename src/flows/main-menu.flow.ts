@@ -59,9 +59,10 @@ export class MainMenuFlow implements IFlowHandler {
     this.stateManager.resetState(phone)
 
     return this.responseBuilder
-      .addText('✨ Obrigado por utilizar nossos serviços!')
-      .addText('Se precisar de algo, estamos aqui para ajudar.')
-      .addLineBreak()
+      .addText(
+        '✨ Obrigado por utilizar nossos serviços!',
+        'Se precisar de algo, estamos aqui para ajudar.',
+      )
       .addText('👋 Até a próxima!')
       .build()
   }

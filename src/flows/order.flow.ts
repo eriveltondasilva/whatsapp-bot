@@ -56,9 +56,10 @@ export class OrderFlow implements IFlowHandler {
 
     return this.responseBuilder
       .addTitle('🍕 Pedido Cancelado')
-      .addLineBreak()
-      .addText('✨ Obrigado por utilizar nossos serviços!')
-      .addText('Se precisar de algo, estamos aqui para ajudar.')
+      .addText(
+        '✨ Obrigado por utilizar nossos serviços!',
+        'Se precisar de algo, estamos aqui para ajudar.',
+      )
       .addLineBreak()
       .addText('👋 Até a próxima!')
       .build()

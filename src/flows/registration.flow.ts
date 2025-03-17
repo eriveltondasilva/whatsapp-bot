@@ -38,8 +38,10 @@ export class RegistrationFlow implements IFlowHandler {
 
     return this.responseBuilder
       .addText('🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!')
-      .addText('Estamos prontos para transformar a sua fome em felicidade.')
-      .addText('Antes de começar, precisamos fazer um _*rápido*_ cadastro. 🏃💨')
+      .addText(
+        'Estamos prontos para transformar a sua fome em felicidade.',
+        'Antes de começar, precisamos fazer um _*rápido*_ cadastro. 🏃💨',
+      )
       .addLineBreak()
       .addText('Por favor, me informe o seu nome completo:')
       .addText('> exemplo: _"João da Silva"_')
