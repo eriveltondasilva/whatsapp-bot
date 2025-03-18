@@ -1,13 +1,59 @@
 import { MessageType } from '@/config/enums.js'
-import type { ResponseBuilder } from './response-builder.js'
+import type { Response } from '@/types/index.js'
+import { getFirstName, getGreeting } from '@/utils/@index.js'
 
-export class TextResponseBuilder implements ResponseBuilder {
+interface ITextResponseBuilder {
+  addTitle(title: string): this
+  addText(...text: string[]): this
+  addEmptyLine(): this
+  addMenu(menu: string[]): this
+  addBulletPoint(text: string): this
+  addGreeting(name: string): this
+  build(): Response
+}
+
+export class TextResponseBuilder implements ITextResponseBuilder {
   private parts: string[] = []
 
   constructor() {
     this.reset()
   }
 
+  // ###
+  public addTitle(title: string): this {
+    return this.addPart(`*${title.toUpperCase()}*`)
+  }
+
+  public addText(...text: string[]): this {
+    return this.addPart(text.join(' '))
+  }
+
+  public addEmptyLine(): this {
+    return this.addPart('\n')
+  }
+
+  public addMenu(menu: string[]): this {
+    return this.addPart(menu.join('\n'))
+  }
+
+  public addBulletPoint(text: string): this {
+    return this.addPart(`• ${text}`)
+  }
+
+  public addGreeting(name: string): this {
+    this.addPart(`${getGreeting()}, ${getFirstName(name)}!`)
+    return this
+  }
+
+  // 
+  public build() {
+    const content = this.parts
+    this.reset()
+
+    return { type: MessageType.TEXT, content }
+  }
+
+  // ###
   private addPart(text: string): this {
     this.parts.push(text)
     return this
@@ -16,34 +62,5 @@ export class TextResponseBuilder implements ResponseBuilder {
   private reset(): this {
     this.parts = []
     return this
-  }
-
-  // ###
-  addTitle(title: string): this {
-    return this.addPart(`*${title.toUpperCase()}*`)
-  }
-
-  addText(...text: string[]): this {
-    return this.addPart(text.join(' '))
-  }
-
-  addLineBreak(): this {
-    return this.addPart('\n')
-  }
-
-  addMenu(menu: string[]): this {
-    return this.addPart(menu.join('\n'))
-  }
-
-  addBulletPoint(text: string): this {
-    return this.addPart(`• ${text}`)
-  }
-
-  // ###
-  build() {
-    const content = this.parts
-    this.reset()
-
-    return { type: MessageType.TEXT, content }
   }
 }

@@ -137,7 +137,7 @@ export class PizzaFlow implements IFlowHandler {
     return this.responseBuilder
       .addText('Deseja adicionar alguma observação?')
       .addText('> Exemplo: retirar cebola, mais queijo, etc.')
-      .addLineBreak()
+      .addEmptyLine()
       .addText('0 - Não desejo adicionar observações')
       .build()
   }
@@ -150,7 +150,7 @@ export class PizzaFlow implements IFlowHandler {
 
     return this.responseBuilder
       .addText('✅ Pizza adicionada ao carrinho com sucesso!')
-      .addLineBreak()
+      .addEmptyLine()
       .addMenu(orderMenu)
       .build()
   }

@@ -42,7 +42,7 @@ export class RegistrationFlow implements IFlowHandler {
         'Estamos prontos para transformar a sua fome em felicidade.',
         'Antes de começar, precisamos fazer um _*rápido*_ cadastro. 🏃💨',
       )
-      .addLineBreak()
+      .addEmptyLine()
       .addText('Por favor, me informe o seu nome completo:')
       .addText('> exemplo: _"João da Silva"_')
       .build()
@@ -52,7 +52,7 @@ export class RegistrationFlow implements IFlowHandler {
     if (!isValidName(name)) {
       return this.responseBuilder
         .addTitle('❌ NOME INVÁLIDO')
-        .addLineBreak()
+        .addEmptyLine()
         .addText('Por favor, informe seu nome completo:')
         .addText('> exemplo: _"João da Silva"_')
         .build()
@@ -64,7 +64,7 @@ export class RegistrationFlow implements IFlowHandler {
     return this.responseBuilder
       .addText(`${getGreeting()}, ${getFirstName(name)}!`)
       .addText('Agora me diga onde vamos entregar suas delícias?')
-      .addLineBreak()
+      .addEmptyLine()
       .addText('Qual o seu endereço completo?')
       .addText('> exemplo: _"Rua das Flores, n° 83, Centro"_')
       .build()
@@ -74,7 +74,7 @@ export class RegistrationFlow implements IFlowHandler {
     if (!isValidAddress(message)) {
       return this.responseBuilder
         .addTitle('❌ ENDEREÇO INVÁLIDO')
-        .addLineBreak()
+        .addEmptyLine()
         .addText('Por favor, informe seu endereço completo:')
         .addText('> exemplo: _"Rua das Flores, n° 83, Centro"_')
         .build()
@@ -99,7 +99,7 @@ export class RegistrationFlow implements IFlowHandler {
     return this.responseBuilder
       .addText(`🎉 Cadastro concluído com sucesso, ${getFirstName(customer?.name || 'cliente')}!`)
       .addText('Agora, vamos ao que interessa: _*escolher algo gostoso*_! 😋')
-      .addLineBreak()
+      .addEmptyLine()
       .addMenu(mainMenu)
       .build()
   }

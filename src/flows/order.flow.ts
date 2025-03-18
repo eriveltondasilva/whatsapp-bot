@@ -60,7 +60,7 @@ export class OrderFlow implements IFlowHandler {
         '✨ Obrigado por utilizar nossos serviços!',
         'Se precisar de algo, estamos aqui para ajudar.',
       )
-      .addLineBreak()
+      .addEmptyLine()
       .addText('👋 Até a próxima!')
       .build()
   }
@@ -69,7 +69,7 @@ export class OrderFlow implements IFlowHandler {
   private handleInvalidOption() {
     return this.responseBuilder
       .addTitle('🍕 OPÇÃO INVÁLIDA')
-      .addLineBreak()
+      .addEmptyLine()
       .addMenu(orderMenu)
       .build()
   }

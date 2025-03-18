@@ -40,7 +40,7 @@ export class WelcomeFlow implements IFlowHandler {
         'Estamos ansiosos para preparar algo delicioso para você. 😋🍽',
       )
       .addText('Para começar, escolha uma das opções abaixo:')
-      .addLineBreak()
+      .addEmptyLine()
       .addMenu(mainMenu)
       .build()
   }

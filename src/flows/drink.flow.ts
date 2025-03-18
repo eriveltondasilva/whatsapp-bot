@@ -87,7 +87,7 @@ export class DrinkFlow implements IFlowHandler {
 
     return this.responseBuilder
       .addText('✅ Bebida adicionada ao carrinho com sucesso!')
-      .addLineBreak()
+      .addEmptyLine()
       .addMenu(orderMenu)
       .build()
   }
