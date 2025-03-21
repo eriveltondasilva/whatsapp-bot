@@ -1,6 +1,7 @@
 import { type Message, MessageType } from '@wppconnect-team/wppconnect'
 import { container } from 'tsyringe'
 
+import { ERIVELTON_NUMBER } from '@/config/constants.js'
 import { Validation } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/@index.js'
 
@@ -56,6 +57,14 @@ export function isValidMessage(message: Message): boolean {
   //   })
   //   return false
   // }
+
+  // TODO: Remove validation
+  if (message.from !== ERIVELTON_NUMBER) {
+    logger.warn('Message validation failed: message is not from Erivelton', {
+      from: message.from,
+    })
+    return false
+  }
 
   if (message.isGroupMsg) {
     logger.warn('Message validation failed: group messages are not supported', {

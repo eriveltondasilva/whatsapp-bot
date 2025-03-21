@@ -1,6 +1,6 @@
 import { MessageType } from '@/config/enums.js'
 import type { Response } from '@/types/index.js'
-import { getFirstName, getGreeting } from '@/utils/@index.js'
+import { getFirstName } from '@/utils/@index.js'
 
 interface ITextResponseBuilder {
   addTitle(title: string): this
@@ -41,11 +41,11 @@ export class TextResponseBuilder implements ITextResponseBuilder {
   }
 
   public addGreeting(name: string): this {
-    this.addPart(`${getGreeting()}, ${getFirstName(name)}!`)
+    this.addPart(`👋 Olá, ${getFirstName(name)}!`)
     return this
   }
 
-  // 
+  //
   public build() {
     const content = this.parts
     this.reset()

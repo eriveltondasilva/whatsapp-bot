@@ -5,7 +5,6 @@ import { ConversationManager } from '@/managers/@index.js'
 import { ClientProvider, LoggerProvider } from '@/providers/@index.js'
 import { MessageSender } from '@/services/@index.js'
 import { isValidMessage } from '@/utils/@index.js'
-import { ERIVELTON_NUMBER } from './config/constants.js'
 
 @injectable()
 export class WhatsappBot {
@@ -30,14 +29,6 @@ export class WhatsappBot {
   }
 
   private async processMessage(message: Message) {
-    // TODO: Remove validation
-    if (message.from !== ERIVELTON_NUMBER) {
-      this.logger.warn('Message validation failed: message is not from Erivelton', {
-        from: message.from,
-      })
-      return
-    }
-
     if (!message.body) return
     if (!isValidMessage(message)) return
 

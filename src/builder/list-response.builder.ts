@@ -37,7 +37,7 @@ export class ListResponseBuilder implements IListResponseBuilder {
     return this
   }
 
-  // 
+  //
   public build(): Response {
     if (this.section.items?.length === 0)
       throw new Error('You must add list items before building the response.')

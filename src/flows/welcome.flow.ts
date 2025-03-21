@@ -34,7 +34,7 @@ export class WelcomeFlow implements IFlowHandler {
     this.stateManager.updateStep(phone, FlowKeys.MENU)
 
     return this.responseBuilder
-      .addText(`🍕 ${getGreeting()}, ${getFirstName(String(customer.name))}!`)
+      .addGreeting(customer.name)
       .addText(
         'Que bom ter você de volta por aqui!',
         'Estamos ansiosos para preparar algo delicioso para você. 😋🍽',
