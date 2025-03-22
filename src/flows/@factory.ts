@@ -1,15 +1,14 @@
 import { inject, injectable } from 'tsyringe'
 
 import { FlowKeys } from '@/config/enums.js'
-import {
-  DrinkFlow,
-  MainMenuFlow,
-  OrderFlow,
-  PizzaFlow,
-  RegistrationFlow,
-  WelcomeFlow,
-} from '@/flows/@index.js'
 import { LoggerProvider } from '@/providers/@index.js'
+
+import { DrinkFlow } from './drink.flow.js'
+import { MainMenuFlow } from './main-menu.flow.js'
+import { OrderFlow } from './order.flow.js'
+import { PizzaFlow } from './pizza.flow.js'
+import { RegistrationFlow } from './registration.flow.js'
+import { WelcomeFlow } from './welcome.flow.js'
 
 import type { IFlowFactory, IFlowHandler } from '@/types/index.js'
 
@@ -19,9 +18,9 @@ export class FlowFactory implements IFlowFactory {
 
   constructor(
     @inject(DrinkFlow) drinkFlow: DrinkFlow,
-    @inject(PizzaFlow) pizzaFlow: PizzaFlow,
-    @inject(OrderFlow) orderFlow: OrderFlow,
     @inject(MainMenuFlow) menuFlow: MainMenuFlow,
+    @inject(OrderFlow) orderFlow: OrderFlow,
+    @inject(PizzaFlow) pizzaFlow: PizzaFlow,
     @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
     @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
     //
@@ -29,14 +28,15 @@ export class FlowFactory implements IFlowFactory {
   ) {
     this.flowMap = new Map<FlowKeys, IFlowHandler>([
       [FlowKeys.DRINK, drinkFlow],
+      [FlowKeys.MENU, menuFlow],
       [FlowKeys.ORDER, orderFlow],
       [FlowKeys.PIZZA, pizzaFlow],
-      [FlowKeys.MENU, menuFlow],
-      [FlowKeys.WELCOME, welcomeFlow],
       [FlowKeys.REGISTRATION, registrationFlow],
+      [FlowKeys.WELCOME, welcomeFlow],
     ])
   }
 
+  //#
   public createFlow(flow: FlowKeys): IFlowHandler {
     this.logger.debug('Flow selected', { flow })
     const flowHandler = this.flowMap.get(flow)

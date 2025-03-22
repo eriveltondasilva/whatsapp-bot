@@ -6,7 +6,7 @@ import { StateManager } from '@/managers/state-manager.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { mainMenu, orderMenu } from '@/templates/@index.js'
 
-import type { FlowActions, FlowHandlerProps, IFlowHandler } from '@/types/index.js'
+import type { FlowActions, FlowHandle, IFlowHandler } from '@/types/index.js'
 
 @injectable()
 export class MainMenuFlow implements IFlowHandler {
@@ -17,12 +17,12 @@ export class MainMenuFlow implements IFlowHandler {
 
   constructor(
     @inject(StateManager) private stateManager: StateManager,
-    @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
+    @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  // ###
-  public handle({ phone, message }: FlowHandlerProps) {
+  //#
+  public handle({ phone, message }: FlowHandle) {
     this.logger.info('📌 Main Menu Flow')
 
     const actions: FlowActions<MenuOptions> = {

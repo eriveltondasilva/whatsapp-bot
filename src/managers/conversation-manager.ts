@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe'
 
+import { FlowFactory } from '@/flows/@factory.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { LoggerProvider } from '@/providers/@index.js'
-import { FlowFactory } from './flow-factory.js'
 
 import type { Response } from '@/types/index.js'
 
@@ -18,10 +18,10 @@ export class ConversationManager {
     this.logger.info('📌 Conversation Manager')
 
     try {
-      const state = this.stateManager.getState(phone)
-      const flow = this.flowFactory.createFlow(state.context.flow)
+      const { context } = this.stateManager.getState(phone)
+      const flow = this.flowFactory.createFlow(context.flow)
 
-      return await flow.handle({ state, phone, message })
+      return await flow.handle({ context, phone, message })
     } catch (error) {
       this.logger.error('Error handling message:', error)
       this.stateManager.resetState(phone)

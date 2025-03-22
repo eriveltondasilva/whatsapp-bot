@@ -2,19 +2,19 @@ import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/@index.js'
 import { PizzaSteps } from '@/config/enums.js'
-import { StateManager } from '@/managers/@index.js'
+import { StateManager } from '@/managers/state-manager.js'
 import { isValidQuantity } from '@/utils/@index.js'
 
 import type { CommandParams, ICommand } from '../command.interface.js'
 
 @injectable()
-export class PizzaQuantityCommand implements ICommand {
+export class QuantityCommand implements ICommand {
   constructor(
     @inject(StateManager) private stateManager: StateManager,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
   ) {}
 
-  async execute({ phone, message }: CommandParams) {
+  public async execute({ phone, message }: CommandParams) {
     const quantity = Number.parseInt(message, 10)
 
     if (!isValidQuantity(quantity)) {
@@ -24,7 +24,7 @@ export class PizzaQuantityCommand implements ICommand {
         .build()
     }
 
-    this.stateManager.updateStep(phone, PizzaSteps.NOTES)
+    this.stateManager.updateStep(phone, PizzaSteps.NOTE)
     this.stateManager.updateContextData(phone, { quantity })
 
     return this.textResponseBuilder

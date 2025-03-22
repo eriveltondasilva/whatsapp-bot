@@ -1,15 +1,15 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder, TextResponseBuilder } from '@/builder/@index.js'
-import { PizzaSteps, PizzaType } from '@/config/enums.js'
-import { StateManager } from '@/managers/@index.js'
+import { PizzaSteps } from '@/config/enums.js'
+import { StateManager } from '@/managers/state-manager.js'
 import { FlavorRepository } from '@/repositories/@index.js'
 import { buildFlavorList } from '@/templates/@index.js'
 
 import type { CommandParams, ICommand } from '@/commands/command.interface.js'
 
 @injectable()
-export class PizzaTypeCommand implements ICommand {
+export class TypeCommand implements ICommand {
   constructor(
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
@@ -17,9 +17,9 @@ export class PizzaTypeCommand implements ICommand {
     @inject(StateManager) private stateManager: StateManager,
   ) {}
 
-  async execute({ phone, message }: CommandParams) {
-    const pizzaType = message === '1' ? PizzaType.FULL : PizzaType.HALF
+  public async execute({ phone, message }: CommandParams) {
     const flavors = await this.flavorRepository.getAllFlavors()
+    const pizzaType = message
 
     if (!flavors?.length) {
       this.stateManager.resetState(phone)
@@ -28,13 +28,10 @@ export class PizzaTypeCommand implements ICommand {
         .build()
     }
 
-    this.stateManager.updateStep(phone, PizzaSteps.FLAVOR)
-    this.stateManager.updateContextData(phone, { pizzaType })
-
-    const text = pizzaType === PizzaType.FULL ? 'O SABOR' : 'O PRIMEIRO SABOR'
+    this.stateManager.updateStep(phone, PizzaSteps.ONE_FLAVOR)
 
     return this.listResponseBuilder
-      .addTitle(`🍕 *ESCOLHA ${text} DA SUA PIZZA*`)
+      .addTitle('🍕 ESCOLHA O SABOR DA SUA PIZZA')
       .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildFlavorList(flavors))
       .build()

@@ -1,14 +1,15 @@
-import { inject } from 'tsyringe'
+import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder, TextResponseBuilder } from '@/builder/@index.js'
 import { PizzaSteps } from '@/config/enums.js'
-import { StateManager } from '@/managers/@index.js'
+import { StateManager } from '@/managers/state-manager.js'
 import { CrustRepository } from '@/repositories/@index.js'
 import { buildCrustList } from '@/templates/@index.js'
 
 import type { CommandParams, ICommand } from '../command.interface.js'
 
-export class PizzaCrustCommand implements ICommand {
+@injectable()
+export class CrustCommand implements ICommand {
   constructor(
     @inject(StateManager) private stateManager: StateManager,
     @inject(CrustRepository) private crustRepository: CrustRepository,
@@ -16,7 +17,7 @@ export class PizzaCrustCommand implements ICommand {
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
   ) {}
 
-  async execute({ phone, message }: CommandParams) {
+  public async execute({ phone, message }: CommandParams) {
     const crusts = await this.crustRepository.getAllCrusts()
     const selectedIndex = Number.parseInt(message, 10) - 1
 

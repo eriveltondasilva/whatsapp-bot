@@ -1,7 +1,7 @@
 import type { Message } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
-import { ConversationManager } from '@/managers/@index.js'
+import { ConversationManager } from '@/managers/conversation-manager.js'
 import { ClientProvider, LoggerProvider } from '@/providers/@index.js'
 import { MessageSender } from '@/services/@index.js'
 import { isValidMessage } from '@/utils/@index.js'

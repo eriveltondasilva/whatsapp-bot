@@ -42,8 +42,8 @@ export enum MenuOptions {
 }
 
 export enum OrderOptions {
-  FULL_PIZZA = '1',
-  HALF_PIZZA = '2',
+  ONE_PIZZA = '1',
+  TWO_PIZZA = '2',
   DRINK = '3',
   COMPLETE = '4',
   CANCEL = '0',
@@ -61,24 +61,26 @@ export enum FlowKeys {
 }
 
 export enum PizzaSteps {
-  TYPE = 'pizza::type',
-  FLAVOR = 'pizza::flavor',
   CRUST = 'pizza::crust',
+  FLAVOR = 'pizza::flavor',
+  ONE_FLAVOR = 'pizza::one-flavor',
+  TWO_FLAVOR = 'pizza::two-flavor',
+  NOTE = 'pizza::note',
   QUANTITY = 'pizza::quantity',
-  NOTES = 'pizza::notes',
+  TYPE = 'pizza::type',
 }
 
 export enum DrinkSteps {
   MENU = 'drink::menu',
-  TYPE = 'drink::type',
   QUANTITY = 'drink::quantity',
+  TYPE = 'drink::type',
   // NAME = 'drink::name',
 }
 
 export enum RegistrationSteps {
   INITIAL = 'registration::initial',
-  COLLECT_NAME = 'registration::collect-name',
-  COLLECT_ADDRESS = 'registration::collect-address',
+  NAME = 'registration::name',
+  ADDRESS = 'registration::address',
 }
 
 // export enum FlowStep {

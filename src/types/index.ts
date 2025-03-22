@@ -28,8 +28,8 @@ export type FlowState = {
   lastInteraction: Date
 }
 
-export type FlowHandlerProps = {
-  state: FlowState
+export type FlowHandle = {
+  context: FlowContext
   phone: string
   message: string
 }
@@ -44,7 +44,7 @@ export type ActionsMap<K extends string = string> = Partial<Record<K, () => Prom
 export type FlowActions<K extends string = string> = Record<K, () => Response | Promise<Response>>
 
 export interface IFlowHandler {
-  handle(props: FlowHandlerProps): Response | Promise<Response>
+  handle(props: FlowHandle): Response | Promise<Response>
 }
 
 export interface IFlowFactory {

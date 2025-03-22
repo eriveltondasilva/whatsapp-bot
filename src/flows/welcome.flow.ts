@@ -2,38 +2,38 @@ import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { FlowKeys, RegistrationSteps } from '@/config/enums.js'
-import { StateManager } from '@/managers/@index.js'
+import { StateManager } from '@/managers/state-manager.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
-import { getFirstName, getGreeting } from '@/utils/@index.js'
+import { mainMenu } from '@/templates/@index.js'
 import { RegistrationFlow } from './registration.flow.js'
 
-import { mainMenu } from '@/templates/@index.js'
-import type { FlowHandlerProps, IFlowHandler, Response } from '@/types/index.js'
+import type { FlowHandle, IFlowHandler, Response } from '@/types/index.js'
 
 @injectable()
 export class WelcomeFlow implements IFlowHandler {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
+    @inject(StateManager) private stateManager: StateManager,
+    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    //
     @inject(LoggerProvider) private logger: LoggerProvider,
-    @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
   ) {}
 
-  // ###
-  public async handle({ phone, message }: FlowHandlerProps): Promise<Response> {
+  //#
+  public async handle({ phone, message }: FlowHandle): Promise<Response> {
     this.logger.info('📌 Welcome Flow')
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {
-      const state = this.stateManager.updateStep(phone, RegistrationSteps.INITIAL)
-      return this.registrationFlow.handle({ state, phone, message })
+      const { context } = this.stateManager.updateStep(phone, RegistrationSteps.INITIAL)
+      return this.registrationFlow.handle({ context, phone, message })
     }
 
     this.stateManager.updateStep(phone, FlowKeys.MENU)
 
-    return this.responseBuilder
+    return this.textResponseBuilder
       .addGreeting(customer.name)
       .addText(
         'Que bom ter você de volta por aqui!',

@@ -1,57 +1,61 @@
-import { OrderStatus, PaymentMethod } from '@/config/enums.js'
-import type { Drink, Flavor, Order, Prisma } from '@prisma/client'
+// import { OrderStatus, PaymentMethod } from '@/config/enums.js'
+// import type { Drink, Flavor, Order, Prisma } from '@prisma/client'
 
-interface IOrderBuilder {
-  addItem(item: Flavor | Drink): void
-  setDeliveryAddress(shippingAddress: string): void
-  addPaymentMethod(paymentMethod: PaymentMethod): void
-  build(): Order
-}
+// interface IOrderBuilder {
+//   addItem(item: Flavor | Drink): void
+//   setDeliveryAddress(shippingAddress: string): void
+//   addPaymentMethod(paymentMethod: PaymentMethod): void
+//   build(): Order
+// }
 
-export class OrderBuilder implements IOrderBuilder {
-  private order: Prisma.OrderCreateInput
+// export class OrderBuilder implements IOrderBuilder {
+//   private order: Prisma.OrderCreateInput | undefined
 
-  constructor() {
-    this.reset()
-  }
+//   constructor() {
+//     this.reset()
+//   }
 
-  // ###
-  //   public addPizza(): this {
-  //     this.order.items.push()
-  //     return this
-  //   }
+//   addItem(item: Flavor | Drink): void {
+//     throw new Error('Method not implemented.')
+//   }
 
-  public setDeliveryAddress(deliveryAddress: string): this {
-    this.order.deliveryAddress = deliveryAddress
-    return this
-  }
+//   // ###
+//   //   public addPizza(): this {
+//   //     this.order.items.push()
+//   //     return this
+//   //   }
 
-  public addPaymentMethod(paymentMethod: PaymentMethod): this {
-    this.order.paymentMethod = paymentMethod
-    return this
-  }
+//   public setDeliveryAddress(deliveryAddress: string): this {
+//     this.order.deliveryAddress = deliveryAddress
+//     return this
+//   }
 
-  public build(): Order {
-    const order = this.order
-    this.reset()
-    return order
-  }
+//   public addPaymentMethod(paymentMethod: PaymentMethod): this {
+//     this.order.paymentMethod = paymentMethod
+//     return this
+//   }
 
-  // ###
-  private reset(): void {
-    this.order = {
-      items: [],
-      shippingAddress: '',
-      paymentMethod: PaymentMethod.CASH,
-      deliveryAddress: '',
-      totalAmount: 0,
-      status: OrderStatus.PENDING,
-    }
-  }
+//   public build(): Order {
+//     const order = this.order
+//     this.reset()
+//     return order
+//   }
 
-  private calculateTotalPrice(): void {
-    if (!this.order.items) return
+//   // ###
+//   private reset(): void {
+//     this.order = {
+//       items: [],
+//       shippingAddress: '',
+//       paymentMethod: PaymentMethod.CASH,
+//       deliveryAddress: '',
+//       totalAmount: 0,
+//       status: OrderStatus.PENDING,
+//     }
+//   }
 
-    this.order.totalAmount = this.order.items.reduce((total, item) => total + item.price, 0)
-  }
-}
+//   private calculateTotalPrice(): void {
+//     if (!this.order.items) return
+
+//     this.order.totalAmount = this.order.items.reduce((total, item) => total + item.price, 0)
+//   }
+// }
