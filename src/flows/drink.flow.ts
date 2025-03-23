@@ -14,10 +14,11 @@ export class DrinkFlow implements IFlowHandler {
   ) {}
 
   //#
-  public handle({ context, phone, message }: FlowHandle) {
+  public async handle({ context, phone, message }: FlowHandle) {
     this.logger.info('📌 Drink Flow')
 
-    const command = this.commandFactory.createCommand(context.step as DrinkSteps)
-    return command.execute({ context, phone, message })
+    const step = context.step as DrinkSteps
+    const command = this.commandFactory.createCommand(step)
+    return await command.execute({ context, phone, message })
   }
 }

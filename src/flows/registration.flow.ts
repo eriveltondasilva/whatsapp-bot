@@ -14,10 +14,11 @@ export class RegistrationFlow implements IFlowHandler {
   ) {}
 
   //#
-  public handle({ context, phone, message }: FlowHandle) {
+  public async handle({ context, phone, message }: FlowHandle) {
     this.logger.info('📌 Registration Flow')
 
-    const command = this.commandFactory.createCommand(context.step as RegistrationSteps)
-    return command.execute({ context, phone, message })
+    const step = context.step as RegistrationSteps
+    const command = this.commandFactory.createCommand(step)
+    return await command.execute({ context, phone, message })
   }
 }

@@ -14,10 +14,11 @@ export class PizzaFlow implements IFlowHandler {
   ) {}
 
   //#
-  public handle({ context, phone, message }: FlowHandle) {
-    this.logger.info('📌 Pizza Flow')
+  public async handle({ context, phone, message }: FlowHandle) {
+    this.logger.info('📌 Pizza Flow', { step: context.step, phone })
 
-    const command = this.commandFactory.createCommand(context.step as PizzaSteps)
-    return command.execute({ context, phone, message })
+    const step = context.step as PizzaSteps
+    const command = this.commandFactory.createCommand(step)
+    return await command.execute({ context, phone, message })
   }
 }
