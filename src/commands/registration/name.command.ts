@@ -3,9 +3,9 @@ import { inject, injectable } from 'tsyringe'
 import { TextResponseBuilder } from '@/builder/@index.js'
 import { RegistrationSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
-
 import { isValidName } from '@/utils/validations.js'
-import type { CommandParams, ICommand } from '../command.interface.js'
+
+import type { CommandParams, ICommand } from '@/types/index.js'
 
 @injectable()
 export class NameCommand implements ICommand {
@@ -15,7 +15,7 @@ export class NameCommand implements ICommand {
   ) {}
 
   public async execute({ context, phone }: CommandParams) {
-    const name = (context.data as { name: string })?.name
+    const { name } = context.data as { name: string }
 
     if (!isValidName(name)) {
       return this.textResponseBuilder

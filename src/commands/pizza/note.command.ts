@@ -5,7 +5,7 @@ import { FlowKeys } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { orderMenu } from '@/templates/@index.js'
 
-import type { CommandParams, ICommand } from '../command.interface.js'
+import type { CommandParams, ICommand } from '@/types/index.js'
 
 @injectable()
 export class NoteCommand implements ICommand {

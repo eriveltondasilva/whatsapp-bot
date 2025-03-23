@@ -30,30 +30,31 @@ export class MainMenuFlow implements IFlowHandler {
       [MenuOptions.EXIT]: () => this.exitFlow(phone),
     }
 
-    return actions[message as MenuOptions]() || this.handleInvalidOption()
+    const sendAction = actions[message as MenuOptions]
+    return sendAction ? sendAction() : this.handleInvalidOption()
   }
 
-  // ###
+  //#
   private showOrderMenu(phone: string) {
     this.stateManager.updateStep(phone, FlowKeys.ORDER)
     return this.responseBuilder.addMenu(orderMenu).build()
   }
 
-  private tackOrder(phone: string) {
-    return this.responseBuilder.addText(this.inProgressMessage).build()
-  }
+  // private tackOrder(phone: string) {
+  //   return this.responseBuilder.addText(this.inProgressMessage).build()
+  // }
 
-  private showOrderHistory(phone: string) {
-    return this.responseBuilder.addText(this.inProgressMessage).build()
-  }
+  // private showOrderHistory(phone: string) {
+  //   return this.responseBuilder.addText(this.inProgressMessage).build()
+  // }
 
-  private updateProfile(phone: string) {
-    return this.responseBuilder.addText(this.inProgressMessage).build()
-  }
+  // private updateProfile(phone: string) {
+  //   return this.responseBuilder.addText(this.inProgressMessage).build()
+  // }
 
-  private contactSupport(phone: string) {
-    return this.responseBuilder.addText(this.inProgressMessage).build()
-  }
+  // private contactSupport(phone: string) {
+  //   return this.responseBuilder.addText(this.inProgressMessage).build()
+  // }
 
   private exitFlow(phone: string) {
     this.stateManager.resetState(phone)

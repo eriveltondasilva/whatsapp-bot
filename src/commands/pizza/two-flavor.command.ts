@@ -7,7 +7,7 @@ import { StateManager } from '@/managers/state-manager.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/@index.js'
 import { buildCrustList, buildFlavorList } from '@/templates/@index.js'
 
-import type { CommandParams, ICommand } from '../command.interface.js'
+import type { CommandParams, ICommand } from '@/types/index.js'
 
 @injectable()
 export class TwoFlavorCommand implements ICommand {

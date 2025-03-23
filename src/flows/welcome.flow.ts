@@ -24,6 +24,7 @@ export class WelcomeFlow implements IFlowHandler {
   //#
   public async handle({ phone, message }: FlowHandle): Promise<Response> {
     this.logger.info('📌 Welcome Flow')
+
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {

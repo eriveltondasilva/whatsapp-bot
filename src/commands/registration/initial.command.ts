@@ -4,7 +4,7 @@ import { TextResponseBuilder } from '@/builder/@index.js'
 import { RegistrationSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 
-import type { CommandParams, ICommand } from '../command.interface.js'
+import type { CommandParams, ICommand } from '@/types/index.js'
 
 @injectable()
 export class InitialCommand implements ICommand {

@@ -17,8 +17,9 @@ export class OrderFlow implements IFlowHandler {
     @inject(DrinkFlow) private drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
     @inject(StateManager) private stateManager: StateManager,
-    @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
+    //
+    @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
   //#
@@ -26,24 +27,20 @@ export class OrderFlow implements IFlowHandler {
     this.logger.info('📌 Order Flow')
 
     const actions: FlowActions<OrderOptions> = {
-      [OrderOptions.ONE_PIZZA]: () => this.handleOneFlavorSelection(phone, message),
-      [OrderOptions.TWO_PIZZA]: () => this.handleTwoFlavorSelection(phone, message),
+      [OrderOptions.ONE_PIZZA]: () => this.handlePizzaSelection(phone, message),
+      [OrderOptions.TWO_PIZZA]: () => this.handlePizzaSelection(phone, message),
       [OrderOptions.DRINK]: () => this.handleDrinkSelection(phone, message),
       [OrderOptions.COMPLETE]: () => this.finalizeOrder(phone),
       [OrderOptions.CANCEL]: () => this.cancelOrder(phone),
     }
 
-    return actions[message as OrderOptions]() || this.handleInvalidOption()
+    const sendAction = actions[message as OrderOptions]
+    return sendAction ? sendAction() : this.handleInvalidOption()
   }
 
-  // ###
-  private handleOneFlavorSelection(phone: string, message: string) {
-    const { context } = this.stateManager.updateStep(phone, PizzaSteps.ONE_FLAVOR)
-    return this.pizzaFlow.handle({ context, phone, message })
-  }
-
-  private handleTwoFlavorSelection(phone: string, message: string) {
-    const { context } = this.stateManager.updateStep(phone, PizzaSteps.TWO_FLAVOR)
+  //#
+  private handlePizzaSelection(phone: string, message: string) {
+    const { context } = this.stateManager.updateStep(phone, PizzaSteps.MENU)
     return this.pizzaFlow.handle({ context, phone, message })
   }
 
@@ -53,24 +50,23 @@ export class OrderFlow implements IFlowHandler {
   }
 
   private finalizeOrder(phone: string) {
-    return this.responseBuilder.addTitle('🍕 *Pedido Finalizado*').build()
+    return this.responseBuilder.addTitle('🍕 Pedido Finalizado').build()
   }
 
   private cancelOrder(phone: string) {
     this.stateManager.resetState(phone)
 
     return this.responseBuilder
-      .addTitle('🍕 Pedido Cancelado')
+      .addTitle('🍕 PEDIDO CANCELADO')
       .addText(
         '✨ Obrigado por utilizar nossos serviços!',
         'Se precisar de algo, estamos aqui para ajudar.',
       )
       .addEmptyLine()
-      .addText('👋 Até a próxima!')
+      .addText('👋 Até a próxima...')
       .build()
   }
 
-  // ###
   private handleInvalidOption() {
     return this.responseBuilder
       .addTitle('🍕 OPÇÃO INVÁLIDA')

@@ -9,8 +9,8 @@ import type { FlowHandle, IFlowHandler } from '@/types/index.js'
 @injectable()
 export class PizzaFlow implements IFlowHandler {
   constructor(
-    @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(CommandFactory) private commandFactory: CommandFactory,
+    @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
   //#

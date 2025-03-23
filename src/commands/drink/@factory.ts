@@ -7,7 +7,7 @@ import { TypeCommand } from './type.command.js'
 import { DrinkSteps } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
-import type { ICommand } from '../command.interface.js'
+import type { ICommand } from '@/types/index.js'
 
 @injectable()
 export class CommandFactory {

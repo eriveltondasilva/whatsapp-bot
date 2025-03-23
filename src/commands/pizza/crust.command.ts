@@ -6,7 +6,7 @@ import { StateManager } from '@/managers/state-manager.js'
 import { CrustRepository } from '@/repositories/@index.js'
 import { buildCrustList } from '@/templates/@index.js'
 
-import type { CommandParams, ICommand } from '../command.interface.js'
+import type { CommandParams, ICommand } from '@/types/index.js'
 
 @injectable()
 export class CrustCommand implements ICommand {

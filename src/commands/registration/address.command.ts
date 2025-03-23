@@ -9,7 +9,7 @@ import { mainMenu } from '@/templates/main-menu.js'
 import { getFirstName } from '@/utils/get-first-name.js'
 import { isValidAddress } from '@/utils/validations.js'
 
-import type { CommandParams, ICommand } from '../command.interface.js'
+import type { CommandParams, ICommand } from '@/types/index.js'
 
 @injectable()
 export class AddressCommand implements ICommand {

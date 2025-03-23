@@ -34,6 +34,12 @@ export type FlowHandle = {
   message: string
 }
 
+export type CommandParams = {
+  context: FlowContext
+  phone: string
+  message: string
+}
+
 export type Response = {
   type: MessageType
   content: string[]
@@ -49,4 +55,8 @@ export interface IFlowHandler {
 
 export interface IFlowFactory {
   createFlow(flow: string): IFlowHandler
+}
+
+export interface ICommand {
+  execute({ context, phone, message }: CommandParams): Promise<Response>
 }

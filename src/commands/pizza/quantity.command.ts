@@ -5,7 +5,7 @@ import { PizzaSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { isValidQuantity } from '@/utils/@index.js'
 
-import type { CommandParams, ICommand } from '../command.interface.js'
+import type { CommandParams, ICommand } from '@/types/index.js'
 
 @injectable()
 export class QuantityCommand implements ICommand {
@@ -29,9 +29,9 @@ export class QuantityCommand implements ICommand {
 
     return this.textResponseBuilder
       .addText('Deseja adicionar alguma observação?')
-      .addText('> Exemplo: retirar cebola, mais queijo, etc.')
+      .addText('> exemplo: retirar cebola, mais queijo, etc.')
       .addEmptyLine()
-      .addText('0 - Não desejo adicionar observações')
+      .addText('0️⃣ - Não desejo adicionar observações')
       .build()
   }
 }

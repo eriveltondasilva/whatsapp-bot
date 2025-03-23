@@ -64,10 +64,10 @@ export enum PizzaSteps {
   CRUST = 'pizza::crust',
   FLAVOR = 'pizza::flavor',
   ONE_FLAVOR = 'pizza::one-flavor',
-  TWO_FLAVOR = 'pizza::two-flavor',
+  TWO_FLAVORS = 'pizza::two-flavors',
   NOTE = 'pizza::note',
   QUANTITY = 'pizza::quantity',
-  TYPE = 'pizza::type',
+  MENU = 'pizza::menu',
 }
 
 export enum DrinkSteps {
