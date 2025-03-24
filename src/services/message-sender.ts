@@ -16,16 +16,16 @@ export class MessageSender {
   public async send(phone: string, response: Response): Promise<void> {
     const { type, content } = response
 
-    const sendActions: ActionsMap<MessageType> = {
+    const actionMap: ActionsMap<MessageType> = {
       [MessageType.TEXT]: () => this.sendText(phone, content),
       [MessageType.LIST]: () => this.sendList(phone, content),
       [MessageType.IMAGE]: () => this.sendImage(phone, content),
-    }
-
-    const sendAction = sendActions[type]
+    } as const
 
     try {
-      sendAction && (await sendAction())
+      const action = actionMap[type]
+      action && (await action())
+      
       this.logger.debug('📬 Message sent successfully', { phone, type })
     } catch (error) {
       this.logger.error('Failed to send message', { phone, type, error })

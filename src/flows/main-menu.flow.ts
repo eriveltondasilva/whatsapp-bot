@@ -25,13 +25,13 @@ export class MainMenuFlow implements IFlowHandler {
   public handle({ phone, message }: FlowHandle) {
     this.logger.info('📌 Main Menu Flow')
 
-    const actions: FlowActions<MenuOptions> = {
+    const actionMap: FlowActions<MenuOptions> = {
       [MenuOptions.ORDER]: () => this.showOrderMenu(phone),
       [MenuOptions.EXIT]: () => this.exitFlow(phone),
-    }
+    } as const
 
-    const sendAction = actions[message as MenuOptions]
-    return sendAction ? sendAction() : this.handleInvalidOption()
+    const action = actionMap[message as MenuOptions]
+    return action ? action() : this.handleInvalidOption()
   }
 
   //#

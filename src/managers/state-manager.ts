@@ -19,9 +19,9 @@ export interface IStateManager {
 export class StateManager implements IStateManager {
   private readonly stateStore = new Map<string, FlowState>()
 
-  constructor(@inject(LoggerProvider) private logger: LoggerProvider) {}
+  constructor(@inject(LoggerProvider) private readonly logger: LoggerProvider) {}
 
-  // ###
+  //#
   getState(phone: string): FlowState {
     if (!this.stateStore.has(phone)) {
       return this.initializeState(phone)
@@ -108,20 +108,25 @@ export class StateManager implements IStateManager {
     return updatedState
   }
 
-  resetState(phone: string): void {
-    this.initializeState(phone)
+  resetState(phone: string): FlowState {
+    const initialState = this.initializeState(phone)
     this.logger.ok('State reset', { phone })
+    return initialState
   }
 
   clearAllStates(): void {
     this.stateStore.clear()
-    this.logger.info('🚫 States cleared')
+    this.logger.info('🚫 All states cleared')
   }
 
   // ###
   private initializeState(phone: string) {
     const initialState: FlowState = {
-      context: { flow: FlowKeys.WELCOME, step: FlowKeys.WELCOME, data: {} },
+      context: {
+        flow: FlowKeys.WELCOME,
+        step: FlowKeys.WELCOME,
+        data: {},
+      },
       customer: {
         name: '',
         phone: '',
@@ -133,18 +138,17 @@ export class StateManager implements IStateManager {
     }
 
     this.stateStore.set(phone, initialState)
-    this.logger.debug('State initialized')
+    this.logger.debug('State initialized', { phone })
 
     return initialState
   }
 
   private extractFlow(step: string): FlowKeys {
-    const flow = step.includes('::') ? step.split('::')[0] : step
+    const flowName = step.includes('::') ? step.split('::')[0] : step
+    const isValidFlow = Object.values(FlowKeys).includes(flowName as FlowKeys)
 
-    if (!Object.values(FlowKeys).includes(flow as FlowKeys)) {
-      throw new Error(`Invalid flow: ${flow}`)
-    }
+    if (!isValidFlow) throw new Error(`Invalid flow: ${flowName}`)
 
-    return flow as FlowKeys
+    return flowName as FlowKeys
   }
 }

@@ -14,7 +14,7 @@ import type { IFlowFactory, IFlowHandler } from '@/types/index.js'
 
 @injectable()
 export class FlowFactory implements IFlowFactory {
-  private flowMap: Map<FlowKeys, IFlowHandler>
+  private readonly flowMap: Map<FlowKeys, IFlowHandler>
 
   constructor(
     @inject(DrinkFlow) drinkFlow: DrinkFlow,
@@ -43,7 +43,7 @@ export class FlowFactory implements IFlowFactory {
 
     if (!flowHandler) {
       this.logger.error('Flow not found', { flow })
-      throw new Error('Flow not found', { cause: { flow } })
+      throw new Error(`Flow not found: ${flow}`)
     }
 
     return flowHandler

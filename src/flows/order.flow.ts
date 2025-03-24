@@ -14,28 +14,27 @@ import type { FlowActions, FlowHandle, IFlowHandler } from '@/types/index.js'
 @injectable()
 export class OrderFlow implements IFlowHandler {
   constructor(
-    @inject(DrinkFlow) private drinkFlow: DrinkFlow,
-    @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
-    @inject(StateManager) private stateManager: StateManager,
-    @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
-    //
-    @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(DrinkFlow) private readonly drinkFlow: DrinkFlow,
+    @inject(PizzaFlow) private readonly pizzaFlow: PizzaFlow,
+    @inject(StateManager) private readonly stateManager: StateManager,
+    @inject(TextResponseBuilder) private readonly responseBuilder: TextResponseBuilder,
+    @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
   //#
   public handle({ phone, message }: FlowHandle) {
     this.logger.info('📌 Order Flow')
 
-    const actions: FlowActions<OrderOptions> = {
+    const actionMap: FlowActions<OrderOptions> = {
       [OrderOptions.ONE_PIZZA]: () => this.handlePizzaSelection(phone, message),
       [OrderOptions.TWO_PIZZA]: () => this.handlePizzaSelection(phone, message),
       [OrderOptions.DRINK]: () => this.handleDrinkSelection(phone, message),
       [OrderOptions.COMPLETE]: () => this.finalizeOrder(phone),
       [OrderOptions.CANCEL]: () => this.cancelOrder(phone),
-    }
+    } as const
 
-    const sendAction = actions[message as OrderOptions]
-    return sendAction ? sendAction() : this.handleInvalidOption()
+    const action = actionMap[message as OrderOptions]
+    return action ? action() : this.handleInvalidOption()
   }
 
   //#
@@ -59,8 +58,7 @@ export class OrderFlow implements IFlowHandler {
     return this.responseBuilder
       .addTitle('🍕 PEDIDO CANCELADO')
       .addText(
-        '✨ Obrigado por utilizar nossos serviços!',
-        'Se precisar de algo, estamos aqui para ajudar.',
+        '✨ Obrigado por utilizar nossos serviços! Se precisar de algo, estamos aqui para ajudar.',
       )
       .addEmptyLine()
       .addText('👋 Até a próxima...')
@@ -69,7 +67,8 @@ export class OrderFlow implements IFlowHandler {
 
   private handleInvalidOption() {
     return this.responseBuilder
-      .addTitle('🍕 OPÇÃO INVÁLIDA')
+      .addTitle('❌ OPÇÃO INVÁLIDA')
+      .addText('Por favor, escolha uma das opções disponíveis.')
       .addEmptyLine()
       .addMenu(orderMenu)
       .build()
