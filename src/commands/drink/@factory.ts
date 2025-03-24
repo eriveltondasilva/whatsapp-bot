@@ -11,7 +11,7 @@ import type { ICommand } from '@/types/index.js'
 
 @injectable()
 export class CommandFactory {
-  private commandMap: Map<DrinkSteps, ICommand>
+  private readonly commandMap: Map<DrinkSteps, ICommand>
 
   constructor(
     @inject(MenuCommand) menuCommand: MenuCommand,

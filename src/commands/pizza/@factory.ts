@@ -14,7 +14,7 @@ import type { ICommand } from '@/types/index.js'
 
 @injectable()
 export class CommandFactory {
-  private commandMap: Map<PizzaSteps, ICommand>
+  private readonly commandMap: Map<PizzaSteps, ICommand>
 
   constructor(
     @inject(CrustCommand) crustCommand: CrustCommand,
