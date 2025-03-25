@@ -57,7 +57,7 @@ export enum FlowKeys {
   ORDER = 'order',
   PIZZA = 'pizza',
   DRINK = 'drink',
-  PAYMENT = 'payment',
+  // PAYMENT = 'payment',
 }
 
 export enum PizzaSteps {

@@ -1,8 +1,5 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowKeys } from '@/config/enums.js'
-import { LoggerProvider } from '@/providers/@index.js'
-
 import { DrinkFlow } from './drink.flow.js'
 import { MainMenuFlow } from './main-menu.flow.js'
 import { OrderFlow } from './order.flow.js'
@@ -10,36 +7,30 @@ import { PizzaFlow } from './pizza.flow.js'
 import { RegistrationFlow } from './registration.flow.js'
 import { WelcomeFlow } from './welcome.flow.js'
 
+import { FlowKeys } from '@/config/enums.js'
+import { LoggerProvider } from '@/providers/@index.js'
+
 import type { IFlowFactory, IFlowHandler } from '@/types/index.js'
 
 @injectable()
 export class FlowFactory implements IFlowFactory {
-  private readonly flowMap: Map<FlowKeys, IFlowHandler>
-
   constructor(
-    @inject(DrinkFlow) drinkFlow: DrinkFlow,
-    @inject(MainMenuFlow) menuFlow: MainMenuFlow,
-    @inject(OrderFlow) orderFlow: OrderFlow,
-    @inject(PizzaFlow) pizzaFlow: PizzaFlow,
-    @inject(RegistrationFlow) registrationFlow: RegistrationFlow,
-    @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
+    @inject(DrinkFlow) private drinkFlow: DrinkFlow,
+    @inject(MainMenuFlow) private menuFlow: MainMenuFlow,
+    @inject(OrderFlow) private orderFlow: OrderFlow,
+    @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
+    @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
+    @inject(WelcomeFlow) private welcomeFlow: WelcomeFlow,
     //
     @inject(LoggerProvider) private logger: LoggerProvider,
-  ) {
-    this.flowMap = new Map<FlowKeys, IFlowHandler>([
-      [FlowKeys.DRINK, drinkFlow],
-      [FlowKeys.MENU, menuFlow],
-      [FlowKeys.ORDER, orderFlow],
-      [FlowKeys.PIZZA, pizzaFlow],
-      [FlowKeys.REGISTRATION, registrationFlow],
-      [FlowKeys.WELCOME, welcomeFlow],
-    ])
-  }
+  ) {}
 
   //#
   public createFlow(flow: FlowKeys): IFlowHandler {
     this.logger.debug('Flow selected', { flow })
-    const flowHandler = this.flowMap.get(flow)
+
+    const flowMap = this.createFlowMap()
+    const flowHandler = flowMap[flow]
 
     if (!flowHandler) {
       this.logger.error('Flow not found', { flow })
@@ -47,5 +38,16 @@ export class FlowFactory implements IFlowFactory {
     }
 
     return flowHandler
+  }
+
+  private createFlowMap(): Record<FlowKeys, IFlowHandler> {
+    return {
+      [FlowKeys.DRINK]: this.drinkFlow,
+      [FlowKeys.MENU]: this.menuFlow,
+      [FlowKeys.ORDER]: this.orderFlow,
+      [FlowKeys.PIZZA]: this.pizzaFlow,
+      [FlowKeys.REGISTRATION]: this.registrationFlow,
+      [FlowKeys.WELCOME]: this.welcomeFlow,
+    }
   }
 }
