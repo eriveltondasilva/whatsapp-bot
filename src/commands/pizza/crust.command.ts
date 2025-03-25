@@ -7,6 +7,7 @@ import { CrustRepository } from '@/repositories/@index.js'
 import { buildCrustList } from '@/templates/@index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
+import { parseIndex } from '@/utils/parse-index.js'
 
 @injectable()
 export class CrustCommand implements ICommand {
@@ -19,9 +20,10 @@ export class CrustCommand implements ICommand {
 
   public async execute({ phone, message }: CommandParams) {
     const crusts = await this.crustRepository.getAllCrusts()
-    const selectedIndex = Number.parseInt(message, 10) - 1
+    const selectedIndex = parseIndex(message)
+    const selectedCrust = crusts[selectedIndex]
 
-    if (Number.isNaN(selectedIndex) || !crusts?.[selectedIndex]) {
+    if (!selectedCrust) {
       return this.listResponseBuilder
         .addTitle('❌ BORDA INVÁLIDA!')
         .addDescription('Por favor, escolha uma opção válida.')
@@ -29,11 +31,9 @@ export class CrustCommand implements ICommand {
         .build()
     }
 
-    const selectedCrust = crusts[selectedIndex]
-
     this.stateManager.updateStep(phone, PizzaSteps.QUANTITY)
     this.stateManager.updateContextData(phone, { selectedCrust })
 
-    return this.textResponseBuilder.addText('🔢 Digite a quantidade desejada (1-5):').build()
+    return this.textResponseBuilder.addText('🔢 Digite a quantidade desejada (1-10):').build()
   }
 }

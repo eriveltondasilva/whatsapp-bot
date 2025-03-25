@@ -13,7 +13,7 @@ export class InitialCommand implements ICommand {
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
   ) {}
 
-  public async execute({ phone, message }: CommandParams) {
+  public async execute({ phone }: CommandParams) {
     this.stateManager.updateStep(phone, RegistrationSteps.NAME)
 
     return this.textResponseBuilder

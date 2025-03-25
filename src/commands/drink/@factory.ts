@@ -11,24 +11,17 @@ import type { ICommand } from '@/types/index.js'
 
 @injectable()
 export class CommandFactory {
-  private readonly commandMap: Map<DrinkSteps, ICommand>
-
   constructor(
-    @inject(MenuCommand) menuCommand: MenuCommand,
-    @inject(QuantityCommand) quantityCommand: QuantityCommand,
-    @inject(TypeCommand) typeCommand: TypeCommand,
+    @inject(MenuCommand) private menuCommand: MenuCommand,
+    @inject(QuantityCommand) private quantityCommand: QuantityCommand,
+    @inject(TypeCommand) private typeCommand: TypeCommand,
     //
     @inject(LoggerProvider) private logger: LoggerProvider,
-  ) {
-    this.commandMap = new Map<DrinkSteps, ICommand>([
-      [DrinkSteps.MENU, menuCommand],
-      [DrinkSteps.QUANTITY, quantityCommand],
-      [DrinkSteps.TYPE, typeCommand],
-    ])
-  }
+  ) {}
 
   public createCommand(step: DrinkSteps): ICommand {
-    const command = this.commandMap.get(step)
+    const commandMap = this.createCommandMap()
+    const command = commandMap[step]
 
     if (!command) {
       this.logger.error('Pizza command not found', { step })
@@ -36,5 +29,13 @@ export class CommandFactory {
     }
 
     return command
+  }
+
+  private createCommandMap(): Record<DrinkSteps, ICommand> {
+    return {
+      [DrinkSteps.MENU]: this.menuCommand,
+      [DrinkSteps.QUANTITY]: this.quantityCommand,
+      [DrinkSteps.TYPE]: this.typeCommand,
+    }
   }
 }

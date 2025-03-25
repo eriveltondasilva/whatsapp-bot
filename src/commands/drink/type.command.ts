@@ -5,6 +5,7 @@ import { DrinkSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { DrinkRepository } from '@/repositories/@index.js'
 import { buildDrinkList } from '@/templates/@index.js'
+import { parseIndex } from '@/utils/parse-index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
 
@@ -20,9 +21,9 @@ export class TypeCommand implements ICommand {
   //#
   public async execute({ phone, message }: CommandParams) {
     const drinks = await this.drinkRepository.getAllDrinks()
-    const selectedIndex = Number.parseInt(message, 10) - 1
+    const selectedIndex = parseIndex(message)
 
-    if (Number.isNaN(selectedIndex) || !drinks?.[selectedIndex]) {
+    if (!drinks[selectedIndex]) {
       return this.listResponseBuilder
         .addTitle('❌ OPÇÃO INVÁLIDA!')
         .addDescription('Selecione uma opção válida.')
@@ -35,6 +36,6 @@ export class TypeCommand implements ICommand {
     this.stateManager.updateStep(phone, DrinkSteps.QUANTITY)
     this.stateManager.updateContextData(phone, { selectedDrink })
 
-    return this.textResponseBuilder.addText('🔢 Digite a quantidade desejada (1-5):').build()
+    return this.textResponseBuilder.addText('🔢 Digite a quantidade desejada (1-10):').build()
   }
 }

@@ -15,10 +15,10 @@ export class NoteCommand implements ICommand {
   ) {}
 
   public async execute({ phone, message }: CommandParams) {
-    const notes = message === '0' ? undefined : message
+    const note = message === '0' ? undefined : message
 
     this.stateManager.updateStep(phone, FlowKeys.ORDER)
-    this.stateManager.updateContextData(phone, { notes })
+    this.stateManager.updateContextData(phone, { note })
 
     return this.textResponseBuilder
       .addText('✅ Pizza adicionada ao carrinho com sucesso!')

@@ -18,7 +18,7 @@ export class MenuCommand implements ICommand {
   ) {}
 
   //#
-  public async execute({ phone, message }: CommandParams) {
+  public async execute({ phone }: CommandParams) {
     const drinks = await this.drinkRepository.getAllDrinks()
 
     if (!drinks?.length) {

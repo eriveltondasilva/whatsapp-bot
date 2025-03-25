@@ -27,19 +27,16 @@ export class MenuCommand implements ICommand {
         .build()
     }
 
-    if (message === '2') {
-      this.stateManager.updateStep(phone, PizzaSteps.TWO_FLAVORS)
-      return this.listResponseBuilder
-        .addTitle('🍕 ESCOLHA O PRIMEIRO SABOR DA SUA PIZZA')
-        .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
-        .addList(buildFlavorList(flavors))
-        .build()
-    }
+    const isOneFlavor = message === '1'
+    const nextStep = isOneFlavor ? PizzaSteps.ONE_FLAVOR : PizzaSteps.TWO_FLAVORS
+    const title = isOneFlavor
+      ? '🍕 ESCOLHA O SABOR DA SUA PIZZA'
+      : '🍕 ESCOLHA O PRIMEIRO SABOR DA SUA PIZZA'
 
-    this.stateManager.updateStep(phone, PizzaSteps.ONE_FLAVOR)
+    this.stateManager.updateStep(phone, nextStep)
 
     return this.listResponseBuilder
-      .addTitle('🍕 ESCOLHA O SABOR DA SUA PIZZA')
+      .addTitle(title)
       .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildFlavorList(flavors))
       .build()

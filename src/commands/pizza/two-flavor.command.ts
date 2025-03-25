@@ -8,6 +8,7 @@ import { CrustRepository, FlavorRepository } from '@/repositories/@index.js'
 import { buildCrustList, buildFlavorList } from '@/templates/@index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
+import { parseIndex } from '@/utils/parse-index.js'
 
 @injectable()
 export class TwoFlavorCommand implements ICommand {
@@ -21,11 +22,9 @@ export class TwoFlavorCommand implements ICommand {
   public async execute({ context, phone, message }: CommandParams) {
     const { data } = context
     const flavors = await this.flavorRepository.getAllFlavors()
-    const crusts = await this.crustRepository.getAllCrusts()
+    const selectedIndex = parseIndex(message)
 
-    const selectedIndex = Number.parseInt(message, 10) - 1
-
-    if (!Number.isFinite(selectedIndex) || !flavors?.[selectedIndex]) {
+    if (!flavors[selectedIndex]) {
       return this.listResponseBuilder
         .addTitle('❌ OPÇÃO INVÁLIDA!')
         .addDescription('Por favor, escolha uma opção válida.')
@@ -50,6 +49,8 @@ export class TwoFlavorCommand implements ICommand {
 
     this.stateManager.updateStep(phone, PizzaSteps.CRUST)
     this.stateManager.updateContextData(phone, { selectedFlavors })
+
+    const crusts = await this.crustRepository.getAllCrusts()
 
     return this.listResponseBuilder
       .addTitle('🍕 ESCOLHA A BORDA DA SUA PIZZA')

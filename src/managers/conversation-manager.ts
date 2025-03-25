@@ -15,7 +15,7 @@ export class ConversationManager {
   ) {}
 
   public async handle(phone: string, message: string): Promise<Response> {
-    this.logger.info('📌 Conversation Manager',  { phone })
+    this.logger.info('📌 Conversation Manager', { phone })
 
     try {
       const { context } = this.stateManager.getState(phone)

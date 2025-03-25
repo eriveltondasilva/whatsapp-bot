@@ -62,7 +62,6 @@ export enum FlowKeys {
 
 export enum PizzaSteps {
   CRUST = 'pizza::crust',
-  FLAVOR = 'pizza::flavor',
   ONE_FLAVOR = 'pizza::one-flavor',
   TWO_FLAVORS = 'pizza::two-flavors',
   NOTE = 'pizza::note',
