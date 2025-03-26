@@ -10,6 +10,7 @@ import { getFirstName } from '@/utils/get-first-name.js'
 import { isValidAddress } from '@/utils/validations.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
+import type { ContextData } from './type.js'
 
 @injectable()
 export class AddressCommand implements ICommand {
@@ -30,7 +31,7 @@ export class AddressCommand implements ICommand {
         .build()
     }
 
-    const { name } = context.data as { name: string }
+    const { name } = context.data as ContextData
 
     if (!name) {
       this.stateManager.resetState(phone)

@@ -1,5 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
+import { ConfirmCommand } from './confirm.command.js'
 import { CrustCommand } from './crust.command.js'
 import { FlavorCommand } from './flavor.command.js'
 import { MenuCommand } from './menu.command.js'
@@ -17,6 +18,7 @@ export class CommandFactory {
   private commandMap: CommandMap
 
   constructor(
+    @inject(ConfirmCommand) private confirmCommand: ConfirmCommand,
     @inject(CrustCommand) private crustCommand: CrustCommand,
     @inject(FlavorCommand) private flavorCommand: FlavorCommand,
     @inject(MenuCommand) private menuCommand: MenuCommand,
@@ -42,6 +44,7 @@ export class CommandFactory {
 
   private createCommandMap(): CommandMap {
     return {
+      [PizzaSteps.CONFIRM]: this.confirmCommand,
       [PizzaSteps.CRUST]: this.crustCommand,
       [PizzaSteps.MENU]: this.menuCommand,
       [PizzaSteps.NOTE]: this.noteCommand,

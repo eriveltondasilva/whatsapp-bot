@@ -1,18 +1,11 @@
 import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/@index.js'
-import { StateManager } from '@/managers/state-manager.js'
-
 import { FlowKeys } from '@/config/enums.js'
-import type { CommandParams, ICommand } from '@/types/index.js'
-import type { Prisma } from '@prisma/client'
+import { StateManager } from '@/managers/state-manager.js'
+import { orderMenu } from '@/templates/@index.js'
 
-type Data = {
-  selectedFlavors: Prisma.FlavorCreateInput[]
-  selectedCrust: Prisma.CrustCreateInput
-  quantity: number
-  note?: string
-}
+import type { CommandParams, ICommand } from '@/types/index.js'
 
 @injectable()
 export class ConfirmCommand implements ICommand {
@@ -22,31 +15,18 @@ export class ConfirmCommand implements ICommand {
   ) {}
 
   //#
-  public async execute({ phone, context }: CommandParams) {
-    const { selectedFlavors, selectedCrust, quantity, note } = context.data as Data
-
-    if (!selectedFlavors || !selectedCrust || !quantity) {
+  public async execute({ message, phone }: CommandParams) {
+    if (message === '0') {
       this.stateManager.resetState(phone)
-      return this.textResponseBuilder
-        .addText('❌ Não foi possível processar seu pedido. Por favor, reinicie o pedido.')
-        .build()
+      return this.textResponseBuilder.addText('❌ Pedido cancelado.').build()
     }
-
-    // Construir a mensagem de confirmação
-    const flavorNames = selectedFlavors.map((flavor) => flavor.name).join(' + ')
 
     this.stateManager.updateStep(phone, FlowKeys.ORDER)
 
     return this.textResponseBuilder
-      .addTitle('✅ Confirmação do Pedido:')
-      .addText(`🍕 Sabor(es): ${flavorNames}`)
-      .addText(`🥖 Borda: ${selectedCrust.name}`)
-      .addText(`🔢 Quantidade: ${quantity}`)
-      .addText(note ? `📝 Observação: ${note}` : '')
+      .addText('✅ Pizza adicionada ao carrinho com sucesso!')
       .addEmptyLine()
-      .addText('Confirma o pedido?')
-      .addText('1️⃣ - Sim, confirmar pedido')
-      .addText('0️⃣ - Cancelar e voltar ao menu inicial')
+      .addMenu(orderMenu)
       .build()
   }
 }

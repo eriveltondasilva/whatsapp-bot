@@ -8,7 +8,7 @@ import { buildCrustList, buildFlavorList } from '@/templates/@index.js'
 import { parseIndex } from '@/utils/parse-index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
-import type { Prisma } from '@prisma/client'
+import type { ContextData } from './type.js'
 
 @injectable()
 export class FlavorCommand implements ICommand {
@@ -21,7 +21,7 @@ export class FlavorCommand implements ICommand {
 
   //#
   public async execute({ context, phone, message }: CommandParams) {
-    const { data } = context
+    const { data } = context as unknown as { data: ContextData }
     const flavors = await this.flavorRepository.getAllFlavors()
     const selectedIndex = parseIndex(message)
     const maxFlavors = 2
@@ -34,10 +34,7 @@ export class FlavorCommand implements ICommand {
         .build()
     }
 
-    const selectedFlavors = [
-      ...((data.selectedFlavors as Prisma.FlavorCreateInput[]) || []),
-      flavors[selectedIndex],
-    ]
+    const selectedFlavors = [...(data.selectedFlavors || []), flavors[selectedIndex]]
 
     if (selectedFlavors.length < maxFlavors) {
       this.stateManager.updateContextData(phone, { selectedFlavors })

@@ -6,6 +6,7 @@ import { StateManager } from '@/managers/state-manager.js'
 import { isValidName } from '@/utils/validations.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
+import type { ContextData } from './type.js'
 
 @injectable()
 export class NameCommand implements ICommand {
@@ -16,7 +17,7 @@ export class NameCommand implements ICommand {
 
   //#
   public async execute({ context, phone }: CommandParams) {
-    const { name } = context.data as { name: string }
+    const { name } = context.data as ContextData
 
     if (!isValidName(name)) {
       return this.textResponseBuilder

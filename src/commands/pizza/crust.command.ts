@@ -5,9 +5,9 @@ import { PizzaSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { CrustRepository } from '@/repositories/@index.js'
 import { buildCrustList } from '@/templates/@index.js'
+import { parseIndex } from '@/utils/parse-index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
-import { parseIndex } from '@/utils/parse-index.js'
 
 @injectable()
 export class CrustCommand implements ICommand {
@@ -18,6 +18,7 @@ export class CrustCommand implements ICommand {
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
   ) {}
 
+  //#
   public async execute({ phone, message }: CommandParams) {
     const crusts = await this.crustRepository.getAllCrusts()
     const selectedIndex = parseIndex(message)
