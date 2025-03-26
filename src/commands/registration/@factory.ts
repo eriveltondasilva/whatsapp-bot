@@ -27,8 +27,8 @@ private commandMap: CommandMap
     const command = this.commandMap[step]
 
     if (!command) {
-      this.logger.error('Pizza command not found', { step })
-      throw new Error(`Pizza command not found for step: ${step}`)
+      this.logger.error('Registration command not found', { step })
+      throw new Error(`Registration command not found for step: ${step}`)
     }
 
     return command

@@ -27,8 +27,8 @@ export class CommandFactory {
     const command = this.commandMap[step]
 
     if (!command) {
-      this.logger.error('Pizza command not found', { step })
-      throw new Error(`Pizza command not found for step: ${step}`)
+      this.logger.error('Drink command not found', { step })
+      throw new Error(`Drink command not found for step: ${step}`)
     }
 
     return command
