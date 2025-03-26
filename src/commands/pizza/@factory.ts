@@ -1,11 +1,10 @@
 import { inject, injectable } from 'tsyringe'
 
 import { CrustCommand } from './crust.command.js'
+import { FlavorCommand } from './flavor.command.js'
 import { MenuCommand } from './menu.command.js'
 import { NoteCommand } from './note.command.js'
-import { OneFlavorCommand } from './one-flavor.command.js'
 import { QuantityCommand } from './quantity.command.js'
-import { TwoFlavorCommand } from './two-flavor.command.js'
 
 import { PizzaSteps } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
@@ -19,11 +18,11 @@ export class CommandFactory {
 
   constructor(
     @inject(CrustCommand) private crustCommand: CrustCommand,
-    @inject(NoteCommand) private noteCommand: NoteCommand,
-    @inject(OneFlavorCommand) private oneFlavorCommand: OneFlavorCommand,
-    @inject(QuantityCommand) private quantityCommand: QuantityCommand,
-    @inject(TwoFlavorCommand) private twoFlavorCommand: TwoFlavorCommand,
+    @inject(FlavorCommand) private flavorCommand: FlavorCommand,
     @inject(MenuCommand) private menuCommand: MenuCommand,
+    @inject(NoteCommand) private noteCommand: NoteCommand,
+    @inject(QuantityCommand) private quantityCommand: QuantityCommand,
+    //
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {
     this.commandMap = this.createCommandMap()
@@ -46,9 +45,8 @@ export class CommandFactory {
       [PizzaSteps.CRUST]: this.crustCommand,
       [PizzaSteps.MENU]: this.menuCommand,
       [PizzaSteps.NOTE]: this.noteCommand,
-      [PizzaSteps.ONE_FLAVOR]: this.oneFlavorCommand,
+      [PizzaSteps.FLAVOR]: this.flavorCommand,
       [PizzaSteps.QUANTITY]: this.quantityCommand,
-      [PizzaSteps.TWO_FLAVORS]: this.twoFlavorCommand,
     }
   }
 }

@@ -23,7 +23,7 @@ export class MessageSender {
     } as const
 
     const action = actionMap[type]
-    
+
     try {
       action && (await action())
 

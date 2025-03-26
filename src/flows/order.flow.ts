@@ -18,7 +18,7 @@ export class OrderFlow implements IFlowHandler {
     @inject(PizzaFlow) private readonly pizzaFlow: PizzaFlow,
     @inject(StateManager) private readonly stateManager: StateManager,
     @inject(TextResponseBuilder) private readonly responseBuilder: TextResponseBuilder,
-    // 
+    //
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 

@@ -12,7 +12,7 @@ type CommandMap = Record<RegistrationSteps, ICommand>
 
 @injectable()
 export class CommandFactory {
-private commandMap: CommandMap
+  private commandMap: CommandMap
 
   constructor(
     @inject(InitialCommand) private initialCommand: InitialCommand,

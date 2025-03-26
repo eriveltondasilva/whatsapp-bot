@@ -1,4 +1,3 @@
-import type { Prisma } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder } from '@/builder/@index.js'
@@ -9,14 +8,15 @@ import { buildCrustList, buildFlavorList } from '@/templates/@index.js'
 import { parseIndex } from '@/utils/parse-index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
+import type { Prisma } from '@prisma/client'
 
 @injectable()
-export class TwoFlavorCommand implements ICommand {
+export class FlavorCommand implements ICommand {
   constructor(
+    @inject(StateManager) private stateManager: StateManager,
     @inject(CrustRepository) private crustRepository: CrustRepository,
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
-    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#
@@ -24,6 +24,7 @@ export class TwoFlavorCommand implements ICommand {
     const { data } = context
     const flavors = await this.flavorRepository.getAllFlavors()
     const selectedIndex = parseIndex(message)
+    const maxFlavors = 2
 
     if (!flavors[selectedIndex]) {
       return this.listResponseBuilder
@@ -38,11 +39,16 @@ export class TwoFlavorCommand implements ICommand {
       flavors[selectedIndex],
     ]
 
-    if (selectedFlavors?.length === 1) {
+    if (selectedFlavors.length < maxFlavors) {
       this.stateManager.updateContextData(phone, { selectedFlavors })
 
+      const title =
+        selectedFlavors.length === 1
+          ? '🍕🍕 ESCOLHA O SEGUNDO SABOR DA PIZZA'
+          : '🍕 ESCOLHA O PRIMEIRO SABOR DA SUA PIZZA'
+
       return this.listResponseBuilder
-        .addTitle('🍕🍕 ESCOLHA O SEGUNDO SABOR DA PIZZA')
+        .addTitle(title)
         .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
         .addList(buildFlavorList(flavors))
         .build()
