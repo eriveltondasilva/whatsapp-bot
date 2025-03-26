@@ -21,15 +21,16 @@ export class CrustCommand implements ICommand {
   public async execute({ phone, message }: CommandParams) {
     const crusts = await this.crustRepository.getAllCrusts()
     const selectedIndex = parseIndex(message)
-    const selectedCrust = crusts[selectedIndex]
 
-    if (!selectedCrust) {
+    if (!crusts[selectedIndex]) {
       return this.listResponseBuilder
         .addTitle('❌ BORDA INVÁLIDA!')
         .addDescription('Por favor, escolha uma opção válida.')
         .addList(buildCrustList(crusts))
         .build()
     }
+
+    const selectedCrust = crusts[selectedIndex]
 
     this.stateManager.updateStep(phone, PizzaSteps.QUANTITY)
     this.stateManager.updateContextData(phone, { selectedCrust })

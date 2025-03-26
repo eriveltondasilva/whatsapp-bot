@@ -48,6 +48,6 @@ export class FlowFactory implements IFlowFactory {
       [FlowKeys.PIZZA]: this.pizzaFlow,
       [FlowKeys.REGISTRATION]: this.registrationFlow,
       [FlowKeys.WELCOME]: this.welcomeFlow,
-    }
+    } as const
   }
 }

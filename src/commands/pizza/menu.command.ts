@@ -17,6 +17,7 @@ export class MenuCommand implements ICommand {
     @inject(StateManager) private stateManager: StateManager,
   ) {}
 
+  //#
   public async execute({ phone, message }: CommandParams) {
     const flavors = await this.flavorRepository.getAllFlavors()
 

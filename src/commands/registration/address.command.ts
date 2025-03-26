@@ -20,13 +20,13 @@ export class AddressCommand implements ICommand {
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
   ) {}
 
-  public async execute({ context, message, phone }: CommandParams) {
-    if (!isValidAddress(message)) {
+  public async execute({ context, message: address, phone }: CommandParams) {
+    if (!isValidAddress(address)) {
       return this.textResponseBuilder
         .addTitle('❌ ENDEREÇO INVÁLIDO')
         .addEmptyLine()
-        .addText('Por favor, informe seu endereço completo:')
-        .addText('> exemplo: _"Rua das Flores, n° 83, Centro"_')
+        .addText('Por favor, informe seu endereço completo.')
+        .addText('> Exemplo: "_Rua das Flores, n° 83, Centro_"')
         .build()
     }
 
@@ -39,11 +39,7 @@ export class AddressCommand implements ICommand {
         .build()
     }
 
-    const newCustomer = this.customerRepository.create({
-      phone,
-      name,
-      address: message,
-    })
+    const newCustomer = this.customerRepository.create({ phone, name, address })
     this.logger.ok('New customer registered', { newCustomer })
 
     this.stateManager.resetState(phone)

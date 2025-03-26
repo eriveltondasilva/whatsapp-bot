@@ -22,8 +22,9 @@ export class MessageSender {
       [MessageType.IMAGE]: () => this.sendImage(phone, content),
     } as const
 
+    const action = actionMap[type]
+    
     try {
-      const action = actionMap[type]
       action && (await action())
 
       this.logger.debug('📬 Message sent successfully', { phone, type })

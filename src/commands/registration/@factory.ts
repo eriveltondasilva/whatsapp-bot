@@ -25,17 +25,16 @@ export class CommandFactory {
 
     if (!command) {
       this.logger.error('Pizza command not found', { step })
-      throw new Error('Pizza command not found', { cause: { step } })
+      throw new Error(`Pizza command not found for step: ${step}`)
     }
 
     return command
   }
-
   private createCommandMap(): Record<RegistrationSteps, ICommand> {
     return {
       [RegistrationSteps.INITIAL]: this.initialCommand,
       [RegistrationSteps.NAME]: this.nameCommand,
       [RegistrationSteps.ADDRESS]: this.addressCommand,
-    }
+    } as const
   }
 }

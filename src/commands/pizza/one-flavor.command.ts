@@ -18,6 +18,7 @@ export class OneFlavorCommand implements ICommand {
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
   ) {}
 
+  //#
   public async execute({ phone, message }: CommandParams) {
     const flavors = await this.flavorRepository.getAllFlavors()
     const selectedIndex = parseIndex(message)

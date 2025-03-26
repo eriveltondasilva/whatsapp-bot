@@ -25,6 +25,7 @@ export class CommandFactory {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
+  //#
   public createCommand(step: PizzaSteps): ICommand {
     const commandMap = this.createCommandMap()
     const command = commandMap[step]
@@ -45,6 +46,6 @@ export class CommandFactory {
       [PizzaSteps.ONE_FLAVOR]: this.oneFlavorCommand,
       [PizzaSteps.QUANTITY]: this.quantityCommand,
       [PizzaSteps.TWO_FLAVORS]: this.twoFlavorCommand,
-    }
+    } as const
   }
 }

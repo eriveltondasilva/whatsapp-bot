@@ -14,6 +14,7 @@ export class NameCommand implements ICommand {
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
   ) {}
 
+  //#
   public async execute({ context, phone }: CommandParams) {
     const { name } = context.data as { name: string }
 
@@ -21,8 +22,8 @@ export class NameCommand implements ICommand {
       return this.textResponseBuilder
         .addTitle('❌ NOME INVÁLIDO')
         .addEmptyLine()
-        .addText('Por favor, informe seu nome completo:')
-        .addText('> exemplo: _"João da Silva"_')
+        .addText('Por favor, informe seu nome completo.')
+        .addText('> Exemplo: "_João da Silva_"')
         .build()
     }
 
@@ -33,8 +34,8 @@ export class NameCommand implements ICommand {
       .addGreeting(name)
       .addText('Agora me diga onde vamos entregar suas delícias?')
       .addEmptyLine()
-      .addText('Qual o seu endereço completo?')
-      .addText('> exemplo: _"Rua das Flores, n° 83, Centro"_')
+      .addText('Por favor, informe seu nome completo.')
+      .addText('> Exemplo: "_Rua das Flores, n° 83, Centro_"')
       .build()
   }
 }

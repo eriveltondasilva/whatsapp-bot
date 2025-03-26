@@ -25,7 +25,7 @@ export class CommandFactory {
 
     if (!command) {
       this.logger.error('Pizza command not found', { step })
-      throw new Error('Pizza command not found', { cause: { step } })
+      throw new Error(`Pizza command not found for step: ${step}`)
     }
 
     return command
@@ -36,6 +36,6 @@ export class CommandFactory {
       [DrinkSteps.MENU]: this.menuCommand,
       [DrinkSteps.QUANTITY]: this.quantityCommand,
       [DrinkSteps.TYPE]: this.typeCommand,
-    }
+    } as const
   }
 }

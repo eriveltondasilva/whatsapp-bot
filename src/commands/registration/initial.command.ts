@@ -13,6 +13,7 @@ export class InitialCommand implements ICommand {
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
   ) {}
 
+  //#
   public async execute({ phone }: CommandParams) {
     this.stateManager.updateStep(phone, RegistrationSteps.NAME)
 
@@ -23,8 +24,8 @@ export class InitialCommand implements ICommand {
         'Antes de começar, precisamos fazer um _*rápido*_ cadastro. 🏃💨',
       )
       .addEmptyLine()
-      .addText('Por favor, me informe o seu nome completo:')
-      .addText('> exemplo: _"João da Silva"_')
+      .addText('Por favor, me informe o seu nome completo.')
+      .addText('> Exemplo: "_João da Silva_"')
       .build()
   }
 }

@@ -14,6 +14,7 @@ export class NoteCommand implements ICommand {
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
   ) {}
 
+  //#
   public async execute({ phone, message }: CommandParams) {
     const note = message === '0' ? undefined : message
 

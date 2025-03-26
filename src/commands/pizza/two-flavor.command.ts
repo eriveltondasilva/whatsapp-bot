@@ -6,9 +6,9 @@ import { PizzaSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/@index.js'
 import { buildCrustList, buildFlavorList } from '@/templates/@index.js'
+import { parseIndex } from '@/utils/parse-index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
-import { parseIndex } from '@/utils/parse-index.js'
 
 @injectable()
 export class TwoFlavorCommand implements ICommand {
@@ -19,6 +19,7 @@ export class TwoFlavorCommand implements ICommand {
     @inject(StateManager) private stateManager: StateManager,
   ) {}
 
+  //#
   public async execute({ context, phone, message }: CommandParams) {
     const { data } = context
     const flavors = await this.flavorRepository.getAllFlavors()
@@ -37,7 +38,7 @@ export class TwoFlavorCommand implements ICommand {
       flavors[selectedIndex],
     ]
 
-    if (selectedFlavors.length === 1) {
+    if (selectedFlavors?.length === 1) {
       this.stateManager.updateContextData(phone, { selectedFlavors })
 
       return this.listResponseBuilder
