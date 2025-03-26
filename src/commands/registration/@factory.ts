@@ -8,20 +8,23 @@ import { RegistrationSteps } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { ICommand } from '@/types/index.js'
+type CommandMap = Record<RegistrationSteps, ICommand>
 
 @injectable()
 export class CommandFactory {
+private commandMap: CommandMap
+
   constructor(
     @inject(InitialCommand) private initialCommand: InitialCommand,
     @inject(NameCommand) private nameCommand: NameCommand,
     @inject(AddressCommand) private addressCommand: AddressCommand,
-    //
     @inject(LoggerProvider) private logger: LoggerProvider,
-  ) {}
+  ) {
+    this.commandMap = this.createCommandMap()
+  }
 
   public createCommand(step: RegistrationSteps): ICommand {
-    const commandMap = this.createCommandMap()
-    const command = commandMap[step]
+    const command = this.commandMap[step]
 
     if (!command) {
       this.logger.error('Pizza command not found', { step })
@@ -30,11 +33,12 @@ export class CommandFactory {
 
     return command
   }
-  private createCommandMap(): Record<RegistrationSteps, ICommand> {
+
+  private createCommandMap(): CommandMap {
     return {
       [RegistrationSteps.INITIAL]: this.initialCommand,
       [RegistrationSteps.NAME]: this.nameCommand,
       [RegistrationSteps.ADDRESS]: this.addressCommand,
-    } as const
+    }
   }
 }
