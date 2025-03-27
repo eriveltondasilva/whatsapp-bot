@@ -19,6 +19,7 @@ export class MenuCommand implements ICommand {
 
   //#
   public async execute({ phone, message }: CommandParams) {
+    const isSingleFlavor = message === '1'
     const flavors = await this.flavorRepository.getAllFlavors()
 
     if (!flavors?.length) {
@@ -28,12 +29,12 @@ export class MenuCommand implements ICommand {
         .build()
     }
 
-    const title =
-      message === '1'
-        ? '🍕 ESCOLHA O SABOR DA SUA PIZZA'
-        : '🍕 ESCOLHA O PRIMEIRO SABOR DA SUA PIZZA'
-
     this.stateManager.updateStep(phone, PizzaSteps.FLAVOR)
+    this.stateManager.updateContextData(phone, { isSingleFlavor })
+
+    const title = isSingleFlavor
+      ? '🍕 ESCOLHA O SABOR DA SUA PIZZA'
+      : '🍕 ESCOLHA O PRIMEIRO SABOR DA SUA PIZZA'
 
     return this.listResponseBuilder
       .addTitle(title)

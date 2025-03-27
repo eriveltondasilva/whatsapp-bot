@@ -24,7 +24,6 @@ export class FlavorCommand implements ICommand {
     const { data } = context as unknown as { data: ContextData }
     const flavors = await this.flavorRepository.getAllFlavors()
     const selectedIndex = parseIndex(message)
-    const maxFlavors = 2
 
     if (!flavors[selectedIndex]) {
       return this.listResponseBuilder
@@ -36,16 +35,11 @@ export class FlavorCommand implements ICommand {
 
     const selectedFlavors = [...(data.selectedFlavors || []), flavors[selectedIndex]]
 
-    if (selectedFlavors.length < maxFlavors) {
+    if (!data.isSingleFlavor && selectedFlavors.length === 1) {
       this.stateManager.updateContextData(phone, { selectedFlavors })
 
-      const title =
-        selectedFlavors.length === 1
-          ? '🍕🍕 ESCOLHA O SEGUNDO SABOR DA PIZZA'
-          : '🍕 ESCOLHA O PRIMEIRO SABOR DA SUA PIZZA'
-
       return this.listResponseBuilder
-        .addTitle(title)
+        .addTitle('🍕🍕 ESCOLHA O SEGUNDO SABOR DA PIZZA')
         .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
         .addList(buildFlavorList(flavors))
         .build()

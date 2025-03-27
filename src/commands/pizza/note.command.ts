@@ -21,9 +21,7 @@ export class NoteCommand implements ICommand {
 
     if (!selectedFlavors || !selectedCrust || !quantity) {
       this.stateManager.resetState(phone)
-      return this.textResponseBuilder
-        .addText('❌ Não foi possível processar seu pedido.')
-        .build()
+      return this.textResponseBuilder.addText('❌ Não foi possível processar seu pedido.').build()
     }
 
     this.stateManager.updateStep(phone, PizzaSteps.CONFIRM)
