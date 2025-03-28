@@ -21,6 +21,7 @@ export class ConfirmCommand implements ICommand {
       return this.textResponseBuilder.addText('❌ Pedido cancelado.').build()
     }
 
+    // this.stateManager.
     this.stateManager.updateStep(phone, FlowKeys.ORDER)
 
     return this.textResponseBuilder

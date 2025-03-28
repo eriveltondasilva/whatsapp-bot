@@ -28,18 +28,17 @@ export class NoteCommand implements ICommand {
     this.stateManager.updateContextData(phone, { note })
 
     const flavorNames = selectedFlavors.map((flavor) => flavor.name).join(' + ')
-    const noteText = note ? `📝 Observação: ${note}` : ''
 
     return this.textResponseBuilder
-      .addTitle('✅ Confirmação do Pedido:')
-      .addText(`🍕 Sabor(es): ${flavorNames}`)
-      .addText(`🥖 Borda: ${selectedCrust.name}`)
-      .addText(`🔢 Quantidade: ${quantity}`)
-      .addText(noteText)
+      .addTitle('# Pizza:')
+      .addText(`Sabor(es): _${flavorNames}_`)
+      .addText(`Borda: _${selectedCrust.name}_`)
+      .addText(`Quantidade: _${quantity}_`)
+      .addText(note ? `📝 Observação: _${note}_` : '')
       .addEmptyLine()
       .addText('Confirma o pedido?')
-      .addText('1️⃣ - Sim, confirmar pizza')
-      .addText('0️⃣ - Cancelar e voltar ao menu inicial')
+      .addText('1️⃣ - Sim, confirmar')
+      .addText('0️⃣ - Cancelar e voltar ao menu')
       .build()
   }
 }
