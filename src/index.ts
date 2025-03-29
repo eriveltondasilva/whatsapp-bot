@@ -2,7 +2,8 @@ import 'reflect-metadata'
 import { container } from 'tsyringe'
 
 import { WhatsappBot } from '@/bot.js'
-import { ClientProvider, LoggerProvider } from '@/providers/@index.js'
+import { ClientProvider } from '@/providers/client.provider.js'
+import {  LoggerProvider } from '@/providers/logger.provider.js'
 
 const PROCESS_EVENTS = {
   SIGINT: 'SIGINT',

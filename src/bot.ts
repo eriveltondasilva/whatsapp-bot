@@ -2,8 +2,9 @@ import type { Message } from '@wppconnect-team/wppconnect'
 import { inject, injectable } from 'tsyringe'
 
 import { ConversationManager } from '@/managers/conversation-manager.js'
-import { ClientProvider, LoggerProvider } from '@/providers/@index.js'
-import { MessageSender } from '@/services/@index.js'
+import { ClientProvider } from '@/providers/client.provider.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
+import { MessageSender } from '@/services/message-sender.service.js'
 import { isValidMessage } from '@/utils/@index.js'
 
 @injectable()

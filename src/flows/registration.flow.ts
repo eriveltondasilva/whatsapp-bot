@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { CommandFactory } from '@/commands/registration/@factory.js'
-import { LoggerProvider } from '@/providers/@index.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { RegistrationSteps } from '@/config/enums.js'
 import type { FlowHandle, IFlowHandler } from '@/types/index.js'

@@ -3,7 +3,7 @@ import { container } from 'tsyringe'
 
 import { ERIVELTON_NUMBER } from '@/config/constants.js'
 import { Validation } from '@/config/enums.js'
-import { LoggerProvider } from '@/providers/@index.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
 
 const logger = container.resolve(LoggerProvider)
 

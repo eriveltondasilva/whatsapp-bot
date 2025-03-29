@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { FlowFactory } from '@/flows/@factory.js'
-import { LoggerProvider } from '@/providers/@index.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
 import { StateFacade } from './state.facade.js'
 
 import type { Response } from '@/types/index.js'

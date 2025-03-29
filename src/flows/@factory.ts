@@ -8,7 +8,7 @@ import { RegistrationFlow } from './registration.flow.js'
 import { WelcomeFlow } from './welcome.flow.js'
 
 import { FlowKeys } from '@/config/enums.js'
-import { LoggerProvider } from '@/providers/@index.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { IFlowFactory, IFlowHandler } from '@/types/index.js'
 

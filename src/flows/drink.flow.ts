@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { CommandFactory } from '@/commands/drink/@factory.js'
-import { LoggerProvider } from '@/providers/@index.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { DrinkSteps } from '@/config/enums.js'
 import type { FlowHandle, IFlowHandler } from '@/types/index.js'
