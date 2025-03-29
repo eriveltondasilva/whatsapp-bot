@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TextResponseBuilder } from '@/builder/@index.js'
+import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { RegistrationSteps } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
 import { isValidName } from '@/utils/validations.js'

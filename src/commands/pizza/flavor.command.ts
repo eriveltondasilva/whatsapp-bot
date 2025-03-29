@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { ListResponseBuilder } from '@/builder/@index.js'
+import { ListResponseBuilder } from '@/builder/list-response.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/@index.js'

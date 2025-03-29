@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TextResponseBuilder } from '@/builder/@index.js'
+import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
 import { isValidQuantity } from '@/utils/@index.js'
