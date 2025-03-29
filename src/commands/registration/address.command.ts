@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/@index.js'
 import { FlowKeys } from '@/config/enums.js'
-import { StateManager } from '@/managers/state-manager.js'
+import { StateFacade } from '@/managers/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { CustomerRepository } from '@/repositories/customer.repository.js'
 import { mainMenu } from '@/templates/main-menu.js'
@@ -19,7 +19,7 @@ export class AddressCommand implements ICommand {
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateManager) private stateManager: StateManager,
+    @inject(StateFacade) private stateManager: StateFacade,
   ) {}
 
   public async execute({ context, message: address, phone }: CommandParams) {

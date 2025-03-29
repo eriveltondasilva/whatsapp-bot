@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/@index.js'
 import { PizzaSteps } from '@/config/enums.js'
-import { StateManager } from '@/managers/state-manager.js'
+import { StateFacade } from '@/managers/state.facade.js'
 import { isValidQuantity } from '@/utils/@index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
@@ -11,7 +11,7 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 export class QuantityCommand implements ICommand {
   constructor(
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    @inject(StateManager) private stateManager: StateManager,
+    @inject(StateFacade) private stateManager: StateFacade,
   ) {}
 
   //#

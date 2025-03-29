@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder, TextResponseBuilder } from '@/builder/@index.js'
 import { DrinkSteps } from '@/config/enums.js'
-import { StateManager } from '@/managers/state-manager.js'
+import { StateFacade } from '@/managers/state.facade.js'
 import { DrinkRepository } from '@/repositories/@index.js'
 import { buildDrinkList } from '@/templates/@index.js'
 import { parseIndex } from '@/utils/parse-index.js'
@@ -16,7 +16,7 @@ export class TypeCommand implements ICommand {
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateManager) private stateManager: StateManager,
+    @inject(StateFacade) private stateManager: StateFacade,
   ) {}
 
   //#

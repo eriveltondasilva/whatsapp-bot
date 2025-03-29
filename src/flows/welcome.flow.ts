@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { FlowKeys, RegistrationSteps } from '@/config/enums.js'
-import { StateManager } from '@/managers/state-manager.js'
+import { StateFacade } from '@/managers/state.facade.js'
 import { LoggerProvider } from '@/providers/@index.js'
 import { CustomerRepository } from '@/repositories/@index.js'
 import { mainMenu } from '@/templates/@index.js'
@@ -18,7 +18,7 @@ export class WelcomeFlow implements IFlowHandler {
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
     @inject(LoggerProvider) private logger: LoggerProvider,
-    @inject(StateManager) private stateManager: StateManager,
+    @inject(StateFacade) private stateManager: StateFacade,
   ) {}
 
   //#

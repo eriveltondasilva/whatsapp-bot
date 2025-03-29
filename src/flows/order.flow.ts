@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/@index.js'
 import { DrinkSteps, OrderOptions, PizzaSteps } from '@/config/enums.js'
-import { StateManager } from '@/managers/state-manager.js'
+import { StateFacade } from '@/managers/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { orderMenu } from '@/templates/order-menu.js'
 
@@ -16,7 +16,7 @@ export class OrderFlow implements IFlowHandler {
   constructor(
     @inject(DrinkFlow) private readonly drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private readonly pizzaFlow: PizzaFlow,
-    @inject(StateManager) private readonly stateManager: StateManager,
+    @inject(StateFacade) private readonly stateManager: StateFacade,
     @inject(TextResponseBuilder) private readonly responseBuilder: TextResponseBuilder,
     //
     @inject(LoggerProvider) private readonly logger: LoggerProvider,

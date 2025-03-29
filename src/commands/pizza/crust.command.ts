@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder, TextResponseBuilder } from '@/builder/@index.js'
 import { PizzaSteps } from '@/config/enums.js'
-import { StateManager } from '@/managers/state-manager.js'
+import { StateFacade } from '@/managers/state.facade.js'
 import { CrustRepository } from '@/repositories/@index.js'
 import { buildCrustList } from '@/templates/@index.js'
 import { parseIndex } from '@/utils/parse-index.js'
@@ -16,7 +16,7 @@ export class CrustCommand implements ICommand {
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateManager) private stateManager: StateManager,
+    @inject(StateFacade) private stateManager: StateFacade,
   ) {}
 
   //#

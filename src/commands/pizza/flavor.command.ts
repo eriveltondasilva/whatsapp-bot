@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder } from '@/builder/@index.js'
 import { PizzaSteps } from '@/config/enums.js'
-import { StateManager } from '@/managers/state-manager.js'
+import { StateFacade } from '@/managers/state.facade.js'
 import { CrustRepository, FlavorRepository } from '@/repositories/@index.js'
 import { buildCrustList, buildFlavorList } from '@/templates/@index.js'
 import { parseIndex } from '@/utils/parse-index.js'
@@ -17,7 +17,7 @@ export class FlavorCommand implements ICommand {
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     //
-    @inject(StateManager) private stateManager: StateManager,
+    @inject(StateFacade) private stateManager: StateFacade,
   ) {}
 
   //#

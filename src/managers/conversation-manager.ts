@@ -1,8 +1,8 @@
 import { inject, injectable } from 'tsyringe'
 
 import { FlowFactory } from '@/flows/@factory.js'
-import { StateManager } from '@/managers/state-manager.js'
 import { LoggerProvider } from '@/providers/@index.js'
+import { StateFacade } from './state.facade.js'
 
 import type { Response } from '@/types/index.js'
 
@@ -10,7 +10,7 @@ import type { Response } from '@/types/index.js'
 export class ConversationManager {
   constructor(
     @inject(FlowFactory) private flowFactory: FlowFactory,
-    @inject(StateManager) private stateManager: StateManager,
+    @inject(StateFacade) private stateManager: StateFacade,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 

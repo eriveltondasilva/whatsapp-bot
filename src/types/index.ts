@@ -7,13 +7,13 @@ export type FlowContext = {
   history: string[]
 }
 
-type Customer = {
+export type Customer = {
   name: string
   phone: string
   address: string
 }
 
-type CartItem = {
+export type CartItem = {
   id: string
   type: ItemType
   name: string
@@ -23,7 +23,7 @@ type CartItem = {
 
 export type FlowState = {
   context: FlowContext
-  customer: Partial<Customer>
+  customer: Customer
   cart: CartItem[]
   lastInteraction: Date
 }
