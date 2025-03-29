@@ -10,8 +10,8 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class QuantityCommand implements ICommand {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#
@@ -25,8 +25,10 @@ export class QuantityCommand implements ICommand {
         .build()
     }
 
-    this.stateManager.updateStep(phone, PizzaSteps.NOTE)
-    this.stateManager.updateContextData(phone, { quantity })
+    this.stateManager.updateContext(phone, {
+      data: { quantity },
+      step: PizzaSteps.NOTE,
+    })
 
     return this.textResponseBuilder
       .addText('Deseja adicionar alguma observação?')

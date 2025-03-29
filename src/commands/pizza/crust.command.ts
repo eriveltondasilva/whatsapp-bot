@@ -12,10 +12,11 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class CrustCommand implements ICommand {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(CrustRepository) private crustRepository: CrustRepository,
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    //
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#
@@ -33,8 +34,10 @@ export class CrustCommand implements ICommand {
 
     const selectedCrust = crusts[selectedIndex]
 
-    this.stateManager.updateStep(phone, PizzaSteps.QUANTITY)
-    this.stateManager.updateContextData(phone, { selectedCrust })
+    this.stateManager.updateContext(phone, {
+      data: { selectedCrust },
+      step: PizzaSteps.QUANTITY,
+    })
 
     return this.textResponseBuilder.addText('🔢 Digite a quantidade desejada (1-10):').build()
   }

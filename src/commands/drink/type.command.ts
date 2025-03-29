@@ -34,7 +34,7 @@ export class TypeCommand implements ICommand {
     const selectedDrink = drinks[selectedIndex]
 
     this.stateManager.updateStep(phone, DrinkSteps.QUANTITY)
-    this.stateManager.updateContextData(phone, { selectedDrink })
+    this.stateManager.updateData(phone, { selectedDrink })
 
     return this.textResponseBuilder.addText('🔢 Digite a quantidade desejada (1-10):').build()
   }

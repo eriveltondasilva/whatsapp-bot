@@ -22,6 +22,7 @@ export class ConfirmCommand implements ICommand {
     }
 
     // this.stateManager.
+    this.stateManager.clearData(phone)
     this.stateManager.updateStep(phone, FlowKeys.ORDER)
 
     return this.textResponseBuilder

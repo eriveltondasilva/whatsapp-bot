@@ -13,10 +13,11 @@ import type { ContextData } from './type.js'
 @injectable()
 export class FlavorCommand implements ICommand {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(CrustRepository) private crustRepository: CrustRepository,
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
+    //
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#
@@ -36,7 +37,7 @@ export class FlavorCommand implements ICommand {
     const selectedFlavors = [...(data.selectedFlavors || []), flavors[selectedIndex]]
 
     if (!data.isSingleFlavor && selectedFlavors.length === 1) {
-      this.stateManager.updateContextData(phone, { selectedFlavors })
+      this.stateManager.updateData(phone, { selectedFlavors })
 
       return this.listResponseBuilder
         .addTitle('🍕🍕 ESCOLHA O SEGUNDO SABOR DA PIZZA')
@@ -45,8 +46,10 @@ export class FlavorCommand implements ICommand {
         .build()
     }
 
-    this.stateManager.updateStep(phone, PizzaSteps.CRUST)
-    this.stateManager.updateContextData(phone, { selectedFlavors })
+    this.stateManager.updateContext(phone, {
+      data: { selectedFlavors },
+      step: PizzaSteps.CRUST,
+    })
 
     const crusts = await this.crustRepository.getAllCrusts()
 

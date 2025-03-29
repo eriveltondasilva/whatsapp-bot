@@ -5,127 +5,96 @@ import { LoggerProvider } from '@/providers/@index.js'
 
 import type { FlowContext, FlowState } from '@/types/index.js'
 
-export interface IStateManager {
-  getState(phone: string): FlowState
-  updateContext(phone: string, context: FlowContext): void
-  updateStep(phone: string, step: string): void
-  updateContextData(phone: string, data: FlowContext['data']): void
-  updateCustomer(phone: string, customer: FlowState['customer']): void
-  resetState(phone: string): void
-  clearAllStates(): void
-}
-
 @singleton()
-export class StateManager implements IStateManager {
+export class StateManager {
   private readonly stateStore = new Map<string, FlowState>()
+  // private readonly MAX_STATES = 1_000
+  // private readonly MAX_HISTORY_LENGTH = 10
+  // private readonly STATE_EXPIRATION_TIME = 1_000 * 60 * 60 * 24 * 7 // 7 days
 
   constructor(@inject(LoggerProvider) private readonly logger: LoggerProvider) {}
 
   //#
-  getState(phone: string): FlowState {
-    if (!this.stateStore.has(phone)) {
-      return this.initializeState(phone)
-    }
-
-    const state = this.stateStore.get(phone) as FlowState
-    this.logger.debug('State requested')
-
-    return state
+  public getState(phone: string): FlowState {
+    return this.stateStore.get(phone) || this.initializeState(phone)
   }
 
-  updateContext(phone: string, context: Partial<FlowContext>): FlowState {
+  public updateContext(phone: string, context: Partial<FlowContext>): FlowState {
     const currentState = this.getState(phone)
 
-    const newHistory = [...currentState.history]
+    const updatedState = this.updateState(phone, currentState, {
+      context: {
+        ...currentState.context,
+        ...context,
+        data: {
+          ...currentState.context.data,
+          ...context.data,
+        },
+      },
+    })
 
-    if (context.step && context.step !== currentState.context.step) {
-      newHistory.push(currentState.context.step)
-    }
-
-    const newContext = {
-      ...currentState.context,
-      ...context,
-    }
-
-    const updatedState: FlowState = {
-      ...currentState,
-      context: newContext,
-      history: newHistory,
-      lastInteraction: new Date(),
-    }
-
-    this.stateStore.set(phone, updatedState)
-    this.logger.debug('State updated: CONTEXT', { newContext })
+    this.logger.debug('State updated: CONTEXT', updatedState.context)
 
     return updatedState
   }
 
-  updateStep(phone: string, step: string): FlowState {
+  public updateStep(phone: string, step: string): FlowState {
     const flow = this.extractFlow(step)
     return this.updateContext(phone, { flow, step })
   }
 
-  updateContextData(phone: string, data: FlowContext['data']): FlowState {
+  public updateData(phone: string, data: FlowContext['data']): FlowState {
+    return this.updateContext(phone, { data })
+  }
+
+  public updateCustomer(phone: string, customer: Partial<FlowState['customer']>): FlowState {
     const currentState = this.getState(phone)
 
-    const newContextData = {
-      ...currentState.context.data,
-      ...data,
-    }
+    const updatedState = this.updateState(phone, currentState, {
+      customer: {
+        ...currentState.customer,
+        ...customer,
+      },
+    })
 
-    const updatedState: FlowState = {
-      ...currentState,
+    this.logger.debug('State updated: CUSTOMER', updatedState.customer)
+
+    return updatedState
+  }
+
+  public clearData(phone: string): FlowState {
+    const currentState = this.getState(phone)
+
+    const updatedState = this.updateState(phone, currentState, {
       context: {
         ...currentState.context,
-        data: newContextData,
+        data: {},
       },
-      lastInteraction: new Date(),
-    }
+    })
 
-    this.stateStore.set(phone, updatedState)
-    this.logger.debug('State updated: CONTEXT DATA', { newContextData })
+    this.logger.debug('State updated: CONTEXT DATA CLEARED', updatedState.context)
 
     return updatedState
   }
 
-  updateCustomer(phone: string, customer: Partial<FlowState['customer']>): FlowState {
-    const currentState = this.getState(phone)
-
-    const newCustomer = {
-      ...currentState.customer,
-      ...customer,
-    }
-
-    const updatedState: FlowState = {
-      ...currentState,
-      customer: newCustomer,
-      lastInteraction: new Date(),
-    }
-
-    this.stateStore.set(phone, updatedState)
-    this.logger.debug('State updated: CUSTOMER', { newCustomer })
-
-    return updatedState
+  public resetState(phone: string): FlowState {
+    this.logger.debug('State reset', { phone })
+    return this.initializeState(phone)
   }
 
-  resetState(phone: string): FlowState {
-    const initialState = this.initializeState(phone)
-    this.logger.ok('State reset', { phone })
-    return initialState
-  }
-
-  clearAllStates(): void {
+  public clearAllStates(): void {
     this.stateStore.clear()
     this.logger.info('🚫 All states cleared')
   }
 
-  // ###
-  private initializeState(phone: string) {
-    const initialState: FlowState = {
+  //#
+  private initializeState(phone: string): FlowState {
+    const initialState = {
       context: {
         flow: FlowKeys.WELCOME,
         step: FlowKeys.WELCOME,
         data: {},
+        history: [],
       },
       customer: {
         name: '',
@@ -133,7 +102,6 @@ export class StateManager implements IStateManager {
         address: '',
       },
       cart: [],
-      history: [],
       lastInteraction: new Date(),
     }
 
@@ -141,6 +109,21 @@ export class StateManager implements IStateManager {
     this.logger.debug('State initialized', { phone })
 
     return initialState
+  }
+
+  private updateState(
+    phone: string,
+    currentState: FlowState,
+    updates: Partial<FlowState>,
+  ): FlowState {
+    const updatedState: FlowState = {
+      ...currentState,
+      ...updates,
+      lastInteraction: new Date(),
+    }
+
+    this.stateStore.set(phone, updatedState)
+    return updatedState
   }
 
   private extractFlow(step: string): FlowKeys {

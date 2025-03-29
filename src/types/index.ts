@@ -4,6 +4,7 @@ export type FlowContext = {
   flow: FlowKeys
   step: string
   data: Record<string, unknown>
+  history: string[]
 }
 
 type Customer = {
@@ -24,7 +25,6 @@ export type FlowState = {
   context: FlowContext
   customer: Partial<Customer>
   cart: CartItem[]
-  history: string[]
   lastInteraction: Date
 }
 

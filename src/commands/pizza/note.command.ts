@@ -6,12 +6,13 @@ import { StateManager } from '@/managers/state-manager.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
 import type { ContextData } from './type.js'
+import { formatCurrency } from '@/utils/format-currency.js'
 
 @injectable()
 export class NoteCommand implements ICommand {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#
@@ -24,17 +25,21 @@ export class NoteCommand implements ICommand {
       return this.textResponseBuilder.addText('❌ Não foi possível processar seu pedido.').build()
     }
 
-    this.stateManager.updateStep(phone, PizzaSteps.CONFIRM)
-    this.stateManager.updateContextData(phone, { note })
+    this.stateManager.updateContext(phone, {
+      data: { note },
+      step: PizzaSteps.CONFIRM,
+    })
 
     const flavorNames = selectedFlavors.map((flavor) => flavor.name).join(' + ')
+    const total = formatCurrency(selectedFlavors.reduce((acc, flavor) => acc + Number(flavor.price), 0))
 
     return this.textResponseBuilder
-      .addTitle('# Pizza:')
-      .addText(`Sabor(es): _${flavorNames}_`)
+      .addText('# PIZZA')
+      .addText(`Sabor: _${flavorNames}_`)
       .addText(`Borda: _${selectedCrust.name}_`)
       .addText(`Quantidade: _${quantity}_`)
-      .addText(note ? `📝 Observação: _${note}_` : '')
+      .addText(`Observação: _${note || 'N/A'}_`)
+      .addText(`Total: _${total}_`)
       .addEmptyLine()
       .addText('Confirma o pedido?')
       .addText('1️⃣ - Sim, confirmar')

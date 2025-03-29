@@ -14,6 +14,7 @@ export class MenuCommand implements ICommand {
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    //
     @inject(StateManager) private stateManager: StateManager,
   ) {}
 
@@ -29,8 +30,10 @@ export class MenuCommand implements ICommand {
         .build()
     }
 
-    this.stateManager.updateStep(phone, PizzaSteps.FLAVOR)
-    this.stateManager.updateContextData(phone, { isSingleFlavor })
+    this.stateManager.updateContext(phone, {
+      data: { isSingleFlavor },
+      step: PizzaSteps.FLAVOR,
+    })
 
     const title = isSingleFlavor
       ? '🍕 ESCOLHA O SABOR DA SUA PIZZA'
