@@ -4,7 +4,7 @@ import { ListResponseBuilder } from '@/builder/list-response.builder.js'
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
-import { FlavorRepository } from '@/repositories/@index.js'
+import { FlavorRepository } from '@/repositories/flavor.repository.js'
 import { buildFlavorList } from '@/templates/@index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'

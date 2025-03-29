@@ -4,7 +4,7 @@ import { ListResponseBuilder,} from '@/builder/list-response.builder.js'
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
-import { CrustRepository } from '@/repositories/@index.js'
+import { CrustRepository } from '@/repositories/crust.repository.js'
 import { buildCrustList } from '@/templates/@index.js'
 import { parseIndex } from '@/utils/parse-index.js'
 

@@ -4,7 +4,7 @@ import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { FlowKeys, RegistrationSteps } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
-import { CustomerRepository } from '@/repositories/@index.js'
+import { CustomerRepository } from '@/repositories/customer.repository.js'
 import { mainMenu } from '@/templates/@index.js'
 import { RegistrationFlow } from './registration.flow.js'
 

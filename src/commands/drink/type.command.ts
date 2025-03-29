@@ -4,7 +4,7 @@ import { ListResponseBuilder, } from '@/builder/list-response.builder.js'
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { DrinkSteps } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
-import { DrinkRepository } from '@/repositories/@index.js'
+import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { buildDrinkList } from '@/templates/@index.js'
 import { parseIndex } from '@/utils/parse-index.js'
 
