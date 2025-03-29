@@ -16,9 +16,10 @@ export class MainMenuFlow implements IFlowHandler {
   ].join(',')
 
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
+    //
     @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#

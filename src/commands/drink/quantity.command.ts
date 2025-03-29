@@ -11,13 +11,12 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class QuantityCommand implements ICommand {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#
-  public async execute({ context, phone, message }: CommandParams) {
-    const { data } = context
+  public async execute({ phone, message }: CommandParams) {
     const quantity = Number.parseInt(message, 10)
 
     if (!isValidQuantity(quantity)) {

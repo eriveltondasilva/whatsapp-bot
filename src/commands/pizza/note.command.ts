@@ -5,8 +5,8 @@ import { PizzaSteps } from '@/config/enums.js'
 import { StateManager } from '@/managers/state-manager.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
-import type { ContextData } from './type.js'
 import { formatCurrency } from '@/utils/format-currency.js'
+import type { ContextData } from './type.js'
 
 @injectable()
 export class NoteCommand implements ICommand {
@@ -31,7 +31,9 @@ export class NoteCommand implements ICommand {
     })
 
     const flavorNames = selectedFlavors.map((flavor) => flavor.name).join(' + ')
-    const total = formatCurrency(selectedFlavors.reduce((acc, flavor) => acc + Number(flavor.price), 0))
+    const total = formatCurrency(
+      selectedFlavors.reduce((acc, flavor) => acc + Number(flavor.price), 0),
+    )
 
     return this.textResponseBuilder
       .addText('# PIZZA')

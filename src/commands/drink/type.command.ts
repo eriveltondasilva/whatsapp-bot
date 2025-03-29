@@ -12,10 +12,11 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class TypeCommand implements ICommand {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(DrinkRepository) private drinkRepository: DrinkRepository,
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    //
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#
@@ -33,8 +34,10 @@ export class TypeCommand implements ICommand {
 
     const selectedDrink = drinks[selectedIndex]
 
-    this.stateManager.updateStep(phone, DrinkSteps.QUANTITY)
-    this.stateManager.updateData(phone, { selectedDrink })
+    this.stateManager.updateContext(phone, {
+      data: { selectedDrink },
+      step: DrinkSteps.QUANTITY,
+    })
 
     return this.textResponseBuilder.addText('🔢 Digite a quantidade desejada (1-10):').build()
   }

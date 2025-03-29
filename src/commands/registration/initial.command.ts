@@ -9,8 +9,8 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class InitialCommand implements ICommand {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#

@@ -11,8 +11,8 @@ import type { ContextData } from './type.js'
 @injectable()
 export class NameCommand implements ICommand {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#

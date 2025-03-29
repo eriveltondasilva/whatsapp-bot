@@ -15,10 +15,11 @@ import type { ContextData } from './type.js'
 @injectable()
 export class AddressCommand implements ICommand {
   constructor(
-    @inject(StateManager) private stateManager: StateManager,
     @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    //
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   public async execute({ context, message: address, phone }: CommandParams) {

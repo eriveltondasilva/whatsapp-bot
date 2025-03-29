@@ -15,10 +15,10 @@ export class WelcomeFlow implements IFlowHandler {
   constructor(
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
-    @inject(StateManager) private stateManager: StateManager,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
     @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(StateManager) private stateManager: StateManager,
   ) {}
 
   //#

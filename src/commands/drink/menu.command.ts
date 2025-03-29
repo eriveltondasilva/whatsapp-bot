@@ -14,6 +14,7 @@ export class MenuCommand implements ICommand {
     @inject(DrinkRepository) private drinkRepository: DrinkRepository,
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    //
     @inject(StateManager) private stateManager: StateManager,
   ) {}
 
