@@ -1,8 +1,8 @@
 // services/state/CustomerManager.ts
 import { inject, injectable } from 'tsyringe'
 
-import { LoggerProvider } from '@/providers/logger.provider.js'
 import { StateStorage } from '@/managers/state-storage.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { Customer, FlowState } from '@/types/index.js'
 

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { MessageType } from '@/config/enums.js'
-import { ClientProvider} from '@/providers/client.provider.js'
+import { ClientProvider } from '@/providers/client.provider.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { getDelay } from '@/utils/@index.js'
 
