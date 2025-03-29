@@ -4,7 +4,8 @@ import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { FlowKeys, MenuOptions } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
-import { mainMenu, orderMenu } from '@/templates/@index.js'
+import { mainMenu } from '@/templates/main-menu.js'
+import { orderMenu } from '@/templates/order-menu.js'
 
 import type { FlowActions, FlowHandle, IFlowHandler } from '@/types/index.js'
 

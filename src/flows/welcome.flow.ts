@@ -5,7 +5,7 @@ import { FlowKeys, RegistrationSteps } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { CustomerRepository } from '@/repositories/customer.repository.js'
-import { mainMenu } from '@/templates/@index.js'
+import { mainMenu } from '@/templates/main-menu.js'
 import { RegistrationFlow } from './registration.flow.js'
 
 import type { FlowHandle, IFlowHandler, Response } from '@/types/index.js'

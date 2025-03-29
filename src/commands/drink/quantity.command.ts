@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe'
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { FlowKeys } from '@/config/enums.js'
 import { StateFacade } from '@/managers/state.facade.js'
-import { orderMenu } from '@/templates/@index.js'
+import { orderMenu } from '@/templates/order-menu.js'
 import { isValidQuantity } from '@/utils/validations.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
