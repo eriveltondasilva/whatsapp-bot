@@ -34,7 +34,7 @@ export class MenuCommand implements ICommand {
 
     return this.listResponseBuilder
       .addTitle('🍹 ESCOLHA SUA BEBIDA')
-      .addDescription('> Por favor, aperte no botão abaixo para escolher a sua bebida.')
+      .addText('> Por favor, aperte no botão abaixo para escolher a sua bebida.')
       .addList(buildDrinkList(drinks))
       .build()
   }

@@ -5,7 +5,7 @@ import { FlowKeys } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { CustomerRepository } from '@/repositories/customer.repository.js'
-import { mainMenu } from '@/templates/main-menu.js'
+import { mainMenu } from '@/templates/menus.js'
 import { getFirstName } from '@/utils/get-first-name.js'
 import { isValidAddress } from '@/utils/validations.js'
 

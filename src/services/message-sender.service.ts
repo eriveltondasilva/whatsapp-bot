@@ -14,6 +14,7 @@ export class MessageSender {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
+  //#
   public async send(phone: string, response: Response): Promise<void> {
     const { type, content } = response
 
@@ -28,14 +29,14 @@ export class MessageSender {
     try {
       action && (await action())
 
-      this.logger.debug('📬 Message sent successfully', { phone, type })
+      this.logger.debug('📬 Mensagem enviada com sucesso', { phone, type })
     } catch (error) {
       this.logger.error('Failed to send message', { phone, type, error })
       throw error
     }
   }
 
-  // ###
+  //#
   public async sendErrorMessage(phone: string): Promise<void> {
     await this.sendText(phone, [
       '❌ Desculpe, ocorreu um erro ao processar sua mensagem.',
@@ -45,21 +46,18 @@ export class MessageSender {
 
   private async sendText(phone: string, content: string[]): Promise<void> {
     const client = await this.client.getClient()
-    await client.sendText(phone, `[BOT]\n\n${content.join('\n')}`, { delay: getDelay() })
+    await client.sendText(phone, `[BOT]\n${content.join('\n')}`, { delay: getDelay() })
   }
 
   private async sendList(phone: string, content: string[]): Promise<void> {
     const [title, description, ...rows] = content
 
-    if (!title || !rows?.length) {
-      this.logger.error('Invalid list data', { title, rows })
-      return
-    }
+    if (!title || !rows.length) throw new Error('Dados de lista inválidos')
 
     const client = await this.client.getClient()
     await client.sendListMessage(phone, {
       buttonText: 'Clique Aqui',
-      title: `[BOT]\n\n${title}`,
+      title: `[BOT]\n${title}`,
       description,
       sections: this.createListSections(rows),
     })
@@ -68,20 +66,24 @@ export class MessageSender {
   private async sendImage(phone: string, content: string[]): Promise<void> {
     const [path, title = 'imagem', caption = ''] = content
 
+    if (!path) throw new Error('Caminho da imagem não fornecido')
+
     const client = await this.client.getClient()
     await client.sendImage(phone, path, title, caption)
   }
 
-  // ###
+  //#
   private createListSections(rows: string[]) {
-    if (!rows?.length) {
-      this.logger.error('Empty list')
-      return []
-    }
+    if (!rows.length) throw new Error('Lista vazia')
 
     const parsedRows = rows.map((row: string) => {
-      const [rowId, title, description, category = 'cardápio'] = row.split('::')
-      return { rowId, title, description, category }
+      const parts = row.split('::')
+      return {
+        rowId: parts[0] || '',
+        title: parts[1] || '',
+        description: parts[2] || '',
+        category: parts[3] || 'cardápio',
+      }
     })
 
     const groupedRows = Object.groupBy(parsedRows, (row) => row.category)

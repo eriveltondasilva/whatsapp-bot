@@ -42,7 +42,7 @@ export class MenuCommand implements ICommand {
 
     return this.listResponseBuilder
       .addTitle(title)
-      .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+      .addText('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildFlavorList(flavors))
       .build()
   }

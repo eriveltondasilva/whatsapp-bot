@@ -4,7 +4,7 @@ import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { DrinkSteps, OrderOptions, PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
-import { orderMenu } from '@/templates/order-menu.js'
+import { orderMenu } from '@/templates/menus.js'
 
 import { DrinkFlow } from './drink.flow.js'
 import { PizzaFlow } from './pizza.flow.js'

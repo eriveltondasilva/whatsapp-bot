@@ -30,7 +30,7 @@ export class FlavorCommand implements ICommand {
     if (!flavors[selectedIndex]) {
       return this.listResponseBuilder
         .addTitle('❌ OPÇÃO INVÁLIDA!')
-        .addDescription('Por favor, escolha uma opção válida.')
+        .addText('Por favor, escolha uma opção válida.')
         .addList(buildFlavorList(flavors))
         .build()
     }
@@ -42,7 +42,7 @@ export class FlavorCommand implements ICommand {
 
       return this.listResponseBuilder
         .addTitle('🍕🍕 ESCOLHA O SEGUNDO SABOR DA PIZZA')
-        .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+        .addText('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
         .addList(buildFlavorList(flavors))
         .build()
     }
@@ -56,7 +56,7 @@ export class FlavorCommand implements ICommand {
 
     return this.listResponseBuilder
       .addTitle('🍕 ESCOLHA A BORDA DA SUA PIZZA')
-      .addDescription('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+      .addText('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildCrustList(crusts))
       .build()
   }
