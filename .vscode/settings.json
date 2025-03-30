@@ -22,5 +22,8 @@
       "filePath": "src",
       "group": "Default"
     }
-  ]
+  ],
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  }
 }

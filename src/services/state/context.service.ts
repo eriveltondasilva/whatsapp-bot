@@ -8,7 +8,7 @@ import type { FlowContext, FlowState } from '@/types/index.js'
 
 @injectable()
 export class ContextService {
-  private readonly MAX_HISTORY_LENGTH = 20
+  private readonly MAX_HISTORY_LENGTH = 10
 
   constructor(
     @inject(StateStorage) private readonly storage: StateStorage,
@@ -22,14 +22,11 @@ export class ContextService {
   ): FlowState {
     const previousStep = currentState.context.step
 
-    const history = [...currentState.context.history]
     if (contextUpdates.step && contextUpdates.step !== previousStep) {
-      history.unshift(previousStep)
-
-      if (history.length > this.MAX_HISTORY_LENGTH) {
-        history.pop()
-      }
+      contextUpdates.flow = this.extractFlow(contextUpdates.step)
     }
+
+    const history = this.updateStepHistory(currentState, contextUpdates)
 
     const updatedState = {
       ...currentState,
@@ -51,8 +48,7 @@ export class ContextService {
   }
 
   public updateStep(phone: string, currentState: FlowState, newStep: string): FlowState {
-    const newFlow = this.extractFlow(newStep)
-    return this.updateContext(phone, currentState, { flow: newFlow, step: newStep })
+    return this.updateContext(phone, currentState, { step: newStep })
   }
 
   public updateData(phone: string, currentState: FlowState, data: FlowContext['data']): FlowState {
@@ -85,5 +81,19 @@ export class ContextService {
     }
 
     return flowName as FlowKeys
+  }
+
+  private updateStepHistory(currentState: FlowState, contextUpdates: Partial<FlowContext>): string[] {
+    const currentHistory = [...currentState.context.history]
+    const previousStep = currentState.context.step
+    const newStep = contextUpdates.step
+
+    if (newStep && newStep !== previousStep) {
+      currentHistory.unshift(previousStep)
+
+      currentHistory.length > this.MAX_HISTORY_LENGTH && currentHistory.pop()
+    }
+
+    return currentHistory
   }
 }
