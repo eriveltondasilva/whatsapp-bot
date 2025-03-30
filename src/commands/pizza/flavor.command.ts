@@ -18,7 +18,7 @@ export class FlavorCommand implements ICommand {
     @inject(FlavorRepository) private flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     //
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   //#
@@ -38,7 +38,7 @@ export class FlavorCommand implements ICommand {
     const selectedFlavors = [...(data.selectedFlavors || []), flavors[selectedIndex]]
 
     if (!data.isSingleFlavor && selectedFlavors.length === 1) {
-      this.stateManager.updateData(phone, { selectedFlavors })
+      this.state.updateData(phone, { selectedFlavors })
 
       return this.listResponseBuilder
         .addTitle('🍕🍕 ESCOLHA O SEGUNDO SABOR DA PIZZA')
@@ -47,7 +47,7 @@ export class FlavorCommand implements ICommand {
         .build()
     }
 
-    this.stateManager.updateContext(phone, {
+    this.state.updateContext(phone, {
       data: { selectedFlavors },
       step: PizzaSteps.CRUST,
     })

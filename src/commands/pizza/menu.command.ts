@@ -16,7 +16,7 @@ export class MenuCommand implements ICommand {
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   //#
@@ -25,13 +25,13 @@ export class MenuCommand implements ICommand {
     const flavors = await this.flavorRepository.getAllFlavors()
 
     if (!flavors?.length) {
-      this.stateManager.resetState(phone)
+      this.state.resetState(phone)
       return this.textResponseBuilder
         .addText('❌ Desculpe, não encontramos sabores disponíveis no momento.')
         .build()
     }
 
-    this.stateManager.updateContext(phone, {
+    this.state.updateContext(phone, {
       data: { isSingleFlavor },
       step: PizzaSteps.FLAVOR,
     })

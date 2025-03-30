@@ -10,12 +10,12 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 export class InitialCommand implements ICommand {
   constructor(
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   //#
   public async execute({ phone }: CommandParams) {
-    this.stateManager.updateStep(phone, RegistrationSteps.NAME)
+    this.state.updateStep(phone, RegistrationSteps.NAME)
 
     return this.textResponseBuilder
       .addText('🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!')

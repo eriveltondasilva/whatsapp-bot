@@ -6,19 +6,16 @@ import { StateFacade } from '@/core/state.facade.js'
 import { isValidName } from '@/utils/validations.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
-import type { ContextData } from './type.js'
 
 @injectable()
 export class NameCommand implements ICommand {
   constructor(
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   //#
-  public async execute({ context, phone }: CommandParams) {
-    const { name } = context.data as ContextData
-
+  public async execute({ message: name, phone }: CommandParams) {
     if (!isValidName(name)) {
       return this.textResponseBuilder
         .addTitle('❌ NOME INVÁLIDO')
@@ -28,8 +25,10 @@ export class NameCommand implements ICommand {
         .build()
     }
 
-    this.stateManager.updateStep(phone, RegistrationSteps.ADDRESS)
-    this.stateManager.updateCustomer(phone, { name })
+    this.state.updateContext(phone, {
+      data: { name },
+      step: RegistrationSteps.ADDRESS,
+    })
 
     return this.textResponseBuilder
       .addGreeting(name)

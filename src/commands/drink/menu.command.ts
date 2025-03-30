@@ -16,7 +16,7 @@ export class MenuCommand implements ICommand {
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   //#
@@ -24,13 +24,13 @@ export class MenuCommand implements ICommand {
     const drinks = await this.drinkRepository.getAllDrinks()
 
     if (!drinks?.length) {
-      this.stateManager.resetState(phone)
+      this.state.resetState(phone)
       return this.textResponseBuilder
         .addText('❌ Desculpe, não encontramos bebidas disponíveis no momento.')
         .build()
     }
 
-    this.stateManager.updateStep(phone, DrinkSteps.TYPE)
+    this.state.updateStep(phone, DrinkSteps.TYPE)
 
     return this.listResponseBuilder
       .addTitle('🍹 ESCOLHA SUA BEBIDA')

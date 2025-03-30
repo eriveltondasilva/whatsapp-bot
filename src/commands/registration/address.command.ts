@@ -19,7 +19,7 @@ export class AddressCommand implements ICommand {
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   public async execute({ context, message: address, phone }: CommandParams) {
@@ -35,17 +35,17 @@ export class AddressCommand implements ICommand {
     const { name } = context.data as ContextData
 
     if (!name) {
-      this.stateManager.resetState(phone)
+      this.state.resetState(phone)
       return this.textResponseBuilder
         .addText('❌ Ops! Algo deu errado. Por favor, tente novamente.')
         .build()
     }
 
-    const newCustomer = this.customerRepository.create({ phone, name, address })
+    const newCustomer = this.customerRepository.create({ name, address, phone })
     this.logger.ok('New customer registered', { newCustomer })
 
-    this.stateManager.resetState(phone)
-    this.stateManager.updateStep(phone, FlowKeys.MENU)
+    this.state.resetState(phone)
+    this.state.updateStep(phone, FlowKeys.MENU)
 
     return this.textResponseBuilder
       .addText(`🎉 Cadastro concluído com sucesso, ${getFirstName(name)}!`)

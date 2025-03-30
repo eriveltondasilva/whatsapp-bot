@@ -10,20 +10,19 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class ConfirmCommand implements ICommand {
   constructor(
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
   ) {}
 
   //#
   public async execute({ message, phone }: CommandParams) {
     if (message === '0') {
-      this.stateManager.resetState(phone)
+      this.state.resetState(phone)
       return this.textResponseBuilder.addText('❌ Pedido cancelado.').build()
     }
 
-    // this.stateManager.
-    this.stateManager.clearData(phone)
-    this.stateManager.updateStep(phone, FlowKeys.ORDER)
+    this.state.clearData(phone)
+    this.state.updateStep(phone, FlowKeys.ORDER)
 
     return this.textResponseBuilder
       .addText('✅ Pizza adicionada ao carrinho com sucesso!')

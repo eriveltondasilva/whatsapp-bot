@@ -12,7 +12,7 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 export class QuantityCommand implements ICommand {
   constructor(
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   //#
@@ -26,7 +26,7 @@ export class QuantityCommand implements ICommand {
         .build()
     }
 
-    this.stateManager.updateStep(phone, FlowKeys.ORDER)
+    this.state.updateStep(phone, FlowKeys.ORDER)
 
     return this.textResponseBuilder
       .addText('✅ Bebida adicionada ao carrinho com sucesso!')

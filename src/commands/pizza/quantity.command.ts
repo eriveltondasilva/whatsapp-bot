@@ -11,7 +11,7 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 export class QuantityCommand implements ICommand {
   constructor(
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   //#
@@ -25,7 +25,7 @@ export class QuantityCommand implements ICommand {
         .build()
     }
 
-    this.stateManager.updateContext(phone, {
+    this.state.updateContext(phone, {
       data: { quantity },
       step: PizzaSteps.NOTE,
     })

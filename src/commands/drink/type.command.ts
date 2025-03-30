@@ -17,7 +17,7 @@ export class TypeCommand implements ICommand {
     @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   //#
@@ -35,7 +35,7 @@ export class TypeCommand implements ICommand {
 
     const selectedDrink = drinks[selectedIndex]
 
-    this.stateManager.updateContext(phone, {
+    this.state.updateContext(phone, {
       data: { selectedDrink },
       step: DrinkSteps.QUANTITY,
     })
