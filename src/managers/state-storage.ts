@@ -26,9 +26,9 @@ export class StateStorage {
     return state
   }
 
-  public set(phone: string, state: FlowState): void {
+  public set(phone: string, currentState: FlowState): void {
     const updatedState = {
-      ...state,
+      ...currentState,
       lastInteraction: new Date(),
     }
 
@@ -81,9 +81,9 @@ export class StateStorage {
 
     this.logger.debug(`Estados ativos: ${this.stateStore.size}`)
 
-    if (this.stateStore.size > this.MAX_STATES) {
-      this.enforceStateLimit()
-    }
+    // if (this.stateStore.size > this.MAX_STATES) {
+    //   this.enforceStateLimit()
+    // }
   }
 
   private enforceStateLimit(): void {

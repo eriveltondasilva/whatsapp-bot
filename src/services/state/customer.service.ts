@@ -13,12 +13,12 @@ export class CustomerService {
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
-  public updateCustomer(phone: string, state: FlowState, customer: Partial<Customer>): FlowState {
+  public updateCustomer(phone: string, currentState: FlowState, customerUpdates: Partial<Customer>): FlowState {
     const updatedState = {
-      ...state,
+      ...currentState,
       customer: {
-        ...state.customer,
-        ...customer,
+        ...currentState.customer,
+        ...customerUpdates,
       },
     }
 

@@ -45,11 +45,13 @@ export class StateFacade {
     return this.contextService.clearData(phone, state)
   }
 
+  //*
   public updateCustomer(phone: string, customer: Partial<Customer>): FlowState {
     const state = this.getState(phone)
     return this.customerService.updateCustomer(phone, state, customer)
   }
 
+  //*
   public addToCart(phone: string, item: CartItem): FlowState {
     const state = this.getState(phone)
     return this.cartService.addToCart(phone, state, item)
@@ -70,6 +72,7 @@ export class StateFacade {
   //   return this.cartService.getCartTotal(state)
   // }
 
+  //*
   public resetState(phone: string): FlowState {
     return this.initializeState(phone)
   }

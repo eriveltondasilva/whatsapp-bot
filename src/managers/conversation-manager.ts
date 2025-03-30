@@ -10,7 +10,7 @@ import type { Response } from '@/types/index.js'
 export class ConversationManager {
   constructor(
     @inject(FlowFactory) private flowFactory: FlowFactory,
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
@@ -18,13 +18,13 @@ export class ConversationManager {
     this.logger.info('📌 Conversation Manager', { phone })
 
     try {
-      const { context } = this.stateManager.getState(phone)
+      const { context } = this.state.getState(phone)
       const flow = this.flowFactory.createFlow(context.flow)
 
       return await flow.handle({ context, phone, message })
     } catch (error) {
       this.logger.error('Error handling conversation:', error)
-      this.stateManager.resetState(phone)
+      this.state.resetState(phone)
 
       throw error
     }

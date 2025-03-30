@@ -15,11 +15,15 @@ export class ContextService {
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
-  public updateContext(phone: string, state: FlowState, context: Partial<FlowContext>): FlowState {
-    const previousStep = state.context.step
+  public updateContext(
+    phone: string,
+    currentState: FlowState,
+    contextUpdates: Partial<FlowContext>,
+  ): FlowState {
+    const previousStep = currentState.context.step
 
-    const history = [...state.context.history]
-    if (context.step && context.step !== previousStep) {
+    const history = [...currentState.context.history]
+    if (contextUpdates.step && contextUpdates.step !== previousStep) {
       history.unshift(previousStep)
 
       if (history.length > this.MAX_HISTORY_LENGTH) {
@@ -28,14 +32,14 @@ export class ContextService {
     }
 
     const updatedState = {
-      ...state,
+      ...currentState,
       context: {
-        ...state.context,
-        ...context,
+        ...currentState.context,
+        ...contextUpdates,
         history,
         data: {
-          ...state.context.data,
-          ...context.data,
+          ...currentState.context.data,
+          ...contextUpdates.data,
         },
       },
     }
@@ -46,20 +50,20 @@ export class ContextService {
     return updatedState
   }
 
-  public updateStep(phone: string, state: FlowState, step: string): FlowState {
-    const flow = this.extractFlow(step)
-    return this.updateContext(phone, state, { flow, step })
+  public updateStep(phone: string, currentState: FlowState, newStep: string): FlowState {
+    const newFlow = this.extractFlow(newStep)
+    return this.updateContext(phone, currentState, { flow: newFlow, step: newStep })
   }
 
-  public updateData(phone: string, state: FlowState, data: FlowContext['data']): FlowState {
-    return this.updateContext(phone, state, { data })
+  public updateData(phone: string, currentState: FlowState, data: FlowContext['data']): FlowState {
+    return this.updateContext(phone, currentState, { data })
   }
 
-  public clearData(phone: string, state: FlowState): FlowState {
+  public clearData(phone: string, currentState: FlowState): FlowState {
     const updatedState = {
-      ...state,
+      ...currentState,
       context: {
-        ...state.context,
+        ...currentState.context,
         data: {},
       },
     }

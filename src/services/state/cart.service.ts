@@ -14,10 +14,10 @@ export class CartService {
   ) {}
 
   //#
-  public addToCart(phone: string, state: FlowState, item: CartItem): FlowState {
+  public addToCart(phone: string, currentState: FlowState, item: CartItem): FlowState {
     const updatedState = {
-      ...state,
-      cart: [...state.cart, item],
+      ...currentState,
+      cart: [...currentState.cart, item],
     }
 
     this.storage.set(phone, updatedState)
@@ -54,17 +54,17 @@ export class CartService {
   //     return updatedState
   //   }
 
-  public removeFromCart(phone: string, state: FlowState, index: number): FlowState {
-    if (index < 0 || index >= state.cart.length) {
+  public removeFromCart(phone: string, currentState: FlowState, index: number): FlowState {
+    if (index < 0 || index >= currentState.cart.length) {
       this.logger.warn('Tentativa de remover item do carrinho com índice inválido', { index })
-      return state
+      return currentState
     }
 
-    const newCart = [...state.cart]
+    const newCart = [...currentState.cart]
     newCart.splice(index, 1)
 
     const updatedState = {
-      ...state,
+      ...currentState,
       cart: newCart,
     }
 
@@ -74,9 +74,9 @@ export class CartService {
     return updatedState
   }
 
-  public clearCart(phone: string, state: FlowState): FlowState {
+  public clearCart(phone: string, currentState: FlowState): FlowState {
     const updatedState = {
-      ...state,
+      ...currentState,
       cart: [],
     }
 
