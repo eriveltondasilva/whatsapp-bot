@@ -5,6 +5,12 @@ export class DrinkRepository {
   async getAllDrinks() {
     return await prisma.drink.findMany({
       where: { active: true },
+      select: {
+        id: true,
+        name: true,
+        price: true,
+        description: true,
+      }
     })
   }
 

@@ -5,6 +5,12 @@ export class CustomerRepository {
   async findByPhone(phone: string) {
     return await prisma.customer.findUnique({
       where: { phone },
+      select: {
+        id: true,
+        name: true,
+        phone: true,
+        address: true,
+      }
     })
   }
 
