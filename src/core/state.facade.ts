@@ -1,8 +1,6 @@
 import { inject, singleton } from 'tsyringe'
 
-import { FlowKeys } from '@/config/enums.js'
 import { StateStorage } from '@/core/state-storage.js'
-import { LoggerProvider } from '@/providers/logger.provider.js'
 import { CartService } from '@/services/state/cart.service.js'
 import { ContextService } from '@/services/state/context.service.js'
 import { CustomerService } from '@/services/state/customer.service.js'
@@ -16,13 +14,12 @@ export class StateFacade {
     @inject(ContextService) private readonly contextService: ContextService,
     @inject(CustomerService) private readonly customerService: CustomerService,
     //
-    @inject(LoggerProvider) private readonly logger: LoggerProvider,
     @inject(StateStorage) private readonly storage: StateStorage,
   ) {}
 
   //#
   public getState(phone: string): FlowState {
-    return this.storage.get(phone) || this.initializeState(phone)
+    return this.storage.get(phone)
   }
 
   public updateContext(phone: string, context: Partial<FlowContext>): FlowState {
@@ -74,34 +71,10 @@ export class StateFacade {
 
   //*
   public resetState(phone: string): FlowState {
-    return this.initializeState(phone)
+    return this.storage.reset(phone)
   }
 
   public clearAllStates(): void {
     this.storage.clear()
-  }
-
-  //#
-  private initializeState(phone: string): FlowState {
-    const initialState: FlowState = {
-      context: {
-        flow: FlowKeys.WELCOME,
-        step: FlowKeys.WELCOME,
-        data: {},
-        history: [],
-      },
-      customer: {
-        name: '',
-        phone,
-        address: '',
-      },
-      cart: [],
-      lastInteraction: new Date(),
-    }
-
-    this.storage.set(phone, initialState)
-    this.logger.debug('Estado inicializado', { phone })
-
-    return initialState
   }
 }

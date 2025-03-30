@@ -8,7 +8,7 @@ import type { FlowContext, FlowState } from '@/types/index.js'
 
 @injectable()
 export class ContextService {
-  private readonly MAX_HISTORY_LENGTH = 10
+  private readonly MAX_HISTORY_LENGTH = 20
 
   constructor(
     @inject(StateStorage) private readonly storage: StateStorage,

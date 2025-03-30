@@ -1,6 +1,8 @@
 import { inject, singleton } from 'tsyringe'
 
+import { FlowKeys } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
+
 import type { FlowState } from '@/types/index.js'
 
 @singleton()
@@ -14,13 +16,17 @@ export class StateStorage {
   }
 
   //#
-  public get(phone: string): FlowState | undefined {
+  public get(phone: string): FlowState {
     const state = this.stateStore.get(phone)
 
-    if (state && this.isStateExpired(state)) {
-      this.logger.info('Estado expirado, removendo', { phone })
-      this.stateStore.delete(phone)
-      return undefined
+    if (!state) {
+      this.logger.debug('Estado não encontrado, inicializando novo', { phone })
+      return this.initializeState(phone)
+    }
+
+    if (this.isStateExpired(state)) {
+      this.logger.debug('Estado expirado', { phone })
+      return this.initializeState(phone)
     }
 
     return state
@@ -39,9 +45,12 @@ export class StateStorage {
     return this.stateStore.delete(phone)
   }
 
+  public reset(phone: string): FlowState {
+    return this.initializeState(phone)
+  }
+
   public clear(): void {
     this.stateStore.clear()
-    this.logger.info('🚫 Todos os estados foram limpos')
   }
 
   public size(): number {
@@ -49,6 +58,27 @@ export class StateStorage {
   }
 
   //#
+  private initializeState(phone: string): FlowState {
+    const initialState: FlowState = {
+      context: {
+        flow: FlowKeys.WELCOME,
+        step: FlowKeys.WELCOME,
+        data: {},
+        history: [],
+      },
+      customer: {
+        name: '',
+        phone,
+        address: '',
+      },
+      cart: [],
+      lastInteraction: new Date(),
+    }
+
+    this.stateStore.set(phone, initialState)
+    return initialState
+  }
+
   private isStateExpired(state: FlowState): boolean {
     const currentTime = new Date().getTime()
     const lastInteractionTime = state.lastInteraction.getTime()
@@ -59,6 +89,7 @@ export class StateStorage {
   private setupPeriodicCleanup(): void {
     setInterval(
       () => {
+        this.logger.debug('Executando limpeza de estados expirados')
         this.cleanupExpiredStates()
       },
       this.STATE_EXPIRATION_TIME / 2, // 12h
@@ -81,6 +112,7 @@ export class StateStorage {
 
     this.logger.debug(`Estados ativos: ${this.stateStore.size}`)
 
+    // TODO: Limitar o número de estados armazenados
     // if (this.stateStore.size > this.MAX_STATES) {
     //   this.enforceStateLimit()
     // }
