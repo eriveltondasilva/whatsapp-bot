@@ -8,7 +8,6 @@ import { NoteCommand } from './note.command.js'
 import { QuantityCommand } from './quantity.command.js'
 
 import { PizzaSteps } from '@/config/enums.js'
-import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { ICommand } from '@/types/index.js'
 type CommandMap = Record<PizzaSteps, ICommand>
@@ -24,8 +23,6 @@ export class CommandFactory {
     @inject(MenuCommand) private menuCommand: MenuCommand,
     @inject(NoteCommand) private noteCommand: NoteCommand,
     @inject(QuantityCommand) private quantityCommand: QuantityCommand,
-    //
-    @inject(LoggerProvider) private logger: LoggerProvider,
   ) {
     this.commandMap = this.createCommandMap()
   }
@@ -34,10 +31,7 @@ export class CommandFactory {
   public createCommand(step: PizzaSteps): ICommand {
     const command = this.commandMap[step]
 
-    if (!command) {
-      this.logger.error('Pizza command not found', { step })
-      throw new Error(`Pizza command not found for step: ${step}`)
-    }
+    if (!command) throw new Error(`Pizza command not found for step: ${step}`)
 
     return command
   }

@@ -10,6 +10,8 @@ export class StateStorage {
   private readonly stateStore = new Map<string, FlowState>()
   private readonly MAX_STATES = 1_000
   private readonly STATE_EXPIRATION_TIME = 1_000 * 60 * 60 * 24 // 24h
+  private readonly CLEANUP_INTERVAL = 1_000 * 60 * 60 * 12 // 12h
+  private cleanupTimer: NodeJS.Timeout | null = null
 
   constructor(@inject(LoggerProvider) private readonly logger: LoggerProvider) {
     this.setupPeriodicCleanup()
@@ -19,13 +21,10 @@ export class StateStorage {
   public get(phone: string): FlowState {
     const state = this.stateStore.get(phone)
 
-    if (!state) {
-      this.logger.debug('Estado não encontrado, inicializando novo', { phone })
-      return this.initializeState(phone)
-    }
-
-    if (this.isStateExpired(state)) {
-      this.logger.debug('Estado expirado', { phone })
+    if (!state || this.isStateExpired(state)) {
+      this.logger.debug(state ? 'Estado expirado' : 'Estado não encontrado, inicializando novo', {
+        phone,
+      })
       return this.initializeState(phone)
     }
 
@@ -39,6 +38,10 @@ export class StateStorage {
     }
 
     this.stateStore.set(phone, updatedState)
+    // TODO: Verifica se o limite de estados foi atingido após cada adição
+    // if (this.stateStore.size > this.MAX_STATES) {
+    //   this.enforceStateLimit()
+    // }
   }
 
   public delete(phone: string): boolean {
@@ -51,6 +54,12 @@ export class StateStorage {
 
   public clear(): void {
     this.stateStore.clear()
+    this.logger.info('🗑️ Todos os estados foram removidos')
+  }
+
+  public has(phone: string): boolean {
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    return this.stateStore.has(phone) && !this.isStateExpired(this.stateStore.get(phone)!)
   }
 
   public size(): number {
@@ -68,8 +77,8 @@ export class StateStorage {
       },
       customer: {
         name: '',
-        phone,
         address: '',
+        phone,
       },
       cart: [],
       lastInteraction: new Date(),
@@ -80,27 +89,31 @@ export class StateStorage {
   }
 
   private isStateExpired(state: FlowState): boolean {
-    const currentTime = new Date().getTime()
+    const currentTime = Date.now()
     const lastInteractionTime = state.lastInteraction.getTime()
 
     return currentTime - lastInteractionTime > this.STATE_EXPIRATION_TIME
   }
 
   private setupPeriodicCleanup(): void {
-    setInterval(
-      () => {
-        this.logger.debug('Executando limpeza de estados expirados')
-        this.cleanupExpiredStates()
-      },
-      this.STATE_EXPIRATION_TIME / 2, // 12h
-    )
+    if (this.cleanupTimer) clearInterval(this.cleanupTimer)
+
+    this.cleanupTimer = setInterval(() => {
+      this.logger.debug('Executando limpeza de estados expirados')
+      this.cleanupExpiredStates()
+    }, this.CLEANUP_INTERVAL)
   }
 
   private cleanupExpiredStates(): void {
+    this.logger.debug('Iniciando limpeza de estados expirados')
+
     let expiredCount = 0
+    const startTime = Date.now()
+    const currentTime = Date.now()
+    const expirationTime = currentTime - this.STATE_EXPIRATION_TIME
 
     for (const [phone, state] of this.stateStore.entries()) {
-      if (this.isStateExpired(state)) {
+      if (state.lastInteraction.getTime() < expirationTime) {
         this.stateStore.delete(phone)
         expiredCount++
       }
@@ -110,7 +123,9 @@ export class StateStorage {
       this.logger.info(`🧹 ${expiredCount} estados expirados foram removidos`)
     }
 
-    this.logger.debug(`Estados ativos: ${this.stateStore.size}`)
+    this.logger.debug(
+      `Estados ativos: ${this.stateStore.size} | Tempo de limpeza: ${Date.now() - startTime}ms`,
+    )
 
     // TODO: Limitar o número de estados armazenados
     // if (this.stateStore.size > this.MAX_STATES) {

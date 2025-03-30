@@ -32,10 +32,7 @@ export class FlowFactory implements IFlowFactory {
     const flowMap = this.createFlowMap()
     const flowHandler = flowMap[flow]
 
-    if (!flowHandler) {
-      this.logger.error('Flow not found', { flow })
-      throw new Error(`Flow not found: ${flow}`)
-    }
+    if (!flowHandler) throw new Error(`Flow not found: ${flow}`)
 
     return flowHandler
   }
@@ -48,6 +45,6 @@ export class FlowFactory implements IFlowFactory {
       [FlowKeys.PIZZA]: this.pizzaFlow,
       [FlowKeys.REGISTRATION]: this.registrationFlow,
       [FlowKeys.WELCOME]: this.welcomeFlow,
-    } as const
+    }
   }
 }
