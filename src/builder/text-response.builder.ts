@@ -10,6 +10,7 @@ export class TextResponseBuilder {
 
   //#
   public addTitle(title: string): this {
+    if (!title) return this
     return this.addPart(`*${title.toUpperCase()}*`)
   }
 
@@ -24,12 +25,12 @@ export class TextResponseBuilder {
   }
 
   public addEmptyLine(): this {
-    return this.addPart('\n')
+    return this.addPart('')
   }
 
-  public addBulletPoint(text: string): this {
-    return this.addPart(`• ${text}`)
-  }
+  // public addBulletPoint(text: string): this {
+  //   return this.addPart(`• ${text}`)
+  // }
 
   public addGreeting(name: string): this {
     return this.addPart(`👋 Olá, ${getFirstName(name)}!`)
@@ -42,8 +43,8 @@ export class TextResponseBuilder {
   }
 
   //#
-  private addPart(text: string): this {
-    if (!text) this.parts.push(text)
+  private addPart(part: string): this {
+    this.parts.push(part)
     return this
   }
 
