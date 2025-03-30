@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { FlowKeys } from '@/config/enums.js'
-import { StateFacade } from '@/managers/state.facade.js'
+import { StateFacade } from '@/core/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { CustomerRepository } from '@/repositories/customer.repository.js'
 import { mainMenu } from '@/templates/main-menu.js'

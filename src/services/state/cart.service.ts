@@ -1,7 +1,7 @@
 // services/state/CartManager.ts
 import { inject, injectable } from 'tsyringe'
 
-import { StateStorage } from '@/managers/state-storage.js'
+import { StateStorage } from '@/core/state-storage.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { CartItem, FlowState } from '@/types/index.js'

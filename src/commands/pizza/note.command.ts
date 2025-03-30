@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
-import { StateFacade } from '@/managers/state.facade.js'
+import { StateFacade } from '@/core/state.facade.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'

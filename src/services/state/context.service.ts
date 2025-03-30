@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { FlowKeys } from '@/config/enums.js'
-import { StateStorage } from '@/managers/state-storage.js'
+import { StateStorage } from '@/core/state-storage.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { FlowContext, FlowState } from '@/types/index.js'

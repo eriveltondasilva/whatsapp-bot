@@ -1,7 +1,7 @@
 // services/state/CustomerManager.ts
 import { inject, injectable } from 'tsyringe'
 
-import { StateStorage } from '@/managers/state-storage.js'
+import { StateStorage } from '@/core/state-storage.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { Customer, FlowState } from '@/types/index.js'
@@ -13,7 +13,11 @@ export class CustomerService {
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
-  public updateCustomer(phone: string, currentState: FlowState, customerUpdates: Partial<Customer>): FlowState {
+  public updateCustomer(
+    phone: string,
+    currentState: FlowState,
+    customerUpdates: Partial<Customer>,
+  ): FlowState {
     const updatedState = {
       ...currentState,
       customer: {
