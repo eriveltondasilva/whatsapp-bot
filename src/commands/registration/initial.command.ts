@@ -25,7 +25,7 @@ export class InitialCommand implements ICommand {
       )
       .addEmptyLine()
       .addText('Por favor, me informe o seu nome completo.')
-      .addText('> Exemplo: "_João da Silva_"')
+      .addQuote('Exemplo: "_João da Silva_"')
       .build()
   }
 }

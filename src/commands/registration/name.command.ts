@@ -18,10 +18,10 @@ export class NameCommand implements ICommand {
   public async execute({ message: name, phone }: CommandParams) {
     if (!isValidName(name)) {
       return this.textResponseBuilder
-        .addTitle('❌ NOME INVÁLIDO')
+        .addBold('❌ NOME INVÁLIDO')
         .addEmptyLine()
         .addText('Por favor, informe seu nome completo.')
-        .addText('> Exemplo: "_João da Silva_"')
+        .addQuote('Exemplo: "_João da Silva_"')
         .build()
     }
 
@@ -35,7 +35,7 @@ export class NameCommand implements ICommand {
       .addText('Agora me diga onde vamos entregar suas delícias?')
       .addEmptyLine()
       .addText('Por favor, informe seu nome completo.')
-      .addText('> Exemplo: "_Rua das Flores, n° 83, Centro_"')
+      .addQuote('Exemplo: "_Rua das Flores, n° 83, Centro_"')
       .build()
   }
 }

@@ -50,16 +50,17 @@ export class OrderFlow implements IFlowHandler {
   }
 
   private finalizeOrder(phone: string) {
-    return this.responseBuilder.addTitle('🍕 Pedido Finalizado').build()
+    return this.responseBuilder.addBold('🍕 Pedido Finalizado').build()
   }
 
   private cancelOrder(phone: string) {
     this.stateManager.resetState(phone)
 
     return this.responseBuilder
-      .addTitle('🍕 PEDIDO CANCELADO')
+      .addBold('🍕 PEDIDO CANCELADO')
       .addText(
-        '✨ Obrigado por utilizar nossos serviços! Se precisar de algo, estamos aqui para ajudar.',
+        '✨ Obrigado por utilizar nossos serviços!',
+        'Se precisar de algo, estamos aqui para ajudar.',
       )
       .addEmptyLine()
       .addText('👋 Até a próxima...')
@@ -68,7 +69,7 @@ export class OrderFlow implements IFlowHandler {
 
   private handleInvalidOption() {
     return this.responseBuilder
-      .addTitle('❌ OPÇÃO INVÁLIDA')
+      .addBold('❌ OPÇÃO INVÁLIDA')
       .addText('Por favor, escolha uma das opções disponíveis.')
       .addEmptyLine()
       .addMenu(orderMenu)

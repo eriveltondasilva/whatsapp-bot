@@ -17,15 +17,20 @@ export class ConfirmCommand implements ICommand {
   //#
   public async execute({ message, phone }: CommandParams) {
     if (message === '0') {
-      this.state.resetState(phone)
-      return this.textResponseBuilder.addText('❌ Pedido cancelado.').build()
+      this.state.clearData(phone)
+      this.state.updateStep(phone, FlowKeys.ORDER)
+      return this.textResponseBuilder
+        .addText('❌ PEDIDO CANCELADO')
+        .addEmptyLine()
+        .addMenu(orderMenu)
+        .build()
     }
 
     this.state.clearData(phone)
     this.state.updateStep(phone, FlowKeys.ORDER)
 
     return this.textResponseBuilder
-      .addText('✅ Pizza adicionada ao carrinho com sucesso!')
+      .addText('✅ Pizza adicionada ao carrinho com sucesso.')
       .addEmptyLine()
       .addMenu(orderMenu)
       .build()

@@ -10,7 +10,7 @@ export class CustomerRepository {
         name: true,
         phone: true,
         address: true,
-      }
+      },
     })
   }
 

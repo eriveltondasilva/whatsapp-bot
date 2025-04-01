@@ -1,5 +1,4 @@
 import { MessageType } from '@/config/enums.js'
-import { getFirstName } from '@/utils/@index.js'
 
 export class TextResponseBuilder {
   private parts: string[] = []
@@ -9,33 +8,57 @@ export class TextResponseBuilder {
   }
 
   //#
-  public addTitle(title: string): this {
-    if (!title) return this
-    return this.addPart(`*${title.toUpperCase()}*`)
-  }
-
   public addText(...text: string[]): this {
     if (!text.length) return this
     return this.addPart(text.join(' '))
   }
 
-  public addMenu(menu: string[]): this {
-    if (!menu.length) return this
-    return this.addPart(menu.join('\n'))
+  public addBold(text: string): this {
+    if (!text) return this
+    return this.addPart(`*${text}*`)
+  }
+
+  public addItalic(text: string): this {
+    if (!text) return this
+    return this.addPart(`_${text}_`)
+  }
+
+  public addStrike(text: string): this {
+    if (!text) return this
+    return this.addPart(`~${text}~`)
+  }
+
+  public addQuote(text: string): this {
+    if (!text) return this
+    return this.addPart(`> ${text}`)
+  }
+
+  public addMono(): this {
+    return this.addPart('```')
+  }
+
+  //
+  public addLine(): this {
+    return this.addPart('--------------------')
   }
 
   public addEmptyLine(): this {
     return this.addPart('')
   }
 
-  // public addBulletPoint(text: string): this {
-  //   return this.addPart(`• ${text}`)
-  // }
-
-  public addGreeting(name: string): this {
-    return this.addPart(`👋 Olá, ${getFirstName(name)}!`)
+  //
+  public addMenu(menu: string[]): this {
+    if (!menu.length) return this
+    return this.addPart(menu.join('\n'))
   }
 
+  public addGreeting(name: string): this {
+    if (!name) return this
+    const [firstName] = name.split(' ')
+    return this.addPart(`👋 Olá, ${firstName}!`)
+  }
+
+  //
   public build() {
     const content = [...this.parts]
     this.reset()

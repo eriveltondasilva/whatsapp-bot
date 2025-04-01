@@ -72,7 +72,7 @@ export class MainMenuFlow implements IFlowHandler {
   // ###
   private handleInvalidOption() {
     return this.responseBuilder
-      .addTitle('❌ OPÇÃO INVÁLIDA')
+      .addBold('❌ OPÇÃO INVÁLIDA')
       .addEmptyLine()
       .addMenu(mainMenu)
       .build()

@@ -21,7 +21,7 @@ export class QuantityCommand implements ICommand {
 
     if (!isValidQuantity(quantity)) {
       return this.textResponseBuilder
-        .addTitle('❌ QUANTIDADE INVÁLIDA!')
+        .addBold('❌ QUANTIDADE INVÁLIDA!')
         .addText('Por favor, digite um número entre 1 e 10.')
         .build()
     }

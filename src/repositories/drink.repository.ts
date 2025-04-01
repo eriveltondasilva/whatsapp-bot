@@ -10,7 +10,7 @@ export class DrinkRepository {
         name: true,
         price: true,
         description: true,
-      }
+      },
     })
   }
 
