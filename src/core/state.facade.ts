@@ -74,6 +74,10 @@ export class StateFacade {
     return this.storage.reset(phone)
   }
 
+  public deleteState(phone: string): boolean {
+    return this.storage.delete(phone)
+  }
+
   public clearAllStates(): void {
     this.storage.clear()
   }

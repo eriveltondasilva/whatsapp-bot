@@ -1,11 +1,11 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder } from '@/builder/list-response.builder.js'
+import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
-import { CrustRepository } from '@/repositories/crust.repository.js'
 import { FlavorRepository } from '@/repositories/flavor.repository.js'
-import { buildCrustList, buildFlavorList } from '@/templates/list-builders.js'
+import { buildFlavorList } from '@/templates/list-builders.js'
 import { parseIndex } from '@/utils/parse-index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
@@ -14,11 +14,11 @@ import type { ContextData } from './type.js'
 @injectable()
 export class FlavorCommand implements ICommand {
   constructor(
-    @inject(CrustRepository) private crustRepository: CrustRepository,
-    @inject(FlavorRepository) private flavorRepository: FlavorRepository,
-    @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
+    @inject(FlavorRepository) private readonly flavorRepository: FlavorRepository,
+    @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateFacade) private state: StateFacade,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
@@ -41,7 +41,7 @@ export class FlavorCommand implements ICommand {
       this.state.updateData(phone, { selectedFlavors })
 
       return this.listResponseBuilder
-        .addTitle('🍕🍕 ESCOLHA O SEGUNDO SABOR DA PIZZA')
+        .addTitle('🍕 ESCOLHA O 2° SABOR DA PIZZA')
         .addText('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
         .addList(buildFlavorList(flavors))
         .build()
@@ -49,15 +49,11 @@ export class FlavorCommand implements ICommand {
 
     this.state.updateContext(phone, {
       data: { selectedFlavors },
-      step: PizzaSteps.CRUST,
+      step: PizzaSteps.QUANTITY,
     })
 
-    const crusts = await this.crustRepository.getAllCrusts()
-
-    return this.listResponseBuilder
-      .addTitle('🍕 ESCOLHA A BORDA DA SUA PIZZA')
-      .addText('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
-      .addList(buildCrustList(crusts))
+    return this.textResponseBuilder
+      .addText('🔢 Digite a quantidade de pizza desejada (1-10):')
       .build()
   }
 }

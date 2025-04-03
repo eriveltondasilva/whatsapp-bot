@@ -12,11 +12,11 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class MenuCommand implements ICommand {
   constructor(
-    @inject(FlavorRepository) private flavorRepository: FlavorRepository,
-    @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(FlavorRepository) private readonly flavorRepository: FlavorRepository,
+    @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateFacade) private state: StateFacade,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
@@ -25,7 +25,7 @@ export class MenuCommand implements ICommand {
     const flavors = await this.flavorRepository.getAllFlavors()
 
     if (!flavors?.length) {
-      this.state.resetState(phone)
+      this.state.deleteState(phone)
       return this.textResponseBuilder
         .addText('❌ Desculpe, não encontramos sabores disponíveis no momento.')
         .build()
@@ -38,7 +38,7 @@ export class MenuCommand implements ICommand {
 
     const title = isSingleFlavor
       ? '🍕 ESCOLHA O SABOR DA SUA PIZZA'
-      : '🍕 ESCOLHA O PRIMEIRO SABOR DA SUA PIZZA'
+      : '🍕 ESCOLHA O 1° SABOR DA SUA PIZZA'
 
     return this.listResponseBuilder
       .addTitle(title)

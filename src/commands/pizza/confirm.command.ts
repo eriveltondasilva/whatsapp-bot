@@ -7,30 +7,27 @@ import { orderMenu } from '@/templates/menus.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
 
+const MESSAGES = {
+  CANCELED: '❌ PEDIDO CANCELADO',
+  SUCCESS: '✅ Pizza adicionada ao carrinho com sucesso.',
+} as const
+
 @injectable()
 export class ConfirmCommand implements ICommand {
   constructor(
-    @inject(StateFacade) private state: StateFacade,
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
   public async execute({ message, phone }: CommandParams) {
-    if (message === '0') {
-      this.state.clearData(phone)
-      this.state.updateStep(phone, FlowKeys.ORDER)
-      return this.textResponseBuilder
-        .addText('❌ PEDIDO CANCELADO')
-        .addEmptyLine()
-        .addMenu(orderMenu)
-        .build()
-    }
-
     this.state.clearData(phone)
     this.state.updateStep(phone, FlowKeys.ORDER)
 
+    const isCanceled = message === '0'
+
     return this.textResponseBuilder
-      .addText('✅ Pizza adicionada ao carrinho com sucesso.')
+      .addText(isCanceled ? MESSAGES.CANCELED : MESSAGES.SUCCESS)
       .addEmptyLine()
       .addMenu(orderMenu)
       .build()

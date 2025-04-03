@@ -1,8 +1,11 @@
 import { inject, injectable } from 'tsyringe'
 
+import { ListResponseBuilder } from '@/builder/list-response.builder.js'
 import { TextResponseBuilder } from '@/builder/text-response.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
+import { CrustRepository } from '@/repositories/crust.repository.js'
+import { buildCrustList } from '@/templates/list-builders.js'
 import { isValidQuantity } from '@/utils/@index.js'
 
 import type { CommandParams, ICommand } from '@/types/index.js'
@@ -10,8 +13,11 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class QuantityCommand implements ICommand {
   constructor(
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private state: StateFacade,
+    @inject(CrustRepository) private readonly crustRepository: CrustRepository,
+    @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    //
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
@@ -27,14 +33,15 @@ export class QuantityCommand implements ICommand {
 
     this.state.updateContext(phone, {
       data: { quantity },
-      step: PizzaSteps.NOTE,
+      step: PizzaSteps.CRUST,
     })
 
-    return this.textResponseBuilder
-      .addText('Deseja adicionar alguma observação?')
-      .addQuote('Exemplo: retirar cebola, mais queijo, etc.')
-      .addEmptyLine()
-      .addText('0️⃣ - Não desejo adicionar observações')
+    const crusts = await this.crustRepository.getAllCrusts()
+
+    return this.listResponseBuilder
+      .addTitle('🍕 ESCOLHA A BORDA DA SUA PIZZA')
+      .addText('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+      .addList(buildCrustList(crusts))
       .build()
   }
 }

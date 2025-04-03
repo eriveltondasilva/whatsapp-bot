@@ -13,11 +13,11 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class CrustCommand implements ICommand {
   constructor(
-    @inject(CrustRepository) private crustRepository: CrustRepository,
-    @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(CrustRepository) private readonly crustRepository: CrustRepository,
+    @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
     //
-    @inject(StateFacade) private state: StateFacade,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
@@ -28,7 +28,7 @@ export class CrustCommand implements ICommand {
     if (!crusts[selectedIndex]) {
       return this.listResponseBuilder
         .addTitle('❌ BORDA INVÁLIDA')
-        .addText('Por favor, escolha uma opção válida.')
+        .addText('Por favor, escolha uma opção válida da lista abaixo:')
         .addList(buildCrustList(crusts))
         .build()
     }
@@ -37,9 +37,15 @@ export class CrustCommand implements ICommand {
 
     this.state.updateContext(phone, {
       data: { selectedCrust },
-      step: PizzaSteps.QUANTITY,
+      step: PizzaSteps.NOTE,
     })
 
-    return this.textResponseBuilder.addText('🔢 Digite a quantidade desejada (1-10):').build()
+    return this.textResponseBuilder
+      .addText('Deseja adicionar alguma observação ao seu pedido?')
+      .addQuote('Exemplo: retirar cebola, mais queijo, etc.')
+      .addEmptyLine()
+      .addText('0️⃣ - Não desejo adicionar observações')
+      .addText('✍️ - Ou digite sua observação')
+      .build()
   }
 }

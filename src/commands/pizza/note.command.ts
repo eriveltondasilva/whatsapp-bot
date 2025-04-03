@@ -12,15 +12,15 @@ import type { ContextData } from './type.js'
 @injectable()
 export class NoteCommand implements ICommand {
   constructor(
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private state: StateFacade,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
   public async execute({ phone, message, context }: CommandParams) {
     const { selectedFlavors, selectedCrust, quantity } = context.data as ContextData
 
-    if (!selectedFlavors?.length || !selectedCrust || !quantity) {
+    if (!selectedFlavors?.length || !selectedCrust || !quantity || quantity < 1) {
       this.state.resetState(phone)
       return this.textResponseBuilder.addText('❌ Não foi possível processar seu pedido.').build()
     }
