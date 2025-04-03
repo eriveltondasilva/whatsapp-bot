@@ -26,6 +26,7 @@ export class NoteCommand implements ICommand {
     }
 
     const note = message === '0' ? undefined : message
+
     this.state.updateContext(phone, {
       data: { note },
       step: PizzaSteps.CONFIRM,
@@ -41,21 +42,20 @@ export class NoteCommand implements ICommand {
       .addMono()
       .addText('# RESUMO DO PEDIDO')
       .addLine()
-      .addText('Sabor:', flavorNames)
-      .addText('Borda:', selectedCrust.name)
+      .addText('Sabor:', flavorNames, `(${formatCurrency(pizzaPrice)})`)
+      .addText('Borda:', selectedCrust.name, `(${formatCurrency(crustPrice)})`)
       .addEmptyLine()
       .addText('Quantidade:', quantity.toString())
-      .addText('Preço Borda:', formatCurrency(crustPrice))
-      .addText('Preço Unitário:', formatCurrency(pizzaPrice))
-      .addText('Preço Total:', formatCurrency(total))
+      .addText('Preço Unit.:', formatCurrency(unitPrice))
+      .addText('Total:', formatCurrency(total))
       .addEmptyLine()
       .addText('Observação:', note || 'nenhuma')
       .addLine()
       .addMono()
       .addEmptyLine()
       .addText('Deseja confirmar seu pedido?')
-      .addText('1️⃣ - Sim, confirmar')
-      .addText('0️⃣ - Cancelar e voltar ao menu de pedidos')
+      .addText('1️⃣ - Confirmar ✅')
+      .addText('0️⃣ - Cancelar ❌')
       .build()
   }
 
@@ -64,6 +64,9 @@ export class NoteCommand implements ICommand {
   }
 
   private calculateAverageFlavorsPrice(flavors: Prisma.FlavorCreateInput[]) {
-    return flavors.reduce((acc, flavor) => acc + Number(flavor.price), 0) / flavors.length
+    if (!flavors.length) return 0
+    const totalPrice = flavors.reduce((acc, flavor) => acc + Number(flavor.price || 0), 0)
+
+    return totalPrice / flavors.length
   }
 }

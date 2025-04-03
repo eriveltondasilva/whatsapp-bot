@@ -9,28 +9,23 @@ export class TextResponseBuilder {
 
   //#
   public addText(...text: string[]): this {
-    if (!text.length) return this
-    return this.addPart(text.join(' '))
+    return text.length ? this.addPart(text.join(' ')) : this
   }
 
   public addBold(text: string): this {
-    if (!text) return this
-    return this.addPart(`*${text}*`)
+    return text ? this.addPart(`*${text}*`) : this
   }
 
   public addItalic(text: string): this {
-    if (!text) return this
-    return this.addPart(`_${text}_`)
+    return text ? this.addPart(`_${text}_`) : this
   }
 
   public addStrike(text: string): this {
-    if (!text) return this
-    return this.addPart(`~${text}~`)
+    return text ? this.addPart(`~${text}~`) : this
   }
 
   public addQuote(text: string): this {
-    if (!text) return this
-    return this.addPart(`> ${text}`)
+    return text ? this.addPart(`> ${text}`) : this
   }
 
   public addMono(): this {
@@ -48,13 +43,12 @@ export class TextResponseBuilder {
 
   //
   public addMenu(menu: string[]): this {
-    if (!menu.length) return this
-    return this.addPart(menu.join('\n'))
+    return menu.length ? this.addPart(menu.join('\n')) : this
   }
 
   public addGreeting(name: string): this {
     if (!name) return this
-    const [firstName] = name.split(' ')
+    const firstName = name.split(' ')[0]
     return this.addPart(`👋 Olá, ${firstName}!`)
   }
 
