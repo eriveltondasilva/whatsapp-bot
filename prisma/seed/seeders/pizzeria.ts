@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@prisma/client'
-import pizzeria from './pizzerias-seed.json'
+import pizzeria from '../data/pizzerias-seed.json'
 
 export async function seedPizzeria(prisma: PrismaClient) {
   console.log('🔄 Seeding pizzeria...')

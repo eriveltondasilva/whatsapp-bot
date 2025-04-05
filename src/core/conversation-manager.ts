@@ -4,7 +4,7 @@ import { FlowFactory } from '@/flows/@factory.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { StateFacade } from './state.facade.js'
 
-import type { Response } from '@/types/index.js'
+import type { FlowResponse } from '@/types/index.js'
 
 @injectable()
 export class ConversationManager {
@@ -14,7 +14,7 @@ export class ConversationManager {
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
-  public async handle(phone: string, message: string): Promise<Response> {
+  public async handle(phone: string, message: string): Promise<FlowResponse> {
     this.logger.info('📌 Conversation Manager', { phone })
 
     try {

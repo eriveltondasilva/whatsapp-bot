@@ -1,39 +1,37 @@
-import { formatCurrency } from '@/utils/format-currency.js'
 import type { Prisma } from '@prisma/client'
 
-export function buildFlavorList(flavors: Prisma.FlavorCreateInput[]): string[] {
+import type { ListResponse } from '@/types/index.js'
+import { formatCurrency } from '@/utils/format-currency.js'
+
+const buildTitle = (id: string, name: string, price: string) => `${id} - ${name} (${price})`
+const buildId = (id: number) => String(id + 1)
+
+export function buildFlavorList(flavors: Prisma.FlavorCreateInput[]): ListResponse[] {
   return flavors.map(({ name, description, price, category }, index) => {
+    const rowId = buildId(index)
     const flavorPrice = formatCurrency(Number(price))
+    const title = buildTitle(rowId, name, flavorPrice)
 
-    const rowId = index + 1
-    const title = `${rowId} - ${name} (${flavorPrice})`
-
-    return [rowId, title, description, category].join('::')
+    return { rowId, title, description, category }
   })
 }
 
-export function buildCrustList(crusts: Prisma.CrustCreateInput[]): string[] {
+export function buildCrustList(crusts: Prisma.CrustCreateInput[]): ListResponse[] {
   return crusts.map(({ name, price }, index) => {
+    const rowId = buildId(index)
     const crustPrice = Number(price) === 0 ? 'grátis' : formatCurrency(Number(price))
+    const title = buildTitle(rowId, name, crustPrice)
 
-    const rowId = index + 1
-    const title = `${rowId} - ${name} (${crustPrice})`
-    const description = ''
-    const category = 'bordas'
-
-    return [rowId, title, description, category].join('::')
+    return { rowId, title, description: '', category: 'bordas' }
   })
 }
 
-// ###
-export function buildDrinkList(drinks: Prisma.DrinkCreateInput[]): string[] {
+export function buildDrinkList(drinks: Prisma.DrinkCreateInput[]): ListResponse[] {
   return drinks.map(({ name, description, price }, index) => {
+    const rowId = buildId(index)
     const drinkPrice = formatCurrency(Number(price))
+    const title = buildTitle(rowId, name, drinkPrice)
 
-    const rowId = index + 1
-    const title = `${rowId} - ${name} (${drinkPrice})`
-    const category = 'bebidas'
-
-    return [rowId, title, description, category].join('::')
+    return { rowId, title, description, category: 'bebidas' }
   })
 }

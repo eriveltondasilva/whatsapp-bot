@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@prisma/client'
-import drinks from './drinks-seed.json'
+import drinks from '../data/drinks-seed.json'
 
 export async function seedDrink(prisma: PrismaClient) {
   console.log('🔄 Seeding drinks...')

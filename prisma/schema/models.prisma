@@ -19,7 +19,7 @@ model Flavor {
   id Int @id @default(autoincrement())
 
   name        String  @unique @db.VarChar(100)
-  description String? @db.VarChar(255)
+  description String @db.VarChar(255)
   category    String  @db.VarChar(100)
   price       Decimal @default("0.00") @db.Decimal(10, 2)
   active      Boolean @default(true)
@@ -52,7 +52,7 @@ model Drink {
   id Int @id @default(autoincrement())
 
   name        String  @unique @db.VarChar(100)
-  description String? @db.VarChar(255)
+  description String @db.VarChar(255)
   price       Decimal @default("0.00") @db.Decimal(10, 2)
   active      Boolean @default(true)
 
@@ -72,7 +72,6 @@ model Order {
   status          String  @db.VarChar(100)
   totalAmount     Decimal @default("0.00") @map("total_amount") @db.Decimal(10, 2)
   paymentMethod   String  @map("payment_method") @db.VarChar(100)
-  notes           String? @db.VarChar(255)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

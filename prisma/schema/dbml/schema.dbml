@@ -16,7 +16,7 @@ Table customers {
 Table flavors {
   id Int [pk, increment]
   name String [unique, not null]
-  description String
+  description String [not null]
   category String [not null]
   price Decimal [not null, default: 0]
   active Boolean [not null, default: true]
@@ -39,7 +39,7 @@ Table crusts {
 Table drinks {
   id Int [pk, increment]
   name String [unique, not null]
-  description String
+  description String [not null]
   price Decimal [not null, default: 0]
   active Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
@@ -54,7 +54,6 @@ Table orders {
   status String [not null]
   totalAmount Decimal [not null, default: 0]
   paymentMethod String [not null]
-  notes String
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   customer customers [not null]

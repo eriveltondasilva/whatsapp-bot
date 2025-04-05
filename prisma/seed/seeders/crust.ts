@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@prisma/client'
-import crusts from './crusts-seed.json'
+import crusts from '../data/crusts-seed.json'
 
 export async function seedCrust(prisma: PrismaClient) {
   console.log('🔄 Seeding crusts...')

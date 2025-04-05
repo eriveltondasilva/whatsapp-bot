@@ -24,6 +24,8 @@
 
     "type:check": "tsc --noEmit",
 
+    "db:reset": "npx prisma migrate reset",
+
     "clean": "rm -rf dist",
     "test": "vitest run tests"
   },

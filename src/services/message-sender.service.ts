@@ -5,7 +5,7 @@ import { ClientProvider } from '@/providers/client.provider.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { getDelay } from '@/utils/@index.js'
 
-import type { ActionsMap, Response } from '@/types/index.js'
+import type { ActionsMap, ContentResponse, FlowResponse, ListResponse } from '@/types/index.js'
 
 @injectable()
 export class MessageSender {
@@ -15,7 +15,7 @@ export class MessageSender {
   ) {}
 
   //#
-  public async send(phone: string, response: Response): Promise<void> {
+  public async send(phone: string, response: FlowResponse): Promise<void> {
     const { type, content } = response
 
     const actionMap: ActionsMap<MessageType> = {
@@ -37,43 +37,36 @@ export class MessageSender {
 
   //#
   public async sendErrorMessage(phone: string): Promise<void> {
-    await this.sendText(phone, [
-      '❌ Desculpe, ocorreu um erro ao processar sua mensagem.',
-      'Por favor, tente novamente em alguns instantes.',
-    ])
+    await this.sendText(phone, {
+      text: [
+        '❌ Desculpe, ocorreu um erro ao processar sua mensagem.',
+        'Por favor, tente novamente em alguns instantes.',
+      ].join('\n'),
+    })
   }
 
-  private async sendText(phone: string, content: string[]): Promise<void> {
+  private async sendText(phone: string, content: ContentResponse): Promise<void> {
     const client = await this.client.getClient()
-    await client.sendText(phone, `[BOT]\n${content.join('')}`, { delay: getDelay() })
+    await client.sendText(phone, `[BOT]\n${content.text}`, { delay: getDelay() })
   }
 
-  private async sendList(phone: string, content: string[]): Promise<void> {
-    const [text, ...rows] = content
+  private async sendList(phone: string, content: ContentResponse): Promise<void> {
+    const { text, list } = content
 
-    if (!text || !rows.length) throw new Error('Dados de lista inválidos')
+    if (!text || !list?.length) throw new Error('Invalid list content')
 
     const client = await this.client.getClient()
     await client.sendListMessage(phone, {
       buttonText: 'Clique Aqui',
       description: text,
-      sections: this.createListSections(rows),
+      sections: this.createListSections(list),
     })
   }
 
   //#
-  private createListSections(rows: string[]) {
-    const parsedRows = rows.map((row: string) => {
-      const parts = row.split('::')
-      return {
-        rowId: parts[0] || '',
-        title: parts[1] || '',
-        description: parts[2] || '',
-        category: parts[3] || 'cardápio',
-      }
-    })
-
-    const groupedRows = Object.groupBy(parsedRows, (row) => row.category)
+  private createListSections(list: ListResponse[]) {
+    const groupedRows = Object.groupBy(list, (row) => row.category)
+    console.log(groupedRows)
 
     return Object.entries(groupedRows).map(([category, items]) => ({
       title: category.toUpperCase(),

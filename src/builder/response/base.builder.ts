@@ -1,4 +1,4 @@
-import type { Response } from '@/types/index.js'
+import type { FlowResponse } from '@/types/index.js'
 
 export type BuilderState = {
   text: string[]
@@ -47,10 +47,10 @@ export abstract class BaseResponseBuilder {
     this.state = this.createInitialState()
   }
 
-  protected createInitialState(): BuilderState {
+  protected createInitialState() {
     return { text: [] }
   }
 
   //#
-  abstract build(): Response
+  public abstract build(): FlowResponse
 }

@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@prisma/client'
-import customers from './customers-seed.json'
+import customers from '../data/customers-seed.json'
 
 export async function seedCustomer(prisma: PrismaClient) {
   console.log('🔄 Seeding customers...')

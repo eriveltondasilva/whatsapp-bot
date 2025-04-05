@@ -10,7 +10,7 @@ import { seedWorkingHour } from './seeders/working-hour.js'
 const prisma = new PrismaClient({ errorFormat: 'pretty' })
 
 async function seedDatabase() {
-  console.log('\n🚀 Starting database seeding:')
+  console.log('\n🚀 Starting database seeding:\n')
 
   await Promise.all([
     seedPizzeria(prisma),

@@ -15,7 +15,7 @@ CREATE TABLE "customers" (
 CREATE TABLE "flavors" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(100) NOT NULL,
-    "description" VARCHAR(255),
+    "description" VARCHAR(255) NOT NULL,
     "category" VARCHAR(100) NOT NULL,
     "price" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     "active" BOOLEAN NOT NULL DEFAULT true,
@@ -41,7 +41,7 @@ CREATE TABLE "crusts" (
 CREATE TABLE "drinks" (
     "id" SERIAL NOT NULL,
     "name" VARCHAR(100) NOT NULL,
-    "description" VARCHAR(255),
+    "description" VARCHAR(255) NOT NULL,
     "price" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     "active" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -58,7 +58,6 @@ CREATE TABLE "orders" (
     "status" VARCHAR(100) NOT NULL,
     "total_amount" DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     "payment_method" VARCHAR(100) NOT NULL,
-    "notes" VARCHAR(255),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

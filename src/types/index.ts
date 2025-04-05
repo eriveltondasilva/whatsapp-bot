@@ -40,17 +40,32 @@ export type CommandParams = {
   message: string
 }
 
-export type Response = {
+export type ListResponse = {
+  rowId: string
+  title: string
+  description: string
+  category: string
+}
+
+export type ContentResponse = {
+  text: string
+  list?: ListResponse[]
+}
+
+export type FlowResponse = {
   type: MessageType
-  content: string[]
+  content: ContentResponse
 }
 
 export type ActionsMap<K extends string = string> = Partial<Record<K, () => Promise<void> | void>>
 
-export type FlowActions<K extends string = string> = Record<K, () => Response | Promise<Response>>
+export type FlowActions<K extends string = string> = Record<
+  K,
+  () => FlowResponse | Promise<FlowResponse>
+>
 
 export interface IFlowHandler {
-  handle(props: FlowHandle): Response | Promise<Response>
+  handle(props: FlowHandle): FlowResponse | Promise<FlowResponse>
 }
 
 export interface IFlowFactory {
@@ -58,5 +73,7 @@ export interface IFlowFactory {
 }
 
 export interface ICommand {
-  execute({ context, phone, message }: CommandParams): Promise<Response>
+  execute({ context, phone, message }: CommandParams): Promise<FlowResponse>
 }
+
+type CommandMap = Record<string, ICommand>

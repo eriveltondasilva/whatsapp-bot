@@ -21,7 +21,7 @@ export class InitialCommand implements ICommand {
       .addText('🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!')
       .addText(
         'Estamos prontos para transformar a sua fome em felicidade.',
-        'Antes de começar, precisamos fazer um _*rápido*_ cadastro. 🏃💨',
+        'Antes de começar, precisamos fazer um *rápido* cadastro. 🏃💨',
       )
       .addEmptyLine()
       .addText('Por favor, me informe o seu nome completo.')

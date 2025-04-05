@@ -1,5 +1,5 @@
 import type { PrismaClient } from '@prisma/client'
-import workingHours from './working-hours-seed.json'
+import workingHours from '../data/working-hours-seed.json'
 
 export async function seedWorkingHour(prisma: PrismaClient) {
   console.log('🔄 Seeding working hours...')
