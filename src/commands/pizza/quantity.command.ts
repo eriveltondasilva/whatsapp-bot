@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
-import { ListResponseBuilder } from '@/builder/list-response.builder.js'
-import { TextResponseBuilder } from '@/builder/text-response.builder.js'
+import { ListBuilder } from '@/builder/response/list.builder.js'
+import { TextBuilder } from '@/builder/response/text.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { CrustRepository } from '@/repositories/crust.repository.js'
@@ -14,8 +14,8 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 export class QuantityCommand implements ICommand {
   constructor(
     @inject(CrustRepository) private readonly crustRepository: CrustRepository,
-    @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(ListBuilder) private readonly listResponseBuilder: ListBuilder,
+    @inject(TextBuilder) private readonly textResponseBuilder: TextBuilder,
     //
     @inject(StateFacade) private readonly state: StateFacade,
   ) {}

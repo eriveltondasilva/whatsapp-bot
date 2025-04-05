@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TextResponseBuilder } from '@/builder/text-response.builder.js'
+import { TextBuilder } from '@/builder/response/text.builder.js'
 import { FlowKeys } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { orderMenu } from '@/templates/menus.js'
@@ -15,7 +15,7 @@ const MESSAGES = {
 @injectable()
 export class ConfirmCommand implements ICommand {
   constructor(
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(TextBuilder) private readonly textResponseBuilder: TextBuilder,
     @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 

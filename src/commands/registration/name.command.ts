@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TextResponseBuilder } from '@/builder/text-response.builder.js'
+import { TextBuilder } from '@/builder/response/text.builder.js'
 import { RegistrationSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { isValidName } from '@/utils/validations.js'
@@ -10,7 +10,7 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class NameCommand implements ICommand {
   constructor(
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(TextBuilder) private textResponseBuilder: TextBuilder,
     @inject(StateFacade) private state: StateFacade,
   ) {}
 

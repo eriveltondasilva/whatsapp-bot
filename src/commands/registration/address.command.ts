@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TextResponseBuilder } from '@/builder/text-response.builder.js'
+import { TextBuilder } from '@/builder/response/text.builder.js'
 import { FlowKeys } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
@@ -16,7 +16,7 @@ export class AddressCommand implements ICommand {
   constructor(
     @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
+    @inject(TextBuilder) private textResponseBuilder: TextBuilder,
     //
     @inject(StateFacade) private state: StateFacade,
   ) {}

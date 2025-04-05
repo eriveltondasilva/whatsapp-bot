@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
-import { ListResponseBuilder } from '@/builder/list-response.builder.js'
-import { TextResponseBuilder } from '@/builder/text-response.builder.js'
+import { ListBuilder } from '@/builder/response/list.builder.js'
+import { TextBuilder } from '@/builder/response/text.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { FlavorRepository } from '@/repositories/flavor.repository.js'
@@ -13,8 +13,8 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 export class MenuCommand implements ICommand {
   constructor(
     @inject(FlavorRepository) private readonly flavorRepository: FlavorRepository,
-    @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(ListBuilder) private readonly listResponseBuilder: ListBuilder,
+    @inject(TextBuilder) private readonly textResponseBuilder: TextBuilder,
     //
     @inject(StateFacade) private readonly state: StateFacade,
   ) {}

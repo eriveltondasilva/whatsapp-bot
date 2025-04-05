@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client'
 import { inject, injectable } from 'tsyringe'
 
-import { TextResponseBuilder } from '@/builder/text-response.builder.js'
+import { TextBuilder } from '@/builder/response/text.builder.js'
 import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { formatCurrency } from '@/utils/format-currency.js'
@@ -12,7 +12,7 @@ import type { ContextData } from './type.js'
 @injectable()
 export class NoteCommand implements ICommand {
   constructor(
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(TextBuilder) private readonly textResponseBuilder: TextBuilder,
     @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 

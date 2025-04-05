@@ -1,5 +1,5 @@
-import type { Prisma } from '@prisma/client'
 import { formatCurrency } from '@/utils/format-currency.js'
+import type { Prisma } from '@prisma/client'
 
 export function buildFlavorList(flavors: Prisma.FlavorCreateInput[]): string[] {
   return flavors.map(({ name, description, price, category }, index) => {
