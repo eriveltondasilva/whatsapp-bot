@@ -27,7 +27,7 @@ export class TypeCommand implements ICommand {
 
     if (!drinks[selectedIndex]) {
       return this.listResponseBuilder
-        .addTitle('❌ OPÇÃO INVÁLIDA!')
+        .addBold('❌ OPÇÃO INVÁLIDA!')
         .addText('Selecione uma opção válida.')
         .addList(buildDrinkList(drinks))
         .build()

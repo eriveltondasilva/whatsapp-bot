@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client'
-import { formatCurrency } from '../utils/format-currency.js'
+import { formatCurrency } from '@/utils/format-currency.js'
 
 export function buildFlavorList(flavors: Prisma.FlavorCreateInput[]): string[] {
   return flavors.map(({ name, description, price, category }, index) => {
@@ -34,7 +34,6 @@ export function buildDrinkList(drinks: Prisma.DrinkCreateInput[]): string[] {
     const title = `${rowId} - ${name} (${drinkPrice})`
     const category = 'bebidas'
 
-    // rowId :: title :: description :: category
     return [rowId, title, description, category].join('::')
   })
 }

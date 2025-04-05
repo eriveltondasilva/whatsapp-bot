@@ -33,7 +33,7 @@ export class MenuCommand implements ICommand {
     this.state.updateStep(phone, DrinkSteps.TYPE)
 
     return this.listResponseBuilder
-      .addTitle('🍹 ESCOLHA SUA BEBIDA')
+      .addBold('🍹 ESCOLHA SUA BEBIDA')
       .addText('> Por favor, aperte no botão abaixo para escolher a sua bebida.')
       .addList(buildDrinkList(drinks))
       .build()

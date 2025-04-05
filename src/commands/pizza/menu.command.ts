@@ -41,7 +41,7 @@ export class MenuCommand implements ICommand {
       : '🍕 ESCOLHA O 1° SABOR DA SUA PIZZA'
 
     return this.listResponseBuilder
-      .addTitle(title)
+      .addBold(title)
       .addText('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildFlavorList(flavors))
       .build()

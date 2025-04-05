@@ -49,14 +49,16 @@ export class TextResponseBuilder {
   public addGreeting(name: string): this {
     if (!name) return this
     const firstName = name.split(' ')[0]
+
     return this.addPart(`👋 Olá, ${firstName}!`)
   }
 
   //
   public build() {
-    const content = [...this.parts]
+    const response = { type: MessageType.TEXT, content: [...this.parts.join('\n')] }
     this.reset()
-    return { type: MessageType.TEXT, content }
+
+    return response
   }
 
   //#

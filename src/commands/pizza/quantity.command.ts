@@ -39,7 +39,7 @@ export class QuantityCommand implements ICommand {
     const crusts = await this.crustRepository.getAllCrusts()
 
     return this.listResponseBuilder
-      .addTitle('🍕 ESCOLHA A BORDA DA SUA PIZZA')
+      .addBold('🍕 ESCOLHA A BORDA DA SUA PIZZA')
       .addText('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildCrustList(crusts))
       .build()

@@ -1,57 +1,53 @@
 import { MessageType } from '@/config/enums.js'
 import type { Response } from '@/types/index.js'
 
-type Section = {
-  title: string
-  description: string
+type content = {
+  text: string
   items: string[]
 }
 
 export class ListResponseBuilder {
-  private section: Section = {
-    title: '',
-    description: '',
-    items: [],
-  }
+  private text: string[] = []
+  private list: string[] = []
 
   constructor() {
     this.reset()
   }
 
   //#
-  public addTitle(title: string): this {
-    this.section.title = `*${title.toUpperCase()}*\n`
+  public addBold(text: string): this {
+    this.text.push(`*${text}*`)
     return this
   }
 
-  public addText(text: string): this {
-    this.section.description += `${text}\n`
+  public addText(...text: string[]): this {
+    this.text.push(text.join(' '))
     return this
   }
 
   public addList(list: string[]): this {
-    this.section.items = [...list]
+    this.list.push(list.join('\n'))
     return this
   }
 
+  public addEmptyLine(): this {
+    this.text.push('')
+    return this
+  }
+
+  //
   public build(): Response {
-    if (!this.section.items.length) {
-      throw new Error('Você deve adicionar itens à lista antes de construir a resposta.')
-    }
+    if (!this.list.length) throw new Error('List is empty')
 
-    const { title, description, items } = this.section
-    const response = { type: MessageType.LIST, content: [title, description, ...items] }
-
+    const response = { type: MessageType.LIST, content: [this.text.join('\n'), ...this.list] }
     this.reset()
+
     return response
   }
 
   //#
-  private reset() {
-    this.section = {
-      title: '',
-      description: '',
-      items: [],
-    }
+  private reset(): void {
+    this.text = []
+    this.list = []
   }
 }

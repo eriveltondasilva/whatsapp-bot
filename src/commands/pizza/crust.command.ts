@@ -27,7 +27,7 @@ export class CrustCommand implements ICommand {
 
     if (!crusts[selectedIndex]) {
       return this.listResponseBuilder
-        .addTitle('❌ BORDA INVÁLIDA')
+        .addBold('❌ BORDA INVÁLIDA')
         .addText('Por favor, escolha uma opção válida da lista abaixo:')
         .addList(buildCrustList(crusts))
         .build()
