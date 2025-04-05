@@ -1,11 +1,11 @@
 import { MessageType } from '@/config/enums.js'
-import { BaseBuilder, type BuilderState } from './base.builder.js'
+import { BaseResponseBuilder, type BuilderState } from './base.builder.js'
 
 type ListBuilderState = BuilderState & {
   list: string[]
 }
 
-export class ListBuilder extends BaseBuilder {
+export class ListResponseBuilder extends BaseResponseBuilder {
   protected state: ListBuilderState
 
   constructor() {

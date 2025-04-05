@@ -1,7 +1,7 @@
 import { MessageType } from '@/config/enums.js'
-import { BaseBuilder } from './base.builder.js'
+import { BaseResponseBuilder } from './base.builder.js'
 
-export class TextBuilder extends BaseBuilder {
+export class TextResponseBuilder extends BaseResponseBuilder {
   public addMono(): this {
     return this.setText('```')
   }

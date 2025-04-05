@@ -4,7 +4,7 @@ export type BuilderState = {
   text: string[]
 }
 
-export abstract class BaseBuilder {
+export abstract class BaseResponseBuilder {
   protected state: BuilderState
 
   constructor() {

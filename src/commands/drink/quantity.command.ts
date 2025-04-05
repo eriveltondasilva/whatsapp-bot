@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TextBuilder } from '@/builder/response/text.builder.js'
+import { TextResponseBuilder } from '@/builder/response/text.builder.js'
 import { FlowKeys } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { orderMenu } from '@/templates/menus.js'
@@ -11,7 +11,7 @@ import type { CommandParams, ICommand } from '@/types/index.js'
 @injectable()
 export class QuantityCommand implements ICommand {
   constructor(
-    @inject(TextBuilder) private textResponseBuilder: TextBuilder,
+    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     @inject(StateFacade) private state: StateFacade,
   ) {}
 

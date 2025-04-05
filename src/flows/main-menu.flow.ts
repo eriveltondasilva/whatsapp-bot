@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TextBuilder } from '@/builder/response/text.builder.js'
+import { TextResponseBuilder } from '@/builder/response/text.builder.js'
 import { FlowKeys, MenuOptions } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
@@ -16,7 +16,7 @@ export class MainMenuFlow implements IFlowHandler {
   ].join(',')
 
   constructor(
-    @inject(TextBuilder) private responseBuilder: TextBuilder,
+    @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
     //
     @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(StateFacade) private stateManager: StateFacade,

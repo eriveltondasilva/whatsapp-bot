@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TextBuilder } from '@/builder/response/text.builder.js'
+import { TextResponseBuilder } from '@/builder/response/text.builder.js'
 import { FlowKeys, RegistrationSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
@@ -15,7 +15,7 @@ export class WelcomeFlow implements IFlowHandler {
   constructor(
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
-    @inject(TextBuilder) private textResponseBuilder: TextBuilder,
+    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     //
     @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(StateFacade) private stateManager: StateFacade,
