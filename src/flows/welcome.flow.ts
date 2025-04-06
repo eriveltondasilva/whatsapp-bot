@@ -18,7 +18,7 @@ export class WelcomeFlow implements Flow {
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
     @inject(LoggerProvider) private logger: LoggerProvider,
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(StateFacade) private state: StateFacade,
   ) {}
 
   //#
@@ -28,11 +28,11 @@ export class WelcomeFlow implements Flow {
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {
-      const { context } = this.stateManager.updateStep(phone, RegistrationSteps.INITIAL)
+      const { context } = this.state.updateStep(phone, RegistrationSteps.INITIAL)
       return this.registrationFlow.handle({ context, phone, message })
     }
 
-    this.stateManager.updateStep(phone, FlowKeys.MENU)
+    this.state.updateStep(phone, FlowKeys.MENU)
 
     return this.textResponseBuilder
       .addGreeting(customer.name)

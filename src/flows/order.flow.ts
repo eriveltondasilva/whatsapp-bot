@@ -17,9 +17,9 @@ export class OrderFlow implements Flow {
   constructor(
     @inject(DrinkFlow) private readonly drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private readonly pizzaFlow: PizzaFlow,
-    @inject(StateFacade) private readonly stateManager: StateFacade,
     @inject(TextResponseBuilder) private readonly responseBuilder: TextResponseBuilder,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
@@ -40,12 +40,12 @@ export class OrderFlow implements Flow {
 
   //#
   private handlePizzaSelection(phone: string, message: string) {
-    const { context } = this.stateManager.updateStep(phone, PizzaSteps.MENU)
+    const { context } = this.state.updateStep(phone, PizzaSteps.MENU)
     return this.pizzaFlow.handle({ context, phone, message })
   }
 
   private handleDrinkSelection(phone: string, message: string) {
-    const { context } = this.stateManager.updateStep(phone, DrinkSteps.MENU)
+    const { context } = this.state.updateStep(phone, DrinkSteps.MENU)
     return this.drinkFlow.handle({ context, phone, message })
   }
 
@@ -54,7 +54,7 @@ export class OrderFlow implements Flow {
   }
 
   private cancelOrder(phone: string) {
-    this.stateManager.resetState(phone)
+    this.state.resetState(phone)
     return this.responseBuilder
       .addBold('🍕 PEDIDO CANCELADO')
       .addText(

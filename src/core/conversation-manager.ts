@@ -9,9 +9,9 @@ import type { FlowResponse } from '@/types/flows.js'
 @injectable()
 export class ConversationManager {
   constructor(
-    @inject(FlowFactory) private flowFactory: FlowFactory,
-    @inject(StateFacade) private state: StateFacade,
-    @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(FlowFactory) private readonly flowFactory: FlowFactory,
+    @inject(StateFacade) private readonly state: StateFacade,
+    @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
   public async handle(phone: string, message: string): Promise<FlowResponse> {

@@ -17,9 +17,9 @@ export class MainMenuFlow implements Flow {
   ].join(',')
 
   constructor(
-    @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
-    @inject(LoggerProvider) private logger: LoggerProvider,
-    @inject(StateFacade) private stateManager: StateFacade,
+    @inject(TextResponseBuilder) private readonly responseBuilder: TextResponseBuilder,
+    @inject(LoggerProvider) private readonly logger: LoggerProvider,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
@@ -37,7 +37,7 @@ export class MainMenuFlow implements Flow {
 
   //#
   private showOrderMenu(phone: string) {
-    this.stateManager.updateStep(phone, FlowKeys.ORDER)
+    this.state.updateStep(phone, FlowKeys.ORDER)
     return this.responseBuilder.addMenu(orderMenu).build()
   }
 
@@ -58,8 +58,7 @@ export class MainMenuFlow implements Flow {
   // }
 
   private exitFlow(phone: string) {
-    this.stateManager.resetState(phone)
-
+    this.state.resetState(phone)
     return this.responseBuilder
       .addText(
         '✨ Obrigado por utilizar nossos serviços!',

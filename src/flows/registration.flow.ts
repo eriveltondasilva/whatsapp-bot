@@ -18,8 +18,7 @@ export class RegistrationFlow implements Flow {
   public async handle({ context, phone, message }: FlowParams) {
     this.logger.info('📌 Registration Flow')
 
-    const step = context.step as RegistrationSteps
-    const command = this.commandFactory.createCommand(step)
+    const command = this.commandFactory.createCommand(context.step as RegistrationSteps)
     return await command.execute({ context, phone, message })
   }
 }

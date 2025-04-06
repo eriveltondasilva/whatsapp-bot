@@ -41,7 +41,7 @@ export class FlavorCommand implements Command {
       this.state.updateData(phone, { selectedFlavors })
 
       return this.listResponseBuilder
-        .addBold('🍕 ESCOLHA O 2° SABOR DA PIZZA')
+        .addBold('🍕 ESCOLHA O 2° SABOR DA SUA PIZZA')
         .addQuote('Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
         .addList(buildFlavorList(flavors))
         .build()

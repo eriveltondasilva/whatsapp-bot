@@ -10,16 +10,15 @@ import type { Flow } from '@/types/interfaces.js'
 @injectable()
 export class DrinkFlow implements Flow {
   constructor(
-    @inject(DrinkCommandFactory) private commandFactory: DrinkCommandFactory,
-    @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(DrinkCommandFactory) private readonly commandFactory: DrinkCommandFactory,
+    @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
   //#
   public async handle({ context, phone, message }: FlowParams) {
     this.logger.info('📌 Drink Flow')
 
-    const step = context.step as DrinkSteps
-    const command = this.commandFactory.createCommand(step)
+    const command = this.commandFactory.createCommand(context.step as DrinkSteps)
     return await command.execute({ context, phone, message })
   }
 }
