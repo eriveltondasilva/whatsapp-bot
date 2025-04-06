@@ -51,15 +51,13 @@ export class MessageSender {
   }
 
   private async sendList(phone: string, content: ResponseContent) {
-    const { text, list } = content
-
-    if (!text || !list?.length) throw new Error('Invalid list content')
+    if (!content.text || !content.list?.length) throw new Error('Invalid list content')
 
     const client = await this.client.getClient()
     await client.sendListMessage(phone, {
       buttonText: 'Clique Aqui',
-      description: text,
-      sections: this.createListSections(list),
+      description: `[BOT]\n${content.text}`,
+      sections: this.createListSections(content.list),
     })
   }
 

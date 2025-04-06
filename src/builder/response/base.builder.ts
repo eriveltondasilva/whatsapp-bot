@@ -29,6 +29,10 @@ export abstract class BaseResponseBuilder {
     return text ? this.setText(`> ${text}`) : this
   }
 
+  public addCode(text: string): this {
+    return text ? this.setText(`\`${text}\``) : this
+  }
+
   //
   public addEmptyLine(): this {
     return this.setText('')

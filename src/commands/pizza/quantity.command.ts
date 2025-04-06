@@ -39,6 +39,8 @@ export class QuantityCommand implements Command {
     const crusts = await this.crustRepository.getAllCrusts()
 
     return this.listResponseBuilder
+      .addCode('Etapa: 3/5')
+      .addEmptyLine()
       .addBold('🍕 ESCOLHA A BORDA DA SUA PIZZA')
       .addQuote('Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildCrustList(crusts))

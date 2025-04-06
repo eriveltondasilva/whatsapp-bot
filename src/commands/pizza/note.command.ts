@@ -8,7 +8,7 @@ import { formatCurrency } from '@/utils/format-currency.js'
 
 import type { FlowParams } from '@/types/flows.js'
 import type { Command } from '@/types/interfaces.js'
-import type { ContextData } from './type.js'
+import type { ContextData } from './types.js'
 
 @injectable()
 export class NoteCommand implements Command {
@@ -40,6 +40,7 @@ export class NoteCommand implements Command {
     const total = unitPrice * quantity
 
     return this.textResponseBuilder
+      .addCode('Etapa: 5/5')
       .addMono()
       .addText('# RESUMO DO PEDIDO')
       .addLine()

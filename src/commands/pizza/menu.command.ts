@@ -41,6 +41,8 @@ export class MenuCommand implements Command {
       : '🍕 ESCOLHA O 1° SABOR DA SUA PIZZA'
 
     return this.listResponseBuilder
+      .addCode('Etapa: 1/5')
+      .addEmptyLine()
       .addBold(title)
       .addQuote('Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildFlavorList(flavors))

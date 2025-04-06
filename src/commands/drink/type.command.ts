@@ -40,6 +40,10 @@ export class TypeCommand implements Command {
       step: DrinkSteps.QUANTITY,
     })
 
-    return this.textResponseBuilder.addText('🔢 Digite a quantidade desejada (1-10):').build()
+    return this.textResponseBuilder
+      .addCode('Etapa: 2/2')
+      .addEmptyLine()
+      .addText('🔢 Digite a quantidade desejada (1-10):')
+      .build()
   }
 }

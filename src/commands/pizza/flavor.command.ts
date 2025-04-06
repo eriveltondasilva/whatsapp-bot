@@ -6,12 +6,12 @@ import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { FlavorRepository } from '@/repositories/flavor.repository.js'
 import { buildFlavorList } from '@/templates/list-builders.js'
+import { deduplicateFlavor } from '@/utils/deduplicate-flavor.js'
 import { parseIndex } from '@/utils/parse-index.js'
 
 import type { FlowParams } from '@/types/flows.js'
 import type { Command } from '@/types/interfaces.js'
-import { deduplicateFlavor } from '@/utils/deduplicate-flavor.js'
-import type { ContextData } from './type.js'
+import type { ContextData } from './types.js'
 
 @injectable()
 export class FlavorCommand implements Command {
@@ -42,6 +42,8 @@ export class FlavorCommand implements Command {
       this.state.updateData(phone, { selectedFlavors })
 
       return this.listResponseBuilder
+        .addCode('Etapa: 1/5')
+        .addEmptyLine()
         .addBold('🍕 ESCOLHA O 2° SABOR DA SUA PIZZA')
         .addQuote('Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
         .addList(buildFlavorList(flavors))
@@ -54,6 +56,8 @@ export class FlavorCommand implements Command {
     })
 
     return this.textResponseBuilder
+      .addCode('Etapa: 2/5')
+      .addEmptyLine()
       .addText('🔢 Digite a quantidade de pizza desejada (1-10):')
       .build()
   }

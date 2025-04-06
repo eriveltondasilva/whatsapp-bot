@@ -10,7 +10,7 @@ import { isValidAddress } from '@/utils/validations.js'
 
 import type { FlowParams } from '@/types/flows.js'
 import type { Command } from '@/types/interfaces.js'
-import type { ContextData } from './type.js'
+import type { ContextData } from './types.js'
 
 @injectable()
 export class AddressCommand implements Command {

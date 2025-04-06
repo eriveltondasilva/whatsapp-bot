@@ -33,6 +33,8 @@ export class MenuCommand implements Command {
     this.state.updateStep(phone, DrinkSteps.TYPE)
 
     return this.listResponseBuilder
+    .addCode('Etapa: 1/2')
+    .addEmptyLine()
       .addBold('🍹 ESCOLHA SUA BEBIDA')
       .addQuote('Por favor, aperte no botão abaixo para escolher a sua bebida.')
       .addList(buildDrinkList(drinks))

@@ -41,6 +41,7 @@ export class CrustCommand implements Command {
     })
 
     return this.textResponseBuilder
+      .addCode('Etapa: 4/5')
       .addText('Deseja adicionar alguma observação ao seu pedido?')
       .addQuote('Exemplo: retirar cebola, mais queijo, etc.')
       .addEmptyLine()
