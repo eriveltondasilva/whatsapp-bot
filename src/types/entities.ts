@@ -1,4 +1,5 @@
 import type { ItemType } from '@/config/enums.js'
+import type { Flavor as FlavorPrisma } from '@prisma/client'
 
 export type Customer = {
   name: string
@@ -13,3 +14,5 @@ export type CartItem = {
   price: number
   quantity: number
 }
+
+export type Flavor = Omit<FlavorPrisma, 'createdAt' | 'updatedAt' | 'active'>

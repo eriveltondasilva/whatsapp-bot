@@ -10,6 +10,7 @@ import { parseIndex } from '@/utils/parse-index.js'
 
 import type { FlowParams } from '@/types/flows.js'
 import type { Command } from '@/types/interfaces.js'
+import { deduplicateFlavor } from '@/utils/deduplicate-flavor.js'
 import type { ContextData } from './type.js'
 
 @injectable()
@@ -48,7 +49,7 @@ export class FlavorCommand implements Command {
     }
 
     this.state.updateContext(phone, {
-      data: { selectedFlavors },
+      data: { selectedFlavors: deduplicateFlavor(selectedFlavors) },
       step: PizzaSteps.QUANTITY,
     })
 
