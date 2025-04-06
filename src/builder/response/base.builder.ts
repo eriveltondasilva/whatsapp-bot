@@ -1,8 +1,5 @@
-import type { FlowResponse } from '@/types/index.js'
-
-export type BuilderState = {
-  text: string[]
-}
+import type { FlowResponse } from '@/types/flows.js'
+import type { BuilderState } from './type.js'
 
 export abstract class BaseResponseBuilder {
   protected state: BuilderState
@@ -32,7 +29,7 @@ export abstract class BaseResponseBuilder {
     return text ? this.setText(`> ${text}`) : this
   }
 
-  //#
+  //
   public addEmptyLine(): this {
     return this.setText('')
   }

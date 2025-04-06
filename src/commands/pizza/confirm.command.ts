@@ -5,7 +5,8 @@ import { FlowKeys } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { orderMenu } from '@/templates/menus.js'
 
-import type { CommandParams, ICommand } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Command } from '@/types/interfaces.js'
 
 const MESSAGES = {
   CANCELED: '❌ PEDIDO CANCELADO',
@@ -13,14 +14,14 @@ const MESSAGES = {
 } as const
 
 @injectable()
-export class ConfirmCommand implements ICommand {
+export class ConfirmCommand implements Command {
   constructor(
     @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
     @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
-  public async execute({ message, phone }: CommandParams) {
+  public async execute({ message, phone }: FlowParams) {
     this.state.clearData(phone)
     this.state.updateStep(phone, FlowKeys.ORDER)
 

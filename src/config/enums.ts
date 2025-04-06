@@ -1,7 +1,7 @@
 export enum MessageType {
   TEXT = 'text',
   LIST = 'list',
-  IMAGE = 'image',
+  // IMAGE = 'image',
 }
 
 export enum PizzaType {

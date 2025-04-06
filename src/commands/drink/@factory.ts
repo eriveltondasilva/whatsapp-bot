@@ -6,24 +6,23 @@ import { TypeCommand } from './type.command.js'
 
 import { DrinkSteps } from '@/config/enums.js'
 
-import type { ICommand } from '@/types/index.js'
-type CommandMap = Record<DrinkSteps, ICommand>
+import type { Command } from '@/types/interfaces.js'
+type CommandMap = Record<DrinkSteps, Command>
 
 @injectable()
 export class CommandFactory {
-  private commandMap: CommandMap
+  private readonly commandMap: CommandMap
 
   constructor(
-    @inject(MenuCommand) private menuCommand: MenuCommand,
-    @inject(QuantityCommand) private quantityCommand: QuantityCommand,
-    @inject(TypeCommand) private typeCommand: TypeCommand,
+    @inject(MenuCommand) private readonly menuCommand: MenuCommand,
+    @inject(QuantityCommand) private readonly quantityCommand: QuantityCommand,
+    @inject(TypeCommand) private readonly typeCommand: TypeCommand,
   ) {
     this.commandMap = this.createCommandMap()
   }
 
-  public createCommand(step: DrinkSteps): ICommand {
+  public createCommand(step: DrinkSteps): Command {
     const command = this.commandMap[step]
-
     if (!command) throw new Error(`Drink command not found for step: ${step}`)
 
     return command

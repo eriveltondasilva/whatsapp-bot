@@ -23,7 +23,10 @@ export class TextResponseBuilder extends BaseResponseBuilder {
 
   //#
   public build() {
-    const response = { type: MessageType.TEXT, content: { text: this.state.text.join('\n') } }
+    const response = {
+      type: MessageType.TEXT,
+      content: { text: this.state.text.join('\n') },
+    }
     this.reset()
 
     return response

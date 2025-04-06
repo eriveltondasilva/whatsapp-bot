@@ -8,20 +8,20 @@ import { CustomerRepository } from '@/repositories/customer.repository.js'
 import { mainMenu } from '@/templates/menus.js'
 import { isValidAddress } from '@/utils/validations.js'
 
-import type { CommandParams, ICommand } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Command } from '@/types/interfaces.js'
 import type { ContextData } from './type.js'
 
 @injectable()
-export class AddressCommand implements ICommand {
+export class AddressCommand implements Command {
   constructor(
-    @inject(LoggerProvider) private logger: LoggerProvider,
-    @inject(CustomerRepository) private customerRepository: CustomerRepository,
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    //
-    @inject(StateFacade) private state: StateFacade,
+    @inject(LoggerProvider) private readonly logger: LoggerProvider,
+    @inject(CustomerRepository) private readonly customerRepository: CustomerRepository,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
-  public async execute({ context, message: address, phone }: CommandParams) {
+  public async execute({ context, message: address, phone }: FlowParams) {
     if (!isValidAddress(address)) {
       return this.textResponseBuilder
         .addBold('❌ ENDEREÇO INVÁLIDO')

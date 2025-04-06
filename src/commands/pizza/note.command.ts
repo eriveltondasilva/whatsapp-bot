@@ -6,18 +6,19 @@ import { PizzaSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 
-import type { CommandParams, ICommand } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Command } from '@/types/interfaces.js'
 import type { ContextData } from './type.js'
 
 @injectable()
-export class NoteCommand implements ICommand {
+export class NoteCommand implements Command {
   constructor(
     @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
     @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
-  public async execute({ phone, message, context }: CommandParams) {
+  public async execute({ phone, message, context }: FlowParams) {
     const { selectedFlavors, selectedCrust, quantity } = context.data as ContextData
 
     if (!selectedFlavors?.length || !selectedCrust || !quantity || quantity < 1) {

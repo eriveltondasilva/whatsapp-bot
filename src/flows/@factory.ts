@@ -10,34 +10,37 @@ import { WelcomeFlow } from './welcome.flow.js'
 import { FlowKeys } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
-import type { IFlowFactory, IFlowHandler } from '@/types/index.js'
+import type { Flow, FlowFactory as IFlowFactory } from '@/types/interfaces.js'
+
+type FlowMap = Record<FlowKeys, Flow>
 
 @injectable()
 export class FlowFactory implements IFlowFactory {
+  private readonly flowMap: FlowMap
+
   constructor(
-    @inject(DrinkFlow) private drinkFlow: DrinkFlow,
-    @inject(MainMenuFlow) private menuFlow: MainMenuFlow,
-    @inject(OrderFlow) private orderFlow: OrderFlow,
-    @inject(PizzaFlow) private pizzaFlow: PizzaFlow,
-    @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
-    @inject(WelcomeFlow) private welcomeFlow: WelcomeFlow,
-    //
-    @inject(LoggerProvider) private logger: LoggerProvider,
-  ) {}
+    @inject(DrinkFlow) private readonly drinkFlow: DrinkFlow,
+    @inject(MainMenuFlow) private readonly menuFlow: MainMenuFlow,
+    @inject(OrderFlow) private readonly orderFlow: OrderFlow,
+    @inject(PizzaFlow) private readonly pizzaFlow: PizzaFlow,
+    @inject(RegistrationFlow) private readonly registrationFlow: RegistrationFlow,
+    @inject(WelcomeFlow) private readonly welcomeFlow: WelcomeFlow,
+    @inject(LoggerProvider) private readonly logger: LoggerProvider,
+  ) {
+    this.flowMap = this.createFlowMap()
+  }
 
   //#
-  public createFlow(flow: FlowKeys): IFlowHandler {
+  public createFlow(flow: FlowKeys) {
     this.logger.debug('Flow selected', { flow })
 
-    const flowMap = this.createFlowMap()
-    const flowHandler = flowMap[flow]
-
+    const flowHandler = this.flowMap[flow]
     if (!flowHandler) throw new Error(`Flow not found: ${flow}`)
 
     return flowHandler
   }
 
-  private createFlowMap(): Record<FlowKeys, IFlowHandler> {
+  private createFlowMap(): FlowMap {
     return {
       [FlowKeys.DRINK]: this.drinkFlow,
       [FlowKeys.MENU]: this.menuFlow,

@@ -5,7 +5,8 @@ import { CartService } from '@/services/state/cart.service.js'
 import { ContextService } from '@/services/state/context.service.js'
 import { CustomerService } from '@/services/state/customer.service.js'
 
-import type { CartItem, Customer, FlowContext, FlowState } from '@/types/index.js'
+import type { CartItem, Customer } from '@/types/entities.js'
+import type { FlowContext, FlowState } from '@/types/flows.js'
 
 @singleton()
 export class StateFacade {
@@ -13,7 +14,6 @@ export class StateFacade {
     @inject(CartService) private readonly cartService: CartService,
     @inject(ContextService) private readonly contextService: ContextService,
     @inject(CustomerService) private readonly customerService: CustomerService,
-    //
     @inject(StateStorage) private readonly storage: StateStorage,
   ) {}
 

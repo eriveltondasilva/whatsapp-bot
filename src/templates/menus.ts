@@ -1,14 +1,14 @@
 export const mainMenu = [
-  '📝 *MENU PRINCIPAL*\n',
-  //
+  '📝 *MENU PRINCIPAL*',
+  '',
   '1️⃣ - Fazer Pedido 🛒',
   '2️⃣ - Acompanhar Pedido 🚚',
   '3️⃣ - Histórico de Pedidos 📜',
   '4️⃣ - Atualizar Cadastro 📝',
   '5️⃣ - Falar com Atendente 👨‍💼',
   '0️⃣ - Finalizar Atendimento ❌',
-  //
-  '\n🔢 Digite o número da opção desejada:',
+  '',
+  '🔢 Digite o número da opção desejada:',
 ]
 
 export const orderMenu = [

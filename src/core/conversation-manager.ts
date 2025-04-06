@@ -4,7 +4,7 @@ import { FlowFactory } from '@/flows/@factory.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { StateFacade } from './state.facade.js'
 
-import type { FlowResponse } from '@/types/index.js'
+import type { FlowResponse } from '@/types/flows.js'
 
 @injectable()
 export class ConversationManager {

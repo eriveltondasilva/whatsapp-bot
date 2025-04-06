@@ -6,10 +6,11 @@ import { StateFacade } from '@/core/state.facade.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { mainMenu, orderMenu } from '@/templates/menus.js'
 
-import type { FlowActions, FlowHandle, IFlowHandler } from '@/types/index.js'
+import type { FlowParams, MenuActionMap } from '@/types/flows.js'
+import type { Flow } from '@/types/interfaces.js'
 
 @injectable()
-export class MainMenuFlow implements IFlowHandler {
+export class MainMenuFlow implements Flow {
   private readonly inProgressMessage = [
     '🚧 Esta funcionalidade está em desenvolvimento.',
     'Por favor, aguarde novidades!',
@@ -17,16 +18,15 @@ export class MainMenuFlow implements IFlowHandler {
 
   constructor(
     @inject(TextResponseBuilder) private responseBuilder: TextResponseBuilder,
-    //
     @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(StateFacade) private stateManager: StateFacade,
   ) {}
 
   //#
-  public handle({ phone, message }: FlowHandle) {
+  public handle({ phone, message }: FlowParams) {
     this.logger.info('📌 Main Menu Flow')
 
-    const actionMap: FlowActions<MenuOptions> = {
+    const actionMap: MenuActionMap = {
       [MenuOptions.ORDER]: () => this.showOrderMenu(phone),
       [MenuOptions.EXIT]: () => this.exitFlow(phone),
     } as const

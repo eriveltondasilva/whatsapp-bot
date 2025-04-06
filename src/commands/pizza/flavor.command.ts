@@ -8,21 +8,21 @@ import { FlavorRepository } from '@/repositories/flavor.repository.js'
 import { buildFlavorList } from '@/templates/list-builders.js'
 import { parseIndex } from '@/utils/parse-index.js'
 
-import type { CommandParams, ICommand } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Command } from '@/types/interfaces.js'
 import type { ContextData } from './type.js'
 
 @injectable()
-export class FlavorCommand implements ICommand {
+export class FlavorCommand implements Command {
   constructor(
     @inject(FlavorRepository) private readonly flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
-    //
     @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
-  public async execute({ context, phone, message }: CommandParams) {
+  public async execute({ context, phone, message }: FlowParams) {
     const { data } = context as unknown as { data: ContextData }
     const flavors = await this.flavorRepository.getAllFlavors()
     const selectedIndex = parseIndex(message)
@@ -42,7 +42,7 @@ export class FlavorCommand implements ICommand {
 
       return this.listResponseBuilder
         .addBold('🍕 ESCOLHA O 2° SABOR DA PIZZA')
-        .addText('> Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+        .addQuote('Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
         .addList(buildFlavorList(flavors))
         .build()
     }

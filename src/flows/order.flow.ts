@@ -9,24 +9,24 @@ import { orderMenu } from '@/templates/menus.js'
 import { DrinkFlow } from './drink.flow.js'
 import { PizzaFlow } from './pizza.flow.js'
 
-import type { FlowActions, FlowHandle, IFlowHandler } from '@/types/index.js'
+import type { FlowParams, OrderActionMap } from '@/types/flows.js'
+import type { Flow } from '@/types/interfaces.js'
 
 @injectable()
-export class OrderFlow implements IFlowHandler {
+export class OrderFlow implements Flow {
   constructor(
     @inject(DrinkFlow) private readonly drinkFlow: DrinkFlow,
     @inject(PizzaFlow) private readonly pizzaFlow: PizzaFlow,
     @inject(StateFacade) private readonly stateManager: StateFacade,
     @inject(TextResponseBuilder) private readonly responseBuilder: TextResponseBuilder,
-    //
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
   //#
-  public handle({ phone, message }: FlowHandle) {
+  public handle({ phone, message }: FlowParams) {
     this.logger.info('📌 Order Flow')
 
-    const actionMap: FlowActions<OrderOptions> = {
+    const actionMap: OrderActionMap = {
       [OrderOptions.ONE_PIZZA]: () => this.handlePizzaSelection(phone, message),
       [OrderOptions.TWO_PIZZA]: () => this.handlePizzaSelection(phone, message),
       [OrderOptions.DRINK]: () => this.handleDrinkSelection(phone, message),
@@ -55,7 +55,6 @@ export class OrderFlow implements IFlowHandler {
 
   private cancelOrder(phone: string) {
     this.stateManager.resetState(phone)
-
     return this.responseBuilder
       .addBold('🍕 PEDIDO CANCELADO')
       .addText(

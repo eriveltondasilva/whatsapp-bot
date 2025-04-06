@@ -8,20 +8,20 @@ import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { buildDrinkList } from '@/templates/list-builders.js'
 import { parseIndex } from '@/utils/parse-index.js'
 
-import type { CommandParams, ICommand } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Command } from '@/types/interfaces.js'
 
 @injectable()
-export class TypeCommand implements ICommand {
+export class TypeCommand implements Command {
   constructor(
-    @inject(DrinkRepository) private drinkRepository: DrinkRepository,
-    @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    //
-    @inject(StateFacade) private state: StateFacade,
+    @inject(DrinkRepository) private readonly drinkRepository: DrinkRepository,
+    @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
-  public async execute({ phone, message }: CommandParams) {
+  public async execute({ phone, message }: FlowParams) {
     const drinks = await this.drinkRepository.getAllDrinks()
     const selectedIndex = parseIndex(message)
 

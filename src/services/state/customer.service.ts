@@ -4,7 +4,8 @@ import { inject, injectable } from 'tsyringe'
 import { StateStorage } from '@/core/state-storage.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
-import type { Customer, FlowState } from '@/types/index.js'
+import type { Customer } from '@/types/entities.js'
+import type { FlowState } from '@/types/flows.js'
 
 @injectable()
 export class CustomerService {

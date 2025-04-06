@@ -3,7 +3,7 @@ import { inject, singleton } from 'tsyringe'
 import { FlowKeys } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
-import type { FlowState } from '@/types/index.js'
+import type { FlowState } from '@/types/flows.js'
 
 @singleton()
 export class StateStorage {

@@ -5,17 +5,18 @@ import { RegistrationSteps } from '@/config/enums.js'
 import { StateFacade } from '@/core/state.facade.js'
 import { isValidName } from '@/utils/validations.js'
 
-import type { CommandParams, ICommand } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Command } from '@/types/interfaces.js'
 
 @injectable()
-export class NameCommand implements ICommand {
+export class NameCommand implements Command {
   constructor(
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private state: StateFacade,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
-  public async execute({ message: name, phone }: CommandParams) {
+  public async execute({ message: name, phone }: FlowParams) {
     if (!isValidName(name)) {
       return this.textResponseBuilder
         .addBold('❌ NOME INVÁLIDO')

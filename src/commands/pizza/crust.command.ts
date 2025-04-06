@@ -8,20 +8,20 @@ import { CrustRepository } from '@/repositories/crust.repository.js'
 import { buildCrustList } from '@/templates/list-builders.js'
 import { parseIndex } from '@/utils/parse-index.js'
 
-import type { CommandParams, ICommand } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Command } from '@/types/interfaces.js'
 
 @injectable()
-export class CrustCommand implements ICommand {
+export class CrustCommand implements Command {
   constructor(
     @inject(CrustRepository) private readonly crustRepository: CrustRepository,
     @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
     @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
-    //
     @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
-  public async execute({ phone, message }: CommandParams) {
+  public async execute({ phone, message }: FlowParams) {
     const crusts = await this.crustRepository.getAllCrusts()
     const selectedIndex = parseIndex(message)
 

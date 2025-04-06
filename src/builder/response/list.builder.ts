@@ -1,11 +1,8 @@
 import { MessageType } from '@/config/enums.js'
-import { BaseResponseBuilder, type BuilderState } from './base.builder.js'
+import { BaseResponseBuilder } from './base.builder.js'
 
-import type { ListResponse } from '@/types/index.js'
-
-export type ListBuilderState = BuilderState & {
-  list: ListResponse[]
-}
+import type { ResponseList } from '@/types/responses.js'
+import type { ListBuilderState } from './type.js'
 
 export class ListResponseBuilder extends BaseResponseBuilder {
   protected override state: ListBuilderState
@@ -15,7 +12,7 @@ export class ListResponseBuilder extends BaseResponseBuilder {
     this.state = this.createInitialState()
   }
 
-  public addList(items: ListResponse[]): this {
+  public addList(items: ResponseList[]): this {
     if (items.length) {
       this.state.list = [...items]
     }
@@ -29,7 +26,6 @@ export class ListResponseBuilder extends BaseResponseBuilder {
     const response = {
       type: MessageType.LIST,
       content: { text: this.state.text.join('\n'), list: [...this.state.list] },
-      // content: [this.state.text.join('\n'), ...this.state.list],
     }
     this.reset()
 

@@ -8,21 +8,21 @@ import { CustomerRepository } from '@/repositories/customer.repository.js'
 import { mainMenu } from '@/templates/menus.js'
 import { RegistrationFlow } from './registration.flow.js'
 
-import type { FlowHandle, FlowResponse, IFlowHandler } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Flow } from '@/types/interfaces.js'
 
 @injectable()
-export class WelcomeFlow implements IFlowHandler {
+export class WelcomeFlow implements Flow {
   constructor(
     @inject(CustomerRepository) private customerRepository: CustomerRepository,
     @inject(RegistrationFlow) private registrationFlow: RegistrationFlow,
     @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    //
     @inject(LoggerProvider) private logger: LoggerProvider,
     @inject(StateFacade) private stateManager: StateFacade,
   ) {}
 
   //#
-  public async handle({ phone, message }: FlowHandle): Promise<FlowResponse> {
+  public async handle({ phone, message }: FlowParams) {
     this.logger.info('📌 Welcome Flow')
 
     const customer = await this.customerRepository.findByPhone(phone)

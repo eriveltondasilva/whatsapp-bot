@@ -1,12 +1,12 @@
+import type { ResponseList } from '@/types/responses.js'
 import type { Prisma } from '@prisma/client'
 
-import type { ListResponse } from '@/types/index.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 
 const buildTitle = (id: string, name: string, price: string) => `${id} - ${name} (${price})`
 const buildId = (id: number) => String(id + 1)
 
-export function buildFlavorList(flavors: Prisma.FlavorCreateInput[]): ListResponse[] {
+export function buildFlavorList(flavors: Prisma.FlavorCreateInput[]): ResponseList[] {
   return flavors.map(({ name, description, price, category }, index) => {
     const rowId = buildId(index)
     const flavorPrice = formatCurrency(Number(price))
@@ -16,7 +16,7 @@ export function buildFlavorList(flavors: Prisma.FlavorCreateInput[]): ListRespon
   })
 }
 
-export function buildCrustList(crusts: Prisma.CrustCreateInput[]): ListResponse[] {
+export function buildCrustList(crusts: Prisma.CrustCreateInput[]): ResponseList[] {
   return crusts.map(({ name, price }, index) => {
     const rowId = buildId(index)
     const crustPrice = Number(price) === 0 ? 'grátis' : formatCurrency(Number(price))
@@ -26,7 +26,7 @@ export function buildCrustList(crusts: Prisma.CrustCreateInput[]): ListResponse[
   })
 }
 
-export function buildDrinkList(drinks: Prisma.DrinkCreateInput[]): ListResponse[] {
+export function buildDrinkList(drinks: Prisma.DrinkCreateInput[]): ResponseList[] {
   return drinks.map(({ name, description, price }, index) => {
     const rowId = buildId(index)
     const drinkPrice = formatCurrency(Number(price))

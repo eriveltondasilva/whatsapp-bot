@@ -4,7 +4,7 @@ import { FlowKeys } from '@/config/enums.js'
 import { StateStorage } from '@/core/state-storage.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
-import type { FlowContext, FlowState } from '@/types/index.js'
+import type { FlowContext, FlowState } from '@/types/flows.js'
 
 @injectable()
 export class ContextService {

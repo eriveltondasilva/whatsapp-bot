@@ -7,20 +7,20 @@ import { StateFacade } from '@/core/state.facade.js'
 import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { buildDrinkList } from '@/templates/list-builders.js'
 
-import type { CommandParams, ICommand } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Command } from '@/types/interfaces.js'
 
 @injectable()
-export class MenuCommand implements ICommand {
+export class MenuCommand implements Command {
   constructor(
-    @inject(DrinkRepository) private drinkRepository: DrinkRepository,
-    @inject(ListResponseBuilder) private listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    //
-    @inject(StateFacade) private state: StateFacade,
+    @inject(DrinkRepository) private readonly drinkRepository: DrinkRepository,
+    @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
-  public async execute({ phone }: CommandParams) {
+  public async execute({ phone }: FlowParams) {
     const drinks = await this.drinkRepository.getAllDrinks()
 
     if (!drinks?.length) {

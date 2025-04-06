@@ -6,17 +6,18 @@ import { StateFacade } from '@/core/state.facade.js'
 import { orderMenu } from '@/templates/menus.js'
 import { isValidQuantity } from '@/utils/validations.js'
 
-import type { CommandParams, ICommand } from '@/types/index.js'
+import type { FlowParams } from '@/types/flows.js'
+import type { Command } from '@/types/interfaces.js'
 
 @injectable()
-export class QuantityCommand implements ICommand {
+export class QuantityCommand implements Command {
   constructor(
-    @inject(TextResponseBuilder) private textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private state: StateFacade,
+    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
+    @inject(StateFacade) private readonly state: StateFacade,
   ) {}
 
   //#
-  public async execute({ phone, message }: CommandParams) {
+  public async execute({ phone, message }: FlowParams) {
     const quantity = Number.parseInt(message, 10)
 
     if (!isValidQuantity(quantity)) {
