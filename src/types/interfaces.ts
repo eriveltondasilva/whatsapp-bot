@@ -12,3 +12,7 @@ export interface FlowFactory {
 export interface Command {
   execute(params: FlowParams): FlowResponse | Promise<FlowResponse>
 }
+
+export interface CommandFactory {
+  createCommand(commandName: string): Command
+}

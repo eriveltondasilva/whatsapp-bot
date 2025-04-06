@@ -8,12 +8,13 @@ import { NoteCommand } from './note.command.js'
 import { QuantityCommand } from './quantity.command.js'
 
 import { PizzaSteps } from '@/config/enums.js'
+import { LoggerProvider } from '@/providers/logger.provider.js'
 
-import type { Command } from '@/types/interfaces.js'
+import type { Command, CommandFactory } from '@/types/interfaces.js'
 type CommandMap = Record<PizzaSteps, Command>
 
 @injectable()
-export class CommandFactory {
+export class PizzaCommandFactory implements CommandFactory {
   private commandMap: CommandMap
 
   constructor(
@@ -23,14 +24,17 @@ export class CommandFactory {
     @inject(MenuCommand) private readonly menuCommand: MenuCommand,
     @inject(NoteCommand) private readonly noteCommand: NoteCommand,
     @inject(QuantityCommand) private readonly quantityCommand: QuantityCommand,
+    @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {
     this.commandMap = this.createCommandMap()
   }
 
   //#
-  public createCommand(step: PizzaSteps): Command {
-    const command = this.commandMap[step]
-    if (!command) throw new Error(`Pizza command not found for step: ${step}`)
+  public createCommand(commandName: PizzaSteps): Command {
+    this.logger.debug('Flow selected', { commandName })
+
+    const command = this.commandMap[commandName]
+    if (!command) throw new Error(`Pizza command not found for: ${commandName}`)
 
     return command
   }
@@ -39,9 +43,9 @@ export class CommandFactory {
     return {
       [PizzaSteps.CONFIRM]: this.confirmCommand,
       [PizzaSteps.CRUST]: this.crustCommand,
+      [PizzaSteps.FLAVOR]: this.flavorCommand,
       [PizzaSteps.MENU]: this.menuCommand,
       [PizzaSteps.NOTE]: this.noteCommand,
-      [PizzaSteps.FLAVOR]: this.flavorCommand,
       [PizzaSteps.QUANTITY]: this.quantityCommand,
     }
   }

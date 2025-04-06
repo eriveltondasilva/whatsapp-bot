@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { CommandFactory } from '@/commands/registration/@factory.js'
+import { RegistrationCommandFactory } from '@/commands/registration/@registration.factory.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { RegistrationSteps } from '@/config/enums.js'
@@ -10,7 +10,7 @@ import type { Flow } from '@/types/interfaces.js'
 @injectable()
 export class RegistrationFlow implements Flow {
   constructor(
-    @inject(CommandFactory) private commandFactory: CommandFactory,
+    @inject(RegistrationCommandFactory) private commandFactory: RegistrationCommandFactory,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 

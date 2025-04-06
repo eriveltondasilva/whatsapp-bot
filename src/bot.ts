@@ -10,10 +10,10 @@ import { isValidMessage } from '@/utils/@index.js'
 @injectable()
 export class WhatsappBot {
   constructor(
-    @inject(ClientProvider) private clientProvider: ClientProvider,
-    @inject(ConversationManager) private conversationManager: ConversationManager,
-    @inject(MessageSender) private messageSender: MessageSender,
-    @inject(LoggerProvider) private logger: LoggerProvider,
+    @inject(ClientProvider) private readonly clientProvider: ClientProvider,
+    @inject(ConversationManager) private readonly conversationManager: ConversationManager,
+    @inject(MessageSender) private readonly messageSender: MessageSender,
+    @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
   public async initialize(): Promise<void> {
@@ -29,7 +29,7 @@ export class WhatsappBot {
     }
   }
 
-  private async processMessage(message: Message) {
+  private async processMessage(message: Message): Promise<void> {
     if (!message.body || !isValidMessage(message)) return
 
     this.logger.info('#️⃣ Process Message')

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { CommandFactory } from '@/commands/pizza/@factory.js'
+import { PizzaCommandFactory } from '@/commands/pizza/@pizza.factory.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { PizzaSteps } from '@/config/enums.js'
@@ -10,7 +10,7 @@ import type { Flow } from '@/types/interfaces.js'
 @injectable()
 export class PizzaFlow implements Flow {
   constructor(
-    @inject(CommandFactory) private commandFactory: CommandFactory,
+    @inject(PizzaCommandFactory) private commandFactory: PizzaCommandFactory,
     @inject(LoggerProvider) private logger: LoggerProvider,
   ) {}
 
