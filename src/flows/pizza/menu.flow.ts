@@ -1,39 +1,38 @@
 import { inject, injectable } from 'tsyringe'
 
-import { ListResponseBuilder } from '@/builder/response/list.builder.js'
-import { TextResponseBuilder } from '@/builder/response/text.builder.js'
-import { PizzaSteps } from '@/config/enums.js'
-import { StateFacade } from '@/core/state.facade.js'
+import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
+import { Flows } from '@/config/enums.js'
 import { FlavorRepository } from '@/repositories/flavor.repository.js'
 import { buildFlavorList } from '@/templates/list-builders.js'
+import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
-import type { Command } from '@/types/interfaces.js'
 
 @injectable()
-export class MenuCommand implements Command {
+export class PizzaMenuFlow extends BaseFlow {
   constructor(
     @inject(FlavorRepository) private readonly flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private readonly state: StateFacade,
-  ) {}
+  ) {
+    super()
+  }
 
   //#
-  public async execute({ phone, message }: FlowParams) {
+  public async handle({ phone, message }: FlowParams) {
+    console.log('estou no PizzaMenuFlow')
     const isSingleFlavor = message === '1'
     const flavors = await this.flavorRepository.getAllFlavors()
 
     if (!flavors?.length) {
       this.state.deleteState(phone)
-      return this.textResponseBuilder
+      return this.responseBuilder
         .addText('❌ Desculpe, não encontramos sabores disponíveis no momento.')
         .build()
     }
 
     this.state.updateContext(phone, {
       data: { isSingleFlavor },
-      step: PizzaSteps.FLAVOR,
+      flow: Flows.PIZZA_FLAVOR,
     })
 
     const title = isSingleFlavor

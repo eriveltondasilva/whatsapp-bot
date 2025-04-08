@@ -1,29 +1,26 @@
 import { inject, injectable } from 'tsyringe'
 
-import { TextResponseBuilder } from '@/builder/response/text.builder.js'
-import { FlowKeys } from '@/config/enums.js'
-import { StateFacade } from '@/core/state.facade.js'
+import { Flows } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { CustomerRepository } from '@/repositories/customer.repository.js'
 import { mainMenu } from '@/templates/menus.js'
 import { isValidAddress } from '@/utils/validations.js'
+import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
-import type { Command } from '@/types/interfaces.js'
-import type { ContextData } from './types.js'
 
 @injectable()
-export class AddressCommand implements Command {
+export class RegistrationAddressFlow extends BaseFlow {
   constructor(
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
     @inject(CustomerRepository) private readonly customerRepository: CustomerRepository,
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private readonly state: StateFacade,
-  ) {}
+  ) {
+    super()
+  }
 
-  public async execute({ context, message: address, phone }: FlowParams) {
+  public async handle({ context, message: address, phone }: FlowParams) {
     if (!isValidAddress(address)) {
-      return this.textResponseBuilder
+      return this.responseBuilder
         .addBold('❌ ENDEREÇO INVÁLIDO')
         .addEmptyLine()
         .addText('Por favor, informe seu endereço completo.')
@@ -31,11 +28,14 @@ export class AddressCommand implements Command {
         .build()
     }
 
-    const { name } = context.data as ContextData
+    const { name } = context.data as {
+      name: string
+      address: string
+    }
 
     if (!name) {
       this.state.resetState(phone)
-      return this.textResponseBuilder
+      return this.responseBuilder
         .addText('❌ Ops! Algo deu errado. Por favor, tente novamente.')
         .build()
     }
@@ -44,9 +44,9 @@ export class AddressCommand implements Command {
     this.logger.ok('New customer registered', { newCustomer })
 
     this.state.resetState(phone)
-    this.state.updateStep(phone, FlowKeys.MENU)
+    this.state.updateFlow(phone, Flows.MENU)
 
-    return this.textResponseBuilder
+    return this.responseBuilder
       .addText('🎉 Cadastro concluído com sucesso,', name.split(' ', 1)[0])
       .addText('Agora, vamos ao que interessa: _*escolher algo gostoso*_! 😋')
       .addEmptyLine()

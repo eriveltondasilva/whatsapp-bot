@@ -11,7 +11,7 @@ import { isValidMessage } from '@/utils/@index.js'
 export class WhatsappBot {
   constructor(
     @inject(ClientProvider) private readonly clientProvider: ClientProvider,
-    @inject(ConversationManager) private readonly conversationManager: ConversationManager,
+    @inject(ConversationManager) private readonly conversation: ConversationManager,
     @inject(MessageSender) private readonly messageSender: MessageSender,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
@@ -36,7 +36,7 @@ export class WhatsappBot {
     this.logger.debug(' Received message', { from: message.from, body: message.body })
 
     try {
-      const response = await this.conversationManager.handle(message.from, message.body)
+      const response = await this.conversation.handle(message.from, message.body)
       await this.messageSender.send(message.from, response)
     } catch (error) {
       this.logger.error('Message processing error', error)

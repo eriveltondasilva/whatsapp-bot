@@ -1,9 +1,9 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowKeys } from '@/config/enums.js'
 import { StateStorage } from '@/core/state-storage.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
+import type { Flows } from '@/config/enums.js'
 import type { FlowContext, FlowState } from '@/types/flows.js'
 
 @injectable()
@@ -20,14 +20,7 @@ export class ContextService {
     currentState: FlowState,
     contextUpdates: Partial<FlowContext>,
   ): FlowState {
-    const previousStep = currentState.context.step
-    const newStep = contextUpdates.step
-
-    if (newStep && newStep !== previousStep) {
-      contextUpdates.flow = this.extractFlow(newStep)
-    }
-
-    const history = this.updateStepHistory(currentState, contextUpdates)
+    const history = this.updateHistory(currentState, contextUpdates)
 
     const updatedState = {
       ...currentState,
@@ -48,8 +41,8 @@ export class ContextService {
     return updatedState
   }
 
-  public updateStep(phone: string, currentState: FlowState, step: string): FlowState {
-    return this.updateContext(phone, currentState, { step })
+  public updateFlow(phone: string, currentState: FlowState, flow: Flows): FlowState {
+    return this.updateContext(phone, currentState, { flow })
   }
 
   public updateData(phone: string, currentState: FlowState, data: FlowContext['data']): FlowState {
@@ -72,29 +65,13 @@ export class ContextService {
   }
 
   //#
-  private extractFlow(step: string): FlowKeys {
-    const [flowName] = step.split('::', 1)
-    const isValidFlow = Object.values(FlowKeys).includes(flowName as FlowKeys)
+  private updateHistory(currentState: FlowState, contextUpdates: Partial<FlowContext>): string[] {
+    const { flow: previousFlow, history: currentHistory } = currentState.context
+    const { flow: newFlow } = contextUpdates
 
-    if (!isValidFlow) {
-      const errorMsg = `Fluxo inválido: ${flowName}`
-      this.logger.error(errorMsg)
-      throw new Error(errorMsg)
-    }
+    if (!newFlow || newFlow === previousFlow) return currentHistory
 
-    return flowName as FlowKeys
-  }
-
-  private updateStepHistory(
-    currentState: FlowState,
-    contextUpdates: Partial<FlowContext>,
-  ): string[] {
-    const { step: previousStep, history: currentHistory } = currentState.context
-    const { step: newStep } = contextUpdates
-
-    if (!newStep || newStep === previousStep) return currentHistory
-
-    const newHistory = [previousStep, ...currentHistory]
+    const newHistory = [previousFlow, ...currentHistory]
     return newHistory.slice(0, this.MAX_HISTORY_LENGTH)
   }
 }

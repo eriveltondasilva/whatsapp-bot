@@ -1,4 +1,4 @@
-import type { FlowKeys, MenuOptions, MessageType, OrderOptions } from '@/config/enums.js'
+import type { Flows, MenuOptions, MessageType, OrderOptions } from '@/config/enums.js'
 import type { CartItem, Customer } from './entities.js'
 import type { ResponseContent } from './responses.js'
 
@@ -8,8 +8,7 @@ export type FlowResponse = {
 }
 
 export type FlowContext = {
-  flow: FlowKeys
-  step: string
+  flow: Flows
   data: Record<string, unknown>
   history: string[]
 }

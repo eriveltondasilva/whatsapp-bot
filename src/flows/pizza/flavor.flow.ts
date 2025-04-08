@@ -1,29 +1,27 @@
 import { inject, injectable } from 'tsyringe'
 
-import { ListResponseBuilder } from '@/builder/response/list.builder.js'
-import { TextResponseBuilder } from '@/builder/response/text.builder.js'
-import { PizzaSteps } from '@/config/enums.js'
-import { StateFacade } from '@/core/state.facade.js'
+import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
+import { Flows } from '@/config/enums.js'
 import { FlavorRepository } from '@/repositories/flavor.repository.js'
 import { buildFlavorList } from '@/templates/list-builders.js'
 import { deduplicateFlavor } from '@/utils/deduplicate-flavor.js'
 import { parseIndex } from '@/utils/parse-index.js'
+import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
-import type { Command } from '@/types/interfaces.js'
 import type { ContextData } from './types.js'
 
 @injectable()
-export class FlavorCommand implements Command {
+export class PizzaFlavorFlow extends BaseFlow {
   constructor(
     @inject(FlavorRepository) private readonly flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private readonly state: StateFacade,
-  ) {}
+  ) {
+    super()
+  }
 
   //#
-  public async execute({ context, phone, message }: FlowParams) {
+  public async handle({ context, phone, message }: FlowParams) {
     const { data } = context as unknown as { data: ContextData }
     const flavors = await this.flavorRepository.getAllFlavors()
     const selectedIndex = parseIndex(message)
@@ -52,10 +50,10 @@ export class FlavorCommand implements Command {
 
     this.state.updateContext(phone, {
       data: { selectedFlavors: deduplicateFlavor(selectedFlavors) },
-      step: PizzaSteps.QUANTITY,
+      flow: Flows.PIZZA_QUANTITY,
     })
 
-    return this.textResponseBuilder
+    return this.responseBuilder
       .addCode('Etapa: 2/5')
       .addEmptyLine()
       .addText('🔢 Digite a quantidade de pizza desejada (1-10):')

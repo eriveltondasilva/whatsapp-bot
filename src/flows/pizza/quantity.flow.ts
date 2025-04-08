@@ -1,31 +1,29 @@
 import { inject, injectable } from 'tsyringe'
 
-import { ListResponseBuilder } from '@/builder/response/list.builder.js'
-import { TextResponseBuilder } from '@/builder/response/text.builder.js'
-import { PizzaSteps } from '@/config/enums.js'
-import { StateFacade } from '@/core/state.facade.js'
+import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
+import { Flows } from '@/config/enums.js'
 import { CrustRepository } from '@/repositories/crust.repository.js'
 import { buildCrustList } from '@/templates/list-builders.js'
 import { isValidQuantity } from '@/utils/@index.js'
+import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
-import type { Command } from '@/types/interfaces.js'
 
 @injectable()
-export class QuantityCommand implements Command {
+export class PizzaQuantityFlow extends BaseFlow {
   constructor(
     @inject(CrustRepository) private readonly crustRepository: CrustRepository,
     @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private readonly state: StateFacade,
-  ) {}
+  ) {
+    super()
+  }
 
   //#
-  public async execute({ phone, message }: FlowParams) {
+  public async handle({ phone, message }: FlowParams) {
     const quantity = Number.parseInt(message, 10)
 
     if (!isValidQuantity(quantity)) {
-      return this.textResponseBuilder
+      return this.responseBuilder
         .addBold('❌ QUANTIDADE INVÁLIDA')
         .addText('Por favor, digite um número entre 1 e 10.')
         .build()
@@ -33,7 +31,7 @@ export class QuantityCommand implements Command {
 
     this.state.updateContext(phone, {
       data: { quantity },
-      step: PizzaSteps.CRUST,
+      flow: Flows.PIZZA_CRUST,
     })
 
     const crusts = await this.crustRepository.getAllCrusts()

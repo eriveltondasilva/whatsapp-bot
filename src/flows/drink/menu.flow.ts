@@ -1,40 +1,38 @@
 import { inject, injectable } from 'tsyringe'
 
-import { ListResponseBuilder } from '@/builder/response/list.builder.js'
-import { TextResponseBuilder } from '@/builder/response/text.builder.js'
-import { DrinkSteps } from '@/config/enums.js'
-import { StateFacade } from '@/core/state.facade.js'
+import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
+import { Flows } from '@/config/enums.js'
 import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { buildDrinkList } from '@/templates/list-builders.js'
+import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
-import type { Command } from '@/types/interfaces.js'
 
 @injectable()
-export class MenuCommand implements Command {
+export class DrinkMenuFlow extends BaseFlow {
   constructor(
     @inject(DrinkRepository) private readonly drinkRepository: DrinkRepository,
     @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private readonly state: StateFacade,
-  ) {}
+  ) {
+    super()
+  }
 
   //#
-  public async execute({ phone }: FlowParams) {
+  public async handle({ phone }: FlowParams) {
     const drinks = await this.drinkRepository.getAllDrinks()
 
     if (!drinks?.length) {
       this.state.resetState(phone)
-      return this.textResponseBuilder
+      return this.responseBuilder
         .addText('❌ Desculpe, não encontramos bebidas disponíveis no momento.')
         .build()
     }
 
-    this.state.updateStep(phone, DrinkSteps.TYPE)
+    this.state.updateFlow(phone, Flows.DRINK_TYPE)
 
     return this.listResponseBuilder
-    .addCode('Etapa: 1/2')
-    .addEmptyLine()
+      .addCode('Etapa: 1/2')
+      .addEmptyLine()
       .addBold('🍹 ESCOLHA SUA BEBIDA')
       .addQuote('Por favor, aperte no botão abaixo para escolher a sua bebida.')
       .addList(buildDrinkList(drinks))

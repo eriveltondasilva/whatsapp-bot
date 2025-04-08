@@ -1,36 +1,28 @@
 import type { Prisma } from '@prisma/client'
-import { inject, injectable } from 'tsyringe'
+import { injectable } from 'tsyringe'
 
-import { TextResponseBuilder } from '@/builder/response/text.builder.js'
-import { PizzaSteps } from '@/config/enums.js'
-import { StateFacade } from '@/core/state.facade.js'
+import { Flows } from '@/config/enums.js'
 import { formatCurrency } from '@/utils/format-currency.js'
+import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
-import type { Command } from '@/types/interfaces.js'
 import type { ContextData } from './types.js'
 
 @injectable()
-export class NoteCommand implements Command {
-  constructor(
-    @inject(TextResponseBuilder) private readonly textResponseBuilder: TextResponseBuilder,
-    @inject(StateFacade) private readonly state: StateFacade,
-  ) {}
-
-  //#
-  public async execute({ phone, message, context }: FlowParams) {
+export class PizzaNoteFlow extends BaseFlow {
+  public async handle({ phone, message, context }: FlowParams) {
     const { selectedFlavors, selectedCrust, quantity } = context.data as ContextData
 
     if (!selectedFlavors?.length || !selectedCrust || !quantity || quantity < 1) {
       this.state.resetState(phone)
-      return this.textResponseBuilder.addText('❌ Não foi possível processar seu pedido.').build()
+      return this.responseBuilder.addText('❌ Não foi possível processar seu pedido.').build()
     }
 
     const note = message === '0' ? undefined : message
 
     this.state.updateContext(phone, {
       data: { note },
-      step: PizzaSteps.CONFIRM,
+      flow: Flows.PIZZA_CONFIRM,
     })
 
     const flavorNames = this.getFlavorNames(selectedFlavors)
@@ -39,7 +31,7 @@ export class NoteCommand implements Command {
     const unitPrice = pizzaPrice + crustPrice
     const total = unitPrice * quantity
 
-    return this.textResponseBuilder
+    return this.responseBuilder
       .addCode('Etapa: 5/5')
       .addMono()
       .addText('# RESUMO DO PEDIDO')

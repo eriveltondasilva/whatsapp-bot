@@ -1,6 +1,6 @@
 import { inject, singleton } from 'tsyringe'
 
-import { FlowKeys } from '@/config/enums.js'
+import { Flows } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { FlowState } from '@/types/flows.js'
@@ -70,8 +70,7 @@ export class StateStorage {
   private initializeState(phone: string): FlowState {
     const initialState: FlowState = {
       context: {
-        flow: FlowKeys.WELCOME,
-        step: FlowKeys.WELCOME,
+        flow: Flows.WELCOME,
         data: {},
         history: [],
       },
