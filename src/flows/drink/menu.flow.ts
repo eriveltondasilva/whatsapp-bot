@@ -31,7 +31,7 @@ export class DrinkMenuFlow extends BaseFlow {
     this.state.updateFlow(phone, Flows.DRINK_TYPE)
 
     return this.listResponseBuilder
-      .addCode('Etapa: 1/2')
+      .addCode('Etapa: 1/3')
       .addEmptyLine()
       .addBold('🍹 ESCOLHA SUA BEBIDA')
       .addQuote('Por favor, aperte no botão abaixo para escolher a sua bebida.')

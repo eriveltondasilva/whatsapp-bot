@@ -18,7 +18,6 @@ export class DrinkTypeFlow extends BaseFlow {
     super()
   }
 
-  //#
   public async handle({ phone, message }: FlowParams) {
     const drinks = await this.drinkRepository.getAllDrinks()
     const selectedIndex = parseIndex(message)
@@ -39,7 +38,7 @@ export class DrinkTypeFlow extends BaseFlow {
     })
 
     return this.responseBuilder
-      .addCode('Etapa: 2/2')
+      .addCode('Etapa: 2/3')
       .addEmptyLine()
       .addText('🔢 Digite a quantidade desejada (1-10):')
       .build()

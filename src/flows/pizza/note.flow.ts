@@ -20,28 +20,24 @@ export class PizzaNoteFlow extends BaseFlow {
 
     const note = message === '0' ? undefined : message
 
-    this.state.updateContext(phone, {
+    const { context: newContext } = this.state.updateContext(phone, {
       data: { note },
       flow: Flows.PIZZA_CONFIRM,
     })
 
-    const flavorNames = this.getFlavorNames(selectedFlavors)
-    const crustPrice = Number(selectedCrust.price)
-    const pizzaPrice = this.calculateAverageFlavorsPrice(selectedFlavors)
-    const unitPrice = pizzaPrice + crustPrice
-    const total = unitPrice * quantity
+    const summary = this.getSummary(newContext.data as ContextData)
 
     return this.responseBuilder
       .addCode('Etapa: 5/5')
       .addMono()
       .addText('# RESUMO DO PEDIDO')
       .addLine()
-      .addText('Sabor:', flavorNames, `(${formatCurrency(pizzaPrice)})`)
-      .addText('Borda:', selectedCrust.name, `(${formatCurrency(crustPrice)})`)
+      .addText('Sabor:', summary.flavorNames, `(${summary.pizzaPrice})`)
+      .addText('Borda:', selectedCrust.name, `(${summary.crustPrice})`)
       .addEmptyLine()
-      .addText('Quantidade:', quantity.toString())
-      .addText('Preço Unit.:', formatCurrency(unitPrice))
-      .addText('Total:', formatCurrency(total))
+      .addText('Quantidade:', summary.quantity)
+      .addText('Preço Unit.:', summary.unitPrice)
+      .addText('Total:', summary.total)
       .addEmptyLine()
       .addText('Observação:', note || 'nenhuma')
       .addLine()
@@ -62,5 +58,24 @@ export class PizzaNoteFlow extends BaseFlow {
     const totalPrice = flavors.reduce((acc, flavor) => acc + Number(flavor.price || 0), 0)
 
     return totalPrice / flavors.length
+  }
+
+  private getSummary(data: ContextData) {
+    const { selectedFlavors, selectedCrust, quantity } = data
+
+    const flavorNames = this.getFlavorNames(selectedFlavors)
+    const crustPrice = Number(selectedCrust.price)
+    const pizzaPrice = this.calculateAverageFlavorsPrice(selectedFlavors)
+    const unitPrice = pizzaPrice + crustPrice
+    const total = unitPrice * quantity
+
+    return {
+      flavorNames,
+      crustPrice: formatCurrency(crustPrice),
+      pizzaPrice: formatCurrency(pizzaPrice),
+      unitPrice: formatCurrency(unitPrice),
+      total: formatCurrency(total),
+      quantity: quantity.toString(),
+    }
   }
 }

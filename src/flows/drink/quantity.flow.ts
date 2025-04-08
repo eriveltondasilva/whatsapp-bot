@@ -1,11 +1,12 @@
 import { injectable } from 'tsyringe'
 
 import { Flows } from '@/config/enums.js'
-import { orderMenu } from '@/templates/menus.js'
+import { formatCurrency } from '@/utils/format-currency.js'
 import { isValidQuantity } from '@/utils/validations.js'
 import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
+import type { ContextData } from './types.js'
 
 @injectable()
 export class DrinkQuantityFlow extends BaseFlow {
@@ -19,12 +20,44 @@ export class DrinkQuantityFlow extends BaseFlow {
         .build()
     }
 
-    this.state.updateFlow(phone, Flows.ORDER)
+    const { context: newContext } = this.state.updateContext(phone, {
+      data: { quantity },
+      flow: Flows.PIZZA_CONFIRM,
+    })
+
+    const summary = this.getSummary(newContext.data as ContextData)
 
     return this.responseBuilder
-      .addText('✅ Bebida adicionada ao carrinho com sucesso!')
+      .addCode('Etapa: 3/3')
+      .addMono()
+      .addText('# RESUMO DO PEDIDO')
+      .addLine()
+      .addText('Bebida:', summary.drinkName)
       .addEmptyLine()
-      .addMenu(orderMenu)
+      .addText('Quantidade:', summary.quantity)
+      .addText('Preço Unit.:', summary.unitPrice)
+      .addText('Total:', summary.total)
+      .addLine()
+      .addMono()
+      .addEmptyLine()
+      .addText('Deseja confirmar seu pedido?')
+      .addText('1️⃣ - Confirmar ✅')
+      .addText('0️⃣ - Cancelar ❌')
       .build()
+  }
+
+  private getSummary(data: ContextData) {
+    const { selectedDrink, quantity } = data
+
+    const drinkName = selectedDrink.name
+    const unitPrice = Number(selectedDrink.price)
+    const total = unitPrice * quantity
+
+    return {
+      drinkName,
+      quantity: quantity.toString(),
+      unitPrice: formatCurrency(unitPrice),
+      total: formatCurrency(total),
+    }
   }
 }

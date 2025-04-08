@@ -40,6 +40,7 @@ export class PizzaCrustFlow extends BaseFlow {
 
     return this.responseBuilder
       .addCode('Etapa: 4/5')
+      .addEmptyLine()
       .addText('Deseja adicionar alguma observação ao seu pedido?')
       .addQuote('Exemplo: retirar cebola, mais queijo, etc.')
       .addEmptyLine()

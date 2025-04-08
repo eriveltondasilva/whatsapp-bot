@@ -54,37 +54,6 @@ export enum OrderOptions {
 }
 
 // ###
-export enum FlowKeys {
-  WELCOME = 'welcome',
-  REGISTRATION = 'registration',
-  MENU = 'menu',
-  ORDER = 'order',
-  PIZZA = 'pizza',
-  DRINK = 'drink',
-  // PAYMENT = 'payment',
-}
-
-export enum PizzaSteps {
-  CONFIRM = 'pizza::confirm',
-  CRUST = 'pizza::crust',
-  FLAVOR = 'pizza::flavor',
-  NOTE = 'pizza::note',
-  QUANTITY = 'pizza::quantity',
-  MENU = 'pizza::menu',
-}
-
-export enum DrinkSteps {
-  MENU = 'drink::menu',
-  QUANTITY = 'drink::quantity',
-  TYPE = 'drink::type',
-}
-
-export enum RegistrationSteps {
-  INITIAL = 'registration::initial',
-  NAME = 'registration::name',
-  ADDRESS = 'registration::address',
-}
-
 export enum Flows {
   REGISTRATION_INITIAL = 'registration_initial',
   REGISTRATION_NAME = 'registration::name',
@@ -105,5 +74,6 @@ export enum Flows {
   DRINK_TYPE = 'drink_type',
   DRINK_QUANTITY = 'drink_quantity',
   DRINK_CONFIRM = 'drink_confirm',
+  //
   // PAYMENT = 'payment',
 }
