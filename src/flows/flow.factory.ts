@@ -1,4 +1,4 @@
-import { inject, injectable } from 'tsyringe'
+import { container, injectable } from 'tsyringe'
 import type { BaseFlow } from './base.flow.js'
 
 import { Flows } from '@/config/enums.js'
@@ -22,56 +22,41 @@ import { DrinkMenuFlow } from './drink/menu.flow.js'
 import { DrinkQuantityFlow } from './drink/quantity.flow.js'
 import { DrinkTypeFlow } from './drink/type.flow.js'
 
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+type FlowConstructor = new (...args: any[]) => BaseFlow
+
 @injectable()
 export class FlowFactory {
-  private readonly flowMap: Map<Flows, BaseFlow>
+  private readonly flowMap: Map<Flows, FlowConstructor>
 
-  constructor(
-    @inject(RegistrationInitialFlow) registrationInitialFlow: RegistrationInitialFlow,
-    @inject(RegistrationNameFlow) registrationNameFlow: RegistrationNameFlow,
-    @inject(RegistrationAddressFlow) registrationAddressFlow: RegistrationAddressFlow,
-    //
-    @inject(WelcomeFlow) welcomeFlow: WelcomeFlow,
-    @inject(MenuFlow) menuFlow: MenuFlow,
-    @inject(OrderFlow) orderFlow: OrderFlow,
-    //
-    @inject(PizzaMenuFlow) pizzaMenuFlow: PizzaMenuFlow,
-    @inject(PizzaFlavorFlow) pizzaFlavorFlow: PizzaFlavorFlow,
-    @inject(PizzaQuantityFlow) pizzaQuantityFlow: PizzaQuantityFlow,
-    @inject(PizzaCrustFlow) pizzaCrustFlow: PizzaCrustFlow,
-    @inject(PizzaNoteFlow) pizzaNoteFlow: PizzaNoteFlow,
-    @inject(PizzaConfirmFlow) pizzaConfirmFlow: PizzaConfirmFlow,
-    //
-    @inject(DrinkMenuFlow) drinkMenuFlow: DrinkMenuFlow,
-    @inject(DrinkTypeFlow) drinkTypeFlow: DrinkTypeFlow,
-    @inject(DrinkQuantityFlow) drinkQuantityFlow: DrinkQuantityFlow,
-  ) {
-    this.flowMap = new Map<Flows, BaseFlow>([
-      [Flows.REGISTRATION_INITIAL, registrationInitialFlow],
-      [Flows.REGISTRATION_NAME, registrationNameFlow],
-      [Flows.REGISTRATION_ADDRESS, registrationAddressFlow],
-      //
-      [Flows.WELCOME, welcomeFlow],
-      [Flows.MENU, menuFlow],
-      [Flows.ORDER, orderFlow],
-      //
-      [Flows.PIZZA_MENU, pizzaMenuFlow],
-      [Flows.PIZZA_FLAVOR, pizzaFlavorFlow],
-      [Flows.PIZZA_QUANTITY, pizzaQuantityFlow],
-      [Flows.PIZZA_CRUST, pizzaCrustFlow],
-      [Flows.PIZZA_NOTE, pizzaNoteFlow],
-      [Flows.PIZZA_CONFIRM, pizzaConfirmFlow],
-      //
-      [Flows.DRINK_MENU, drinkMenuFlow],
-      [Flows.DRINK_TYPE, drinkTypeFlow],
-      [Flows.DRINK_QUANTITY, drinkQuantityFlow],
+  constructor() {
+    this.flowMap = new Map<Flows, FlowConstructor>([
+      // Registration flows
+      [Flows.REGISTRATION_INITIAL, RegistrationInitialFlow],
+      [Flows.REGISTRATION_NAME, RegistrationNameFlow],
+      [Flows.REGISTRATION_ADDRESS, RegistrationAddressFlow],
+      // Core flows
+      [Flows.WELCOME, WelcomeFlow],
+      [Flows.MENU, MenuFlow],
+      [Flows.ORDER, OrderFlow],
+      // Pizza flows
+      [Flows.PIZZA_MENU, PizzaMenuFlow],
+      [Flows.PIZZA_FLAVOR, PizzaFlavorFlow],
+      [Flows.PIZZA_QUANTITY, PizzaQuantityFlow],
+      [Flows.PIZZA_CRUST, PizzaCrustFlow],
+      [Flows.PIZZA_NOTE, PizzaNoteFlow],
+      [Flows.PIZZA_CONFIRM, PizzaConfirmFlow],
+      // Drink flows
+      [Flows.DRINK_MENU, DrinkMenuFlow],
+      [Flows.DRINK_TYPE, DrinkTypeFlow],
+      [Flows.DRINK_QUANTITY, DrinkQuantityFlow],
     ])
   }
 
   public create(flowName: Flows): BaseFlow {
-    const flow = this.flowMap.get(flowName)
-    if (!flow) throw new Error('Invalid flow')
+    const FlowClass = this.flowMap.get(flowName)
+    if (!FlowClass) throw new Error('Invalid flow')
 
-    return flow
+    return container.resolve<BaseFlow>(FlowClass)
   }
 }

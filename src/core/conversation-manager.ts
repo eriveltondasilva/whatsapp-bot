@@ -1,6 +1,5 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FlowContext } from '@/flows/flow-context.js'
 import { FlowFactory } from '@/flows/flow.factory.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { StateFacade } from './state.facade.js'
@@ -10,8 +9,6 @@ import type { FlowResponse } from '@/types/flows.js'
 @injectable()
 export class ConversationManager {
   constructor(
-    // @inject(FlowFactory) private readonly flowFactory: FlowFactory,
-    @inject(FlowContext) private readonly flowContext: FlowContext,
     @inject(FlowFactory) private readonly flowFactory: FlowFactory,
     @inject(StateFacade) private readonly state: StateFacade,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
@@ -23,13 +20,9 @@ export class ConversationManager {
     try {
       const { context } = this.state.getState(phone)
       const flow = this.flowFactory.create(context.flow)
-      this.flowContext.setFlow(flow)
 
-      return await this.flowContext.handle({ context, phone, message })
-
-      // const { context } = this.state.getState(phone)
-      // const flow = this.flowFactory.createFlow(context.flow)
-      // return await flow.handle({ context, phone, message })
+      this.logger.info(`🔄️ Handling flow: ${context.flow}`, { phone })
+      return await flow.handle({ context, phone, message })
     } catch (error) {
       this.state.resetState(phone)
       throw error
