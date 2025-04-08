@@ -9,3 +9,7 @@ export interface Flow {
 export interface FlowFactory {
   createFlow(flow: FlowKeys): Flow
 }
+
+export interface MessageSendStrategy {
+  send(phone: string, content: ResponseContent): Promise<void>
+}

@@ -5,20 +5,14 @@ import { ConversationManager } from '@/core/conversation-manager.js'
 import { ClientProvider } from '@/providers/client.provider.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { isValidMessage } from '@/utils/@index.js'
-import { MessageType } from './config/enums.js'
-
-import { MessageSender } from '@/services/sender/message-sender.js'
-import { ListMessageService } from './services/sender/list-message.service.js'
-import { TextMessageService } from './services/sender/text-message.service.js'
+import { MessageSenderFactory } from './services/sender/message-sender.factory.js'
 
 @injectable()
 export class WhatsappBot {
   constructor(
     @inject(ClientProvider) private readonly clientProvider: ClientProvider,
     @inject(ConversationManager) private readonly conversation: ConversationManager,
-    @inject(MessageSender) private readonly messageSender: MessageSender,
-    @inject(TextMessageService) private readonly textMessageService: TextMessageService,
-    @inject(ListMessageService) private readonly listMessageService: ListMessageService,
+    @inject(MessageSenderFactory) private readonly messageSenderFactory: MessageSenderFactory,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
@@ -44,13 +38,12 @@ export class WhatsappBot {
     try {
       const { type, content } = await this.conversation.handle(message.from, message.body)
 
-      const sender = type === MessageType.LIST ? this.textMessageService : this.listMessageService
-
-      this.messageSender.set(sender)
-      await this.messageSender.send(message.from, content)
+      const messageSender = this.messageSenderFactory.create(type)
+      await messageSender.send(message.from, content)
     } catch (error) {
-      this.logger.error('Message processing error', error)
-      await this.messageSender.sendErrorMessage(message.from)
+      this.logger.error('Message processing error:', error)
+      const messageSender = this.messageSenderFactory.createDefault()
+      await messageSender.sendErrorMessage(message.from)
     }
   }
 }

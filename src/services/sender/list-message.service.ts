@@ -2,14 +2,14 @@ import { inject, injectable } from 'tsyringe'
 
 import { ClientProvider } from '@/providers/client.provider.js'
 
+import type { MessageSendStrategy } from '@/types/interfaces.js'
 import type { ResponseContent, ResponseList } from '@/types/responses.js'
-import type { MessageSendStrategy } from './message-sender.js'
 
 @injectable()
 export class ListMessageService implements MessageSendStrategy {
   constructor(@inject(ClientProvider) private client: ClientProvider) {}
 
-  public async send(phone: string, content: ResponseContent): Promise<void> {
+  public async send(phone: string, content: ResponseContent) {
     if (!content.text || !content.list?.length) throw new Error('Invalid list content')
 
     const client = await this.client.getClient()
@@ -18,11 +18,6 @@ export class ListMessageService implements MessageSendStrategy {
       description: `[BOT]\n${content.text}`,
       sections: this.createListSections(content.list),
     })
-  }
-
-  public async sendErrorMessage(phone: string, messageError: string) {
-    const client = await this.client.getClient()
-    await client.sendText(phone, `[BOT]\n${messageError}`)
   }
 
   //#
