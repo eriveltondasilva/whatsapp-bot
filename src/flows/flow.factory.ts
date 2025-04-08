@@ -18,6 +18,7 @@ import { PizzaMenuFlow } from './pizza/menu.flow.js'
 import { PizzaNoteFlow } from './pizza/note.flow.js'
 import { PizzaQuantityFlow } from './pizza/quantity.flow.js'
 
+import { DrinkConfirmFlow } from './drink/confirm.flow.js'
 import { DrinkMenuFlow } from './drink/menu.flow.js'
 import { DrinkQuantityFlow } from './drink/quantity.flow.js'
 import { DrinkTypeFlow } from './drink/type.flow.js'
@@ -50,6 +51,7 @@ export class FlowFactory {
       [Flows.DRINK_MENU, DrinkMenuFlow],
       [Flows.DRINK_TYPE, DrinkTypeFlow],
       [Flows.DRINK_QUANTITY, DrinkQuantityFlow],
+      [Flows.DRINK_CONFIRM, DrinkConfirmFlow],
     ])
   }
 

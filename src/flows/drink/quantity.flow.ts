@@ -39,7 +39,6 @@ export class DrinkQuantityFlow extends BaseFlow {
       .addText('Total:', summary.total)
       .addLine()
       .addMono()
-      .addEmptyLine()
       .addText('Deseja confirmar seu pedido?')
       .addText('1️⃣ - Confirmar ✅')
       .addText('0️⃣ - Cancelar ❌')

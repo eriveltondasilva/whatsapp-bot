@@ -42,7 +42,6 @@ export class PizzaNoteFlow extends BaseFlow {
       .addText('Observação:', note || 'nenhuma')
       .addLine()
       .addMono()
-      .addEmptyLine()
       .addText('Deseja confirmar seu pedido?')
       .addText('1️⃣ - Confirmar ✅')
       .addText('0️⃣ - Cancelar ❌')
