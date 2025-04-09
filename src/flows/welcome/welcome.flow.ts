@@ -30,7 +30,7 @@ export class WelcomeFlow extends BaseFlow {
     this.state.updateFlow(phone, Flows.MENU)
 
     return this.responseBuilder
-      .addGreeting(customer.name)
+      .addText('Olá,', customer.name)
       .addText(
         'Que bom ter você de volta por aqui!',
         'Estamos ansiosos para preparar algo delicioso para você. 😋🍽',

@@ -24,7 +24,7 @@ export class RegistrationNameFlow extends BaseFlow {
     })
 
     return this.responseBuilder
-      .addGreeting(name)
+      .addText('Olá,', name.split(' ')[0])
       .addText('Agora me diga onde vamos entregar suas delícias?')
       .addEmptyLine()
       .addText('Por favor, informe seu nome completo.')
