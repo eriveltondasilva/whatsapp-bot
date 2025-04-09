@@ -1,5 +1,4 @@
 import { container, injectable } from 'tsyringe'
-import type { BaseFlow } from './base.flow.js'
 
 import { Flows } from '@/config/enums.js'
 
@@ -23,6 +22,8 @@ import { DrinkMenuFlow } from './drink/menu.flow.js'
 import { DrinkQuantityFlow } from './drink/quantity.flow.js'
 import { DrinkTypeFlow } from './drink/type.flow.js'
 
+import type { BaseFlow } from './base.flow.js'
+
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 type FlowConstructor = new (...args: any[]) => BaseFlow
 
@@ -32,26 +33,27 @@ export class FlowFactory {
 
   constructor() {
     this.flowMap = new Map<Flows, FlowConstructor>([
-      // Registration flows
+      //* Registration flows
       [Flows.REGISTRATION_INITIAL, RegistrationInitialFlow],
       [Flows.REGISTRATION_NAME, RegistrationNameFlow],
       [Flows.REGISTRATION_ADDRESS, RegistrationAddressFlow],
-      // Core flows
+      //* Core flows
       [Flows.WELCOME, WelcomeFlow],
       [Flows.MENU, MenuFlow],
       [Flows.ORDER, OrderFlow],
-      // Pizza flows
+      //* Pizza flows
       [Flows.PIZZA_MENU, PizzaMenuFlow],
       [Flows.PIZZA_FLAVOR, PizzaFlavorFlow],
       [Flows.PIZZA_QUANTITY, PizzaQuantityFlow],
       [Flows.PIZZA_CRUST, PizzaCrustFlow],
       [Flows.PIZZA_NOTE, PizzaNoteFlow],
       [Flows.PIZZA_CONFIRM, PizzaConfirmFlow],
-      // Drink flows
+      //* Drink flows
       [Flows.DRINK_MENU, DrinkMenuFlow],
       [Flows.DRINK_TYPE, DrinkTypeFlow],
       [Flows.DRINK_QUANTITY, DrinkQuantityFlow],
       [Flows.DRINK_CONFIRM, DrinkConfirmFlow],
+      //* Other flows
     ])
   }
 

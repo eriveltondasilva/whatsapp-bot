@@ -1,3 +1,15 @@
+const menuFooter = '🔢 Digite o número da opção desejada:'
+
+export const registrationMenu = [
+  '👤 *CADASTRO*',
+  '',
+  '1️⃣ - Nome',
+  '2️⃣ - Endereço',
+  '0️⃣ - Voltar',
+  '',
+  menuFooter,
+]
+
 export const mainMenu = [
   '📝 *MENU PRINCIPAL*',
   '',
@@ -8,7 +20,7 @@ export const mainMenu = [
   '5️⃣ - Falar com Atendente 👨‍💼',
   '0️⃣ - Finalizar Atendimento ❌',
   '',
-  '🔢 Digite o número da opção desejada:',
+  menuFooter,
 ]
 
 export const orderMenu = [
@@ -20,5 +32,5 @@ export const orderMenu = [
   '4️⃣ - Finalizar pedido ✅',
   '0️⃣ - Cancelar pedido ❌',
   '',
-  '🔢 Digite o número da opção desejada:',
+  menuFooter,
 ]
