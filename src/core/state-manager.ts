@@ -15,6 +15,7 @@ export class StateManager {
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
     @inject(StateCleanupService) private readonly cleanupService: StateCleanupService,
   ) {
+    this.cleanupService.setStateManager(this)
     this.cleanupService.startCleanup()
   }
 
@@ -60,7 +61,7 @@ export class StateManager {
 
   public has(phone: string): boolean {
     const state = this.stateStore.get(phone)
-    return !!state && !this.isStateExpired(state)
+    return Boolean(state && !this.isStateExpired(state))
   }
 
   public getSize(): number {

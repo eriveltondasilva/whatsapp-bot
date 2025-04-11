@@ -43,7 +43,7 @@ export class PizzaFlavorFlow extends BaseFlow {
         .addCode('Etapa: 1/5')
         .addEmptyLine()
         .addBold('🍕 ESCOLHA O 2° SABOR DA SUA PIZZA')
-        .addQuote('Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+        .addQuote('Por favor, aperte o botão abaixo para escolher o sabor da sua pizza.')
         .addList(buildFlavorList(flavors))
         .build()
     }

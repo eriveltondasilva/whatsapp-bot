@@ -19,7 +19,6 @@ export class PizzaMenuFlow extends BaseFlow {
 
   //#
   public async handle({ phone, message }: FlowParams) {
-    console.log('estou no PizzaMenuFlow')
     const isSingleFlavor = message === '1'
     const flavors = await this.flavorRepository.getAllFlavors()
 
@@ -43,7 +42,7 @@ export class PizzaMenuFlow extends BaseFlow {
       .addCode('Etapa: 1/5')
       .addEmptyLine()
       .addBold(title)
-      .addQuote('Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+      .addQuote('Por favor, aperte o botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildFlavorList(flavors))
       .build()
   }

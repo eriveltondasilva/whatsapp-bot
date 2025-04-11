@@ -20,7 +20,6 @@ export class OrderFlow extends BaseFlow {
 
   //#
   public handle({ phone, message }: FlowParams) {
-    console.log('estou no OrderFlow')
     const actionMap: OrderActionMap = {
       [OrderOptions.ONE_PIZZA]: () => this.handlePizzaMenu(phone, message),
       [OrderOptions.TWO_PIZZA]: () => this.handlePizzaMenu(phone, message),
@@ -34,7 +33,6 @@ export class OrderFlow extends BaseFlow {
   }
 
   private handlePizzaMenu(phone: string, message: string) {
-    console.log('estou no handlePizzaMenu')
     const { context } = this.state.updateFlow(phone, Flows.PIZZA_MENU)
     return this.pizzaMenuFlow.handle({ context, phone, message })
   }
@@ -52,12 +50,12 @@ export class OrderFlow extends BaseFlow {
   private cancelOrder(phone: string) {
     this.state.resetState(phone)
     return this.responseBuilder
-      .addBold('🍕 PEDIDO CANCELADO')
-      .addText(
-        '✨ Obrigado por utilizar nossos serviços!',
-        'Se precisar de algo, estamos aqui para ajudar.',
-      )
+      .addBold('❌ PEDIDO CANCELADO')
       .addEmptyLine()
+      .addText(
+        'Obrigado por utilizar nossos serviços!',
+        'Se precisar de algo, estamos aqui para oferecer o melhor atendimento.',
+      )
       .addText('👋 Até a próxima...')
       .build()
   }
@@ -66,7 +64,7 @@ export class OrderFlow extends BaseFlow {
   private handleInvalidOption() {
     return this.responseBuilder
       .addBold('❌ OPÇÃO INVÁLIDA')
-      .addText('Por favor, escolha uma das opções disponíveis.')
+      .addText('Por favor, escolha uma das opções disponíveis abaixo.')
       .addEmptyLine()
       .addMenu(orderMenu)
       .build()

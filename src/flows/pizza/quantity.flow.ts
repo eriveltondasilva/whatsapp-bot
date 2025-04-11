@@ -40,7 +40,7 @@ export class PizzaQuantityFlow extends BaseFlow {
       .addCode('Etapa: 3/5')
       .addEmptyLine()
       .addBold('🍕 ESCOLHA A BORDA DA SUA PIZZA')
-      .addQuote('Por favor, aperte no botão abaixo para escolher o sabor da sua pizza.')
+      .addQuote('Por favor, aperte o botão abaixo para escolher o sabor da sua pizza.')
       .addList(buildCrustList(crusts))
       .build()
   }

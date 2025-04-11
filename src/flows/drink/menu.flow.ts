@@ -34,7 +34,7 @@ export class DrinkMenuFlow extends BaseFlow {
       .addCode('Etapa: 1/3')
       .addEmptyLine()
       .addBold('🍹 ESCOLHA SUA BEBIDA')
-      .addQuote('Por favor, aperte no botão abaixo para escolher a sua bebida.')
+      .addQuote('Por favor, aperte o botão abaixo para escolher a sua bebida.')
       .addList(buildDrinkList(drinks))
       .build()
   }

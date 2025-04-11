@@ -1,7 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ClientProvider } from '@/providers/client.provider.js'
-import { getDelay } from '@/utils/get-delay.js'
 
 import type { MessageSendStrategy } from '@/types/interfaces.js'
 import type { ResponseContent } from '@/types/responses.js'
@@ -12,7 +11,7 @@ export class TextMessageService implements MessageSendStrategy {
 
   public async send(phone: string, content: ResponseContent) {
     const client = await this.client.getClient()
-    await client.sendText(phone, `[BOT]\n${content.text}`, { delay: getDelay() })
+    await client.sendText(phone, `[BOT]\n${content.text}`, /* { delay: getDelay() } */)
   }
 
   public async sendErrorMessage(phone: string) {
