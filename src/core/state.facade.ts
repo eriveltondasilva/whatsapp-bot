@@ -1,6 +1,6 @@
 import { inject, singleton } from 'tsyringe'
 
-import { StateStorage } from '@/core/state-storage.js'
+import { StateManager } from '@/core/state-manager.js'
 import { CartService } from '@/services/state/cart.service.js'
 import { ContextService } from '@/services/state/context.service.js'
 import { CustomerService } from '@/services/state/customer.service.js'
@@ -15,7 +15,7 @@ export class StateFacade {
     @inject(CartService) private readonly cartService: CartService,
     @inject(ContextService) private readonly contextService: ContextService,
     @inject(CustomerService) private readonly customerService: CustomerService,
-    @inject(StateStorage) private readonly storage: StateStorage,
+    @inject(StateManager) private readonly storage: StateManager,
   ) {}
 
   //#
@@ -80,6 +80,6 @@ export class StateFacade {
   }
 
   public clearAllStates(): void {
-    this.storage.clear()
+    this.storage.clearAllStates()
   }
 }

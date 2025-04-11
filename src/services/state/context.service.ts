@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { StateStorage } from '@/core/state-storage.js'
+import { StateManager } from '@/core/state-manager.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { Flows } from '@/config/enums.js'
@@ -11,7 +11,7 @@ export class ContextService {
   private readonly MAX_HISTORY_LENGTH = 10
 
   constructor(
-    @inject(StateStorage) private readonly storage: StateStorage,
+    @inject(StateManager) private readonly storage: StateManager,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 

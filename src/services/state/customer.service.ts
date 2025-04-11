@@ -1,7 +1,7 @@
 // services/state/CustomerManager.ts
 import { inject, injectable } from 'tsyringe'
 
-import { StateStorage } from '@/core/state-storage.js'
+import { StateManager } from '@/core/state-manager.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 import type { Customer } from '@/types/entities.js'
@@ -10,7 +10,7 @@ import type { FlowState } from '@/types/flows.js'
 @injectable()
 export class CustomerService {
   constructor(
-    @inject(StateStorage) private readonly storage: StateStorage,
+    @inject(StateManager) private readonly storage: StateManager,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
