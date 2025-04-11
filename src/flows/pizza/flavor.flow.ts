@@ -29,7 +29,7 @@ export class PizzaFlavorFlow extends BaseFlow {
     if (!flavors[selectedIndex]) {
       return this.listResponseBuilder
         .addBold('❌ OPÇÃO INVÁLIDA!')
-        .addText('Por favor, escolha uma opção válida.')
+        .addText('Por favor, escolha uma das opções disponíveis abaixo.')
         .addList(buildFlavorList(flavors))
         .build()
     }

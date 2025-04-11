@@ -26,7 +26,7 @@ export class PizzaCrustFlow extends BaseFlow {
     if (!crusts[selectedIndex]) {
       return this.listResponseBuilder
         .addBold('❌ BORDA INVÁLIDA')
-        .addText('Por favor, escolha uma opção válida da lista abaixo:')
+        .addText('Por favor, escolha uma das opções disponíveis abaixo.')
         .addList(buildCrustList(crusts))
         .build()
     }

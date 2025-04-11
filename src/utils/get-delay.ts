@@ -1,7 +1,6 @@
 const MILLISECONDS_IN_SECOND = 1_000
 
 export function getDelay(min = 2, max = 6): number {
-  if (min < 0 || max < 0) throw new Error('min and max must be positive')
   if (min > max) throw new Error('min must be less than max')
 
   const minMs = min * MILLISECONDS_IN_SECOND

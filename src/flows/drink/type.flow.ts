@@ -25,7 +25,7 @@ export class DrinkTypeFlow extends BaseFlow {
     if (!drinks[selectedIndex]) {
       return this.listResponseBuilder
         .addBold('❌ OPÇÃO INVÁLIDA!')
-        .addText('Selecione uma opção válida.')
+        .addText('Por favor, escolha uma das opções disponíveis abaixo.')
         .addList(buildDrinkList(drinks))
         .build()
     }

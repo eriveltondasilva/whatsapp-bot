@@ -1,7 +1,6 @@
 export enum MessageType {
   TEXT = 'text',
   LIST = 'list',
-  // IMAGE = 'image',
 }
 
 export enum PizzaType {
@@ -55,25 +54,32 @@ export enum OrderOptions {
 
 // ###
 export enum Flows {
+  // Fluxos de registro do usuário
   REGISTRATION_INITIAL = 'registration_initial',
   REGISTRATION_NAME = 'registration::name',
   REGISTRATION_ADDRESS = 'registration::address',
-  //
+
+  // Fluxos de navegação principal
   WELCOME = 'welcome',
   MENU = 'menu',
   ORDER = 'order',
-  //
+
+ // Fluxos relacionados a pedidos de pizza
   PIZZA_MENU = 'pizza_menu',
   PIZZA_FLAVOR = 'pizza_flavor',
   PIZZA_QUANTITY = 'pizza_quantity',
   PIZZA_CRUST = 'pizza_crust',
   PIZZA_NOTE = 'pizza_note',
   PIZZA_CONFIRM = 'pizza_confirm',
-  //
+
+  // Fluxos relacionados a pedidos de bebidas
   DRINK_MENU = 'drink_menu',
   DRINK_TYPE = 'drink_type',
   DRINK_QUANTITY = 'drink_quantity',
   DRINK_CONFIRM = 'drink_confirm',
-  //
-  // PAYMENT = 'payment',
+
+  // Fluxos de pagamento
+  // PAYMENT_METHOD = 'payment_method',
+  // PAYMENT_CONFIRM = 'payment_confirm',
+  // PAYMENT_CANCEL = 'payment_cancel',
 }

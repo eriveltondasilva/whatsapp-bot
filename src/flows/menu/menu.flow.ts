@@ -54,10 +54,10 @@ export class MenuFlow extends BaseFlow {
     this.state.resetState(phone)
     return this.responseBuilder
       .addText(
-        '✨ Obrigado por utilizar nossos serviços!',
-        'Se precisar de algo, estamos aqui para ajudar.',
+        'Obrigado por utilizar nossos serviços!',
+        'Se precisar de algo, estamos aqui para oferecer o melhor atendimento.',
       )
-      .addText('👋 Até a próxima!')
+      .addText('👋 Até a próxima...')
       .build()
   }
 
@@ -65,6 +65,7 @@ export class MenuFlow extends BaseFlow {
   private handleInvalidOption() {
     return this.responseBuilder
       .addBold('❌ OPÇÃO INVÁLIDA')
+      .addText('Por favor, escolha uma das opções disponíveis abaixo.')
       .addEmptyLine()
       .addMenu(mainMenu)
       .build()
