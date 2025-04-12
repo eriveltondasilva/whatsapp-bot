@@ -39,6 +39,7 @@ export class PaymentMethodFlow extends BaseFlow {
         .build()
     }
 
+    //*>
     this.state.updateContext(phone, {
       data: { paymentMethod },
       flow: Flows.PAYMENT_CONFIRM,

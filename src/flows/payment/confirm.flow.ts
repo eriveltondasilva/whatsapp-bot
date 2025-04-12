@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import { injectable } from 'tsyringe'
 
-import { orderMenu } from '@/templates/menus.js'
+import { Flows } from '@/config/enums.js'
+import { mainMenu, orderMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
@@ -22,12 +23,16 @@ export class PaymentConfirmFlow extends BaseFlow {
         .build()
     }
 
+    this.state.updateFlow(phone, Flows.MENU)
+
     return this.responseBuilder
       .addBold('✅ PEDIDO REGISTRADO!')
       .addText('Obrigado pela sua compra.', 'Seu pedido foi registrado e será preparado em breve.')
       .addEmptyLine()
       .addText('Tempo estimado de entrega: *30-45 minutos*')
       .addText('Número do pedido:', this.generateOrderNumber())
+      .addEmptyLine()
+      .addMenu(mainMenu)
       .build()
   }
 
