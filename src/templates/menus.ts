@@ -34,3 +34,13 @@ export const orderMenu = [
   '',
   menuFooter,
 ]
+
+export const paymentMenu = [
+  '💳 *MENU DE PAGAMENTO*',
+  '',
+  '1️⃣ - Cartão de Crédito',
+  '2️⃣ - Cartão de Débito',
+  '3️⃣ - Dinheiro',
+  '',
+  menuFooter,
+]

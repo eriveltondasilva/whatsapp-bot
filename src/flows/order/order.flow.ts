@@ -5,6 +5,7 @@ import { orderMenu } from '@/templates/menus.js'
 
 import { BaseFlow } from '../base.flow.js'
 import { DrinkMenuFlow } from '../drink/menu.flow.js'
+import { PaymentMenuFlow } from '../payment/menu.flow.js'
 import { PizzaMenuFlow } from '../pizza/menu.flow.js'
 
 import type { FlowParams, OrderActionMap } from '@/types/flows.js'
@@ -14,6 +15,7 @@ export class OrderFlow extends BaseFlow {
   constructor(
     @inject(DrinkMenuFlow) private readonly drinkMenuFlow: DrinkMenuFlow,
     @inject(PizzaMenuFlow) private readonly pizzaMenuFlow: PizzaMenuFlow,
+    @inject(PaymentMenuFlow) private readonly paymentMenuFlow: PaymentMenuFlow,
   ) {
     super()
   }
@@ -24,7 +26,7 @@ export class OrderFlow extends BaseFlow {
       [OrderOptions.ONE_PIZZA]: () => this.handlePizzaMenu(phone, message),
       [OrderOptions.TWO_PIZZA]: () => this.handlePizzaMenu(phone, message),
       [OrderOptions.DRINK]: () => this.handleDrinkMenu(phone, message),
-      [OrderOptions.COMPLETE]: () => this.finalizeOrder(phone),
+      [OrderOptions.COMPLETE]: () => this.finalizeOrder(phone, message),
       [OrderOptions.CANCEL]: () => this.cancelOrder(phone),
     } as const
 
@@ -42,9 +44,9 @@ export class OrderFlow extends BaseFlow {
     return this.drinkMenuFlow.handle({ context, phone, message })
   }
 
-  private finalizeOrder(phone: string) {
-    this.state.resetState(phone)
-    return this.responseBuilder.addBold('🍕 Pedido Finalizado').build()
+  private finalizeOrder(phone: string, message: string) {
+    const { context } = this.state.updateFlow(phone, Flows.PAYMENT_MENU)
+    return this.paymentMenuFlow.handle({ context, phone, message })
   }
 
   private cancelOrder(phone: string) {

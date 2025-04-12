@@ -11,7 +11,7 @@ export class MenuFlow extends BaseFlow {
   private readonly inProgressMessage = [
     '🚧 Esta funcionalidade está em desenvolvimento.',
     'Por favor, aguarde novidades!',
-  ].join(',')
+  ]
 
   //#
   public handle({ phone, message }: FlowParams) {
@@ -35,19 +35,19 @@ export class MenuFlow extends BaseFlow {
   }
 
   private showOrderTracking() {
-    return this.responseBuilder.addText(this.inProgressMessage).build()
+    return this.responseBuilder.addText(...this.inProgressMessage).build()
   }
 
   private showOrderHistory() {
-    return this.responseBuilder.addText(this.inProgressMessage).build()
+    return this.responseBuilder.addText(...this.inProgressMessage).build()
   }
 
   private updateProfile() {
-    return this.responseBuilder.addText(this.inProgressMessage).build()
+    return this.responseBuilder.addText(...this.inProgressMessage).build()
   }
 
   private contactSupport() {
-    return this.responseBuilder.addText(this.inProgressMessage).build()
+    return this.responseBuilder.addText(...this.inProgressMessage).build()
   }
 
   private exitFlow(phone: string) {

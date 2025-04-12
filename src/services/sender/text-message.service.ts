@@ -11,7 +11,7 @@ export class TextMessageService implements MessageSendStrategy {
 
   public async send(phone: string, content: ResponseContent) {
     const client = await this.client.getClient()
-    await client.sendText(phone, `[BOT]\n${content.text}`, /* { delay: getDelay() } */)
+    await client.sendText(phone, `[BOT]\n${content.text}` /* { delay: getDelay() } */)
   }
 
   public async sendErrorMessage(phone: string) {
