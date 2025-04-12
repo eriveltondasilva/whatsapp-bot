@@ -45,7 +45,6 @@ export class PaymentMethodFlow extends BaseFlow {
     })
 
     return this.responseBuilder
-      .addBold('💳 CONFIRMAÇÃO DE PAGAMENTO')
       .addMono()
       .addText('# DETALHES DO PAGAMENTO')
       .addLine()

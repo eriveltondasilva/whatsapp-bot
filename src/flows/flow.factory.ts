@@ -22,6 +22,10 @@ import { DrinkMenuFlow } from './drink/menu.flow.js'
 import { DrinkQuantityFlow } from './drink/quantity.flow.js'
 import { DrinkTypeFlow } from './drink/type.flow.js'
 
+import { PaymentConfirmFlow } from './payment/confirm.flow.js'
+import { PaymentMenuFlow } from './payment/menu.flow.js'
+import { PaymentMethodFlow } from './payment/method.flow.js'
+
 import type { BaseFlow } from './base.flow.js'
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -53,6 +57,10 @@ export class FlowFactory {
       [Flows.DRINK_TYPE, DrinkTypeFlow],
       [Flows.DRINK_QUANTITY, DrinkQuantityFlow],
       [Flows.DRINK_CONFIRM, DrinkConfirmFlow],
+      //* Payment flows
+      [Flows.PAYMENT_MENU, PaymentMenuFlow],
+      [Flows.PAYMENT_METHOD, PaymentMethodFlow],
+      [Flows.PAYMENT_CONFIRM, PaymentConfirmFlow],
       //* Other flows
     ])
   }

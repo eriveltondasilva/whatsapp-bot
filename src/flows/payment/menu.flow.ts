@@ -30,7 +30,10 @@ export class PaymentMenuFlow extends BaseFlow {
 
     return this.responseBuilder
       .addMono()
-      .addText('# Total do pedido:', formatCurrency(orderTotal))
+      .addText('# DETALHES DO PAGAMENTO')
+      .addLine()
+      .addText('Total:', formatCurrency(orderTotal))
+      .addLine()
       .addMono()
       .addMenu(paymentMenu)
       .build()

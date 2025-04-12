@@ -6,13 +6,8 @@ import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
 
-const MESSAGES = {
-  CANCELED: '❌ PAGAMENTO CANCELADO',
-  SUCCESS: '✅ Pagamento confirmado com sucesso! Seu pedido foi registrado.',
-} as const
-
 @injectable()
-export class PaymentConfirmationFlow extends BaseFlow {
+export class PaymentConfirmFlow extends BaseFlow {
   public async handle({ phone, message }: FlowParams) {
     const isCanceled = message === '0'
 
@@ -20,7 +15,7 @@ export class PaymentConfirmationFlow extends BaseFlow {
 
     if (isCanceled) {
       return this.responseBuilder
-        .addBold(MESSAGES.CANCELED)
+        .addBold('❌ PAGAMENTO CANCELADO')
         .addText('Você pode continuar comprando ou fechar o pedido.')
         .addEmptyLine()
         .addMenu(orderMenu)
@@ -28,17 +23,15 @@ export class PaymentConfirmationFlow extends BaseFlow {
     }
 
     return this.responseBuilder
-      .addBold(MESSAGES.SUCCESS)
+      .addBold('✅ PEDIDO REGISTRADO!')
+      .addText('Obrigado pela sua compra.', 'Seu pedido foi registrado e será preparado em breve.')
       .addEmptyLine()
-      .addText('🎉 Obrigado pela sua compra!')
-      .addText('Seu pedido foi registrado e será preparado em breve.')
-      .addEmptyLine()
-      .addText('Tempo estimado de entrega: 30-45 minutos')
-      .addText('Acompanhe o status do seu pedido pelo número:', this.generateOrderNumber())
+      .addText('Tempo estimado de entrega: *30-45 minutos*')
+      .addText('Número do pedido:', this.generateOrderNumber())
       .build()
   }
 
   private generateOrderNumber(): string {
-    return `#${randomUUID()}`
+    return `*#${randomUUID()}*`
   }
 }
