@@ -17,10 +17,7 @@ export class StateCleanup {
   public startPeriodicCleanup(): void {
     this.stopPeriodicCleanup()
 
-    this.cleanupTimer = setInterval(() => {
-      this.cleanupExpiredStates()
-    }, CLEANUP_INTERVAL)
-
+    this.cleanupTimer = setInterval(() => this.cleanupExpiredStates(), CLEANUP_INTERVAL)
     this.logger.info('🧹 Serviço de limpeza de estados iniciado')
   }
 
@@ -53,6 +50,7 @@ export class StateCleanup {
       expiredCount++
 
       if (expiredCount % 100 !== 0) continue
+
       this.logger.debug('Limpeza em andamento...')
       await new Promise((resolve) => setTimeout(resolve, 0))
     }
@@ -64,7 +62,6 @@ export class StateCleanup {
     }
 
     this.logger.debug('Estados ativos restantes:', { states: this.stateManager.getSize() })
-
     this.enforceStateLimit()
   }
 
@@ -74,13 +71,11 @@ export class StateCleanup {
 
     this.logger.debug('Aplicando limite de estados', { currentSize, maxStates: MAX_STATES })
 
+    const statesToDelete = currentSize - MAX_STATES
+
     const sortedStates = this.stateManager
       .getAllEntries()
       .sort((a, b) => a[1].lastInteraction.getTime() - b[1].lastInteraction.getTime())
-
-    const statesToDelete = currentSize - MAX_STATES
-
-    if (statesToDelete <= 0) return
 
     for (let i = 0; i < statesToDelete; i++) {
       this.stateManager.delete(sortedStates[i][0])

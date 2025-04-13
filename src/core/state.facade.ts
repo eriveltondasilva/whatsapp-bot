@@ -7,7 +7,7 @@ import { CustomerService } from '@/services/state/customer.service.js'
 
 import type { Flows } from '@/config/enums.js'
 import type { CartItem, Customer } from '@/types/entities.js'
-import type { FlowContext, FlowState } from '@/types/flows.js'
+import type { FlowContext, FlowState, FlowData } from '@/types/flows.js'
 
 @singleton()
 export class StateFacade {
@@ -18,7 +18,7 @@ export class StateFacade {
     @inject(StateManager) private readonly stateManager: StateManager,
   ) {}
 
-  //#
+  //# CONTEXT METHODS
   public getState(phone: string): FlowState {
     return this.stateManager.get(phone)
   }
@@ -33,7 +33,7 @@ export class StateFacade {
     return this.contextService.updateFlow(phone, state, flow)
   }
 
-  public updateData(phone: string, data: FlowContext['data']): FlowState {
+  public updateData(phone: string, data: FlowData): FlowState {
     const state = this.getState(phone)
     return this.contextService.updateData(phone, state, data)
   }
@@ -43,13 +43,13 @@ export class StateFacade {
     return this.contextService.clearData(phone, state)
   }
 
-  //*
+  //# CUSTOMER METHODS
   public updateCustomer(phone: string, customer: Partial<Customer>): FlowState {
     const state = this.getState(phone)
     return this.customerService.updateCustomer(phone, state, customer)
   }
 
-  //*
+  //# CART METHODS
   public addToCart(phone: string, item: CartItem): FlowState {
     const state = this.getState(phone)
     return this.cartService.addToCart(phone, state, item)
@@ -70,7 +70,7 @@ export class StateFacade {
   //   return this.cartService.getCartTotal(state)
   // }
 
-  //*
+  //# STATE MANAGEMENT
   public hasState(phone: string): boolean {
     return this.stateManager.has(phone)
   }

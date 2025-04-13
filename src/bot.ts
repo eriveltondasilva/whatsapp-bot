@@ -10,7 +10,7 @@ import { MessageSenderFactory } from './services/sender/message-sender.factory.j
 @injectable()
 export class WhatsappBot {
   constructor(
-    @inject(ClientProvider) private readonly clientProvider: ClientProvider,
+    @inject(ClientProvider) private readonly client: ClientProvider,
     @inject(ConversationManager) private readonly conversation: ConversationManager,
     @inject(MessageSenderFactory) private readonly messageSenderFactory: MessageSenderFactory,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
@@ -18,7 +18,7 @@ export class WhatsappBot {
 
   public async initialize(): Promise<void> {
     try {
-      const client = await this.clientProvider.getClient()
+      const client = await this.client.getClient()
       // TODO: Remove onAnyMessage
       client.onAnyMessage((message) => this.processMessage(message))
 

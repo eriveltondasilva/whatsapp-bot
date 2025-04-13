@@ -7,9 +7,11 @@ export type FlowResponse = {
   content: ResponseContent
 }
 
+export type FlowData = Record<string, unknown>
+
 export type FlowContext = {
   flow: Flows
-  data: Record<string, unknown>
+  data: FlowData
   history: string[]
 }
 

@@ -7,9 +7,9 @@ import { StateStore } from '@/services/state/state-store.service.js'
 
 import type { FlowState } from '@/types/flows.js'
 
-const Message = {
-  EXPIRED: 'Estado expirado, inicializando estado',
-  NOT_INITIALIZED: 'Estado não encontrado, inicializando estado',
+const Messages = {
+  EXPIRED: 'Estado expirado, inicializando novo estado',
+  NOT_INITIALIZED: 'Estado não encontrado, inicializando estado inicial',
 }
 
 @singleton()
@@ -24,9 +24,7 @@ export class StateManager {
     const state = this.stateStore.get(phone)
 
     if (!state || this.isStateExpired(state)) {
-      this.logger.debug(state ? Message.EXPIRED : Message.NOT_INITIALIZED, {
-        phone,
-      })
+      this.logger.debug(state ? Messages.EXPIRED : Messages.NOT_INITIALIZED, { phone })
       return this.initializeState(phone)
     }
 
