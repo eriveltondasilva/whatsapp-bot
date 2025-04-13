@@ -15,12 +15,12 @@ export class StateFacade {
     @inject(CartService) private readonly cartService: CartService,
     @inject(ContextService) private readonly contextService: ContextService,
     @inject(CustomerService) private readonly customerService: CustomerService,
-    @inject(StateManager) private readonly state: StateManager,
+    @inject(StateManager) private readonly stateManager: StateManager,
   ) {}
 
   //#
   public getState(phone: string): FlowState {
-    return this.state.get(phone)
+    return this.stateManager.get(phone)
   }
 
   public updateContext(phone: string, context: Partial<FlowContext>): FlowState {
@@ -72,18 +72,18 @@ export class StateFacade {
 
   //*
   public hasState(phone: string): boolean {
-    return this.state.has(phone)
+    return this.stateManager.has(phone)
   }
 
   public resetState(phone: string): FlowState {
-    return this.state.reset(phone)
+    return this.stateManager.reset(phone)
   }
 
   public deleteState(phone: string): boolean {
-    return this.state.delete(phone)
+    return this.stateManager.delete(phone)
   }
 
   public clearAllStates(): void {
-    this.state.clearAllStates()
+    this.stateManager.clearAllStates()
   }
 }

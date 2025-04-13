@@ -10,7 +10,7 @@ import type { FlowState } from '@/types/flows.js'
 @injectable()
 export class CartService {
   constructor(
-    @inject(StateManager) private readonly storage: StateManager,
+    @inject(StateManager) private readonly stateManager: StateManager,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
@@ -21,7 +21,7 @@ export class CartService {
       cart: [...currentState.cart, item],
     }
 
-    this.storage.set(phone, updatedState)
+    this.stateManager.set(phone, updatedState)
     this.logger.debug('Item adicionado ao carrinho', { item })
 
     return updatedState
@@ -41,7 +41,7 @@ export class CartService {
       cart: newCart,
     }
 
-    this.storage.set(phone, updatedState)
+    this.stateManager.set(phone, updatedState)
     this.logger.debug('Item removido do carrinho', { index })
 
     return updatedState
@@ -53,7 +53,7 @@ export class CartService {
       cart: [],
     }
 
-    this.storage.set(phone, updatedState)
+    this.stateManager.set(phone, updatedState)
     this.logger.debug('Carrinho limpo')
 
     return updatedState

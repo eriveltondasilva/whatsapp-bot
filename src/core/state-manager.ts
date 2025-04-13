@@ -1,30 +1,30 @@
 import { inject, singleton } from 'tsyringe'
 
+import { STATE_EXPIRATION_TIME } from '@/config/constants.js'
 import { Flows } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
-import { StateCleanupService } from '@/services/state/state-cleanup.service.js'
+import { StateStore } from '@/services/state/state-store.service.js'
 
 import type { FlowState } from '@/types/flows.js'
 
+const Message = {
+  EXPIRED: 'Estado expirado, inicializando estado',
+  NOT_INITIALIZED: 'Estado não encontrado, inicializando estado',
+}
+
 @singleton()
 export class StateManager {
-  private readonly stateStore = new Map<string, FlowState>()
-  private readonly STATE_EXPIRATION_TIME = 1_000 * 60 * 60 * 24 // 24h
-
   constructor(
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
-    @inject(StateCleanupService) private readonly cleanupService: StateCleanupService,
-  ) {
-    this.cleanupService.setStateManager(this)
-    this.cleanupService.startCleanup()
-  }
+    @inject(StateStore) private readonly stateStore: StateStore,
+  ) {}
 
   //#
   public get(phone: string): FlowState {
     const state = this.stateStore.get(phone)
 
     if (!state || this.isStateExpired(state)) {
-      this.logger.debug(state ? 'Estado expirado' : 'Estado não encontrado, inicializando novo', {
+      this.logger.debug(state ? Message.EXPIRED : Message.NOT_INITIALIZED, {
         phone,
       })
       return this.initializeState(phone)
@@ -40,9 +40,6 @@ export class StateManager {
     }
 
     this.stateStore.set(phone, updatedState)
-
-    // TODO: Implementar limpeza de estados expirados ao adicionar um novo estado
-    // this.cleanupService.enforceStateLimit()
   }
 
   public delete(phone: string): boolean {
@@ -65,11 +62,11 @@ export class StateManager {
   }
 
   public getSize(): number {
-    return this.stateStore.size
+    return this.stateStore.getSize()
   }
 
-  public getAllStateEntries(): [string, FlowState][] {
-    return Array.from(this.stateStore.entries())
+  public getAllEntries(): [string, FlowState][] {
+    return this.stateStore.getAllEntries()
   }
 
   public isStateExpired(state: FlowState): boolean {
@@ -78,12 +75,7 @@ export class StateManager {
     const currentTime = Date.now()
     const lastInteractionTime = state.lastInteraction.getTime()
 
-    return currentTime - lastInteractionTime > this.STATE_EXPIRATION_TIME
-  }
-
-  public dispose(): void {
-    this.cleanupService.stopCleanup()
-    this.clearAllStates()
+    return currentTime - lastInteractionTime > STATE_EXPIRATION_TIME
   }
 
   //#

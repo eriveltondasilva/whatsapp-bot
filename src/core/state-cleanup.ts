@@ -1,45 +1,42 @@
 import { inject, singleton } from 'tsyringe'
 
-import type { StateManager } from '@/core/state-manager.js'
+import { CLEANUP_INTERVAL, MAX_STATES } from '@/config/constants.js'
+import { StateManager } from '@/core/state-manager.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 @singleton()
-export class StateCleanupService {
-  private readonly MAX_STATES = 1_000
-  private readonly CLEANUP_INTERVAL = 1_000 * 60 * 60 * 12 // 12h
+export class StateCleanup {
   private cleanupTimer: NodeJS.Timeout | null = null
-  private state?: StateManager
 
-  constructor(@inject(LoggerProvider) private readonly logger: LoggerProvider) {}
+  constructor(
+    @inject(LoggerProvider) private readonly logger: LoggerProvider,
+    @inject(StateManager) private readonly stateManager: StateManager,
+  ) {}
 
   //#
-  public setStateManager(state: StateManager): void {
-    if (!state) throw new Error('StateManager não fornecido')
-    this.state = state
-  }
-
-  public startCleanup(): void {
-    this.stopCleanup()
+  public startPeriodicCleanup(): void {
+    this.stopPeriodicCleanup()
 
     this.cleanupTimer = setInterval(() => {
       this.cleanupExpiredStates()
-    }, this.CLEANUP_INTERVAL)
+    }, CLEANUP_INTERVAL)
+
+    this.logger.info('🧹 Serviço de limpeza de estados iniciado')
   }
 
-  public stopCleanup(): void {
+  public stopPeriodicCleanup(): void {
     if (!this.cleanupTimer) return
 
     clearInterval(this.cleanupTimer)
     this.cleanupTimer = null
+    this.logger.info('🛑 Serviço de limpeza de estados parado')
   }
 
   //#
   private async cleanupExpiredStates(): Promise<void> {
-    if (!this.state) throw new Error('StateManager não fornecido')
-
     this.logger.debug('Iniciando limpeza de estados expirados')
 
-    const stateEntries = this.state.getAllStateEntries()
+    const stateEntries = this.stateManager.getAllEntries()
 
     if (!stateEntries.length) {
       this.logger.debug('Nenhum estado encontrado para limpeza')
@@ -50,9 +47,9 @@ export class StateCleanupService {
     const startTime = Date.now()
 
     for (const [phone, state] of stateEntries) {
-      if (!this.state.isStateExpired(state)) continue
+      if (!this.stateManager.isStateExpired(state)) continue
 
-      this.state.delete(phone)
+      this.stateManager.delete(phone)
       expiredCount++
 
       if (expiredCount % 100 !== 0) continue
@@ -66,29 +63,27 @@ export class StateCleanupService {
       this.logger.info('🧹 Estados expirados removidos:', { expiredCount, duration })
     }
 
-    this.logger.debug('Estados ativos restantes:', { state: this.state.getSize() })
+    this.logger.debug('Estados ativos restantes:', { states: this.stateManager.getSize() })
 
     this.enforceStateLimit()
   }
 
   private enforceStateLimit(): void {
-    if (!this.state) throw new Error('StateManager não fornecido')
+    const currentSize = this.stateManager.getSize()
+    if (currentSize <= MAX_STATES) return
 
-    const currentSize = this.state.getSize()
-    if (currentSize <= this.MAX_STATES) return
+    this.logger.debug('Aplicando limite de estados', { currentSize, maxStates: MAX_STATES })
 
-    this.logger.debug('Aplicando limite de estados', { currentSize, maxStates: this.MAX_STATES })
-
-    const sortedStates = this.state
-      .getAllStateEntries()
+    const sortedStates = this.stateManager
+      .getAllEntries()
       .sort((a, b) => a[1].lastInteraction.getTime() - b[1].lastInteraction.getTime())
 
-    const statesToDelete = currentSize - this.MAX_STATES
+    const statesToDelete = currentSize - MAX_STATES
 
     if (statesToDelete <= 0) return
 
     for (let i = 0; i < statesToDelete; i++) {
-      this.state.delete(sortedStates[i][0])
+      this.stateManager.delete(sortedStates[i][0])
     }
 
     this.logger.info('🗑️ Estados removidos para manter o limite de estados:', { statesToDelete })

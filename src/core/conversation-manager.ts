@@ -19,9 +19,9 @@ export class ConversationManager {
 
     try {
       const { context } = this.state.getState(phone)
-      const flow = this.flowFactory.create(context.flow)
-
       this.logger.info(`🔄️ Handling flow: ((${context.flow}))`, { phone })
+
+      const flow = this.flowFactory.create(context.flow)
       return await flow.handle({ context, phone, message })
     } catch (error) {
       this.state.resetState(phone)

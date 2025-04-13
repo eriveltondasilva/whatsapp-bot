@@ -14,9 +14,9 @@ export enum ItemType {
 }
 
 export enum PaymentMethods {
-  CREDIT = 'Cartão de Crédito',
-  DEBIT = 'Cartão de Débito',
-  CASH = 'Dinheiro',
+  CREDIT = 'cartão de crédito',
+  DEBIT = 'cartão de débito',
+  CASH = 'dinheiro',
 }
 
 export enum OrderStatus {
@@ -54,17 +54,17 @@ export enum OrderOptions {
 
 // ###
 export enum Flows {
-  // Fluxos de registro do usuário
+  //* Fluxos de registro do usuário
   REGISTRATION_INITIAL = 'registration_initial',
   REGISTRATION_NAME = 'registration::name',
   REGISTRATION_ADDRESS = 'registration::address',
 
-  // Fluxos de navegação principal
+  //* Fluxos de navegação principal
   WELCOME = 'welcome',
   MENU = 'menu',
   ORDER = 'order',
 
-  // Fluxos relacionados a pedidos de pizza
+  //* Fluxos relacionados a pedidos de pizza
   PIZZA_MENU = 'pizza_menu',
   PIZZA_FLAVOR = 'pizza_flavor',
   PIZZA_QUANTITY = 'pizza_quantity',
@@ -72,15 +72,14 @@ export enum Flows {
   PIZZA_NOTE = 'pizza_note',
   PIZZA_CONFIRM = 'pizza_confirm',
 
-  // Fluxos relacionados a pedidos de bebidas
+  //* Fluxos relacionados a pedidos de bebidas
   DRINK_MENU = 'drink_menu',
   DRINK_TYPE = 'drink_type',
   DRINK_QUANTITY = 'drink_quantity',
   DRINK_CONFIRM = 'drink_confirm',
 
-  // Fluxos de pagamento
+  //* Fluxos de pagamento
   PAYMENT_MENU = 'payment_menu',
   PAYMENT_METHOD = 'payment_method',
   PAYMENT_CONFIRM = 'payment_confirm',
-  // PAYMENT_CANCEL = 'payment_cancel',
 }

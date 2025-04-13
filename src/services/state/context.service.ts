@@ -11,7 +11,7 @@ export class ContextService {
   private readonly MAX_HISTORY_LENGTH = 10
 
   constructor(
-    @inject(StateManager) private readonly storage: StateManager,
+    @inject(StateManager) private readonly stateManager: StateManager,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
@@ -35,7 +35,7 @@ export class ContextService {
       },
     }
 
-    this.storage.set(phone, updatedState)
+    this.stateManager.set(phone, updatedState)
     this.logger.debug('Contexto atualizado', updatedState.context)
 
     return updatedState
@@ -58,7 +58,7 @@ export class ContextService {
       },
     }
 
-    this.storage.set(phone, updatedState)
+    this.stateManager.set(phone, updatedState)
     this.logger.debug('Dados do contexto limpos', updatedState.context)
 
     return updatedState

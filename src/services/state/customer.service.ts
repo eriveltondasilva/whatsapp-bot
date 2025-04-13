@@ -1,4 +1,3 @@
-// services/state/CustomerManager.ts
 import { inject, injectable } from 'tsyringe'
 
 import { StateManager } from '@/core/state-manager.js'
@@ -10,7 +9,7 @@ import type { FlowState } from '@/types/flows.js'
 @injectable()
 export class CustomerService {
   constructor(
-    @inject(StateManager) private readonly storage: StateManager,
+    @inject(StateManager) private readonly stateManager: StateManager,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
@@ -27,7 +26,7 @@ export class CustomerService {
       },
     }
 
-    this.storage.set(phone, updatedState)
+    this.stateManager.set(phone, updatedState)
     this.logger.debug('Dados do cliente atualizados', updatedState.customer)
 
     return updatedState
