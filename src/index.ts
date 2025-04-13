@@ -7,7 +7,7 @@ import { setupProcessHandlers } from './process-handlers.js'
 
 async function bootstrap(): Promise<void> {
   const logger = container.resolve(LoggerProvider)
-  logger.info('🟢 Initializing bot...')
+  logger.info('🟢 Iniciando aplicação...')
 
   try {
     const bot = container.resolve(WhatsappBot)
@@ -15,7 +15,7 @@ async function bootstrap(): Promise<void> {
 
     await bot.initialize()
   } catch (error) {
-    logger.error('Failed to bootstrap application\n', error)
+    logger.error('Falha na validação de configurações', error)
     process.exit(1)
   }
 }

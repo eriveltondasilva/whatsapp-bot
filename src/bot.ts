@@ -58,14 +58,14 @@ export class WhatsappBot {
     if (!message.body || !isValidMessage(message)) return
 
     const { from, body } = message
-    this.logger.info('▶️ Process Message', { from, body })
+    this.logger.info(`#️⃣ ${this.constructor.name}`, { from, body })
 
     try {
       const { type, content } = await this.conversation.handle(from, body)
       const messageSender = this.messageSender.create(type)
       await messageSender.send(from, content)
     } catch (error) {
-      this.logger.error('Message processing error:', error)
+      this.logger.error('Erro no processamento da mensagem:', error)
       const messageSender = this.messageSender.createDefault()
       await messageSender.sendErrorMessage(from)
     }

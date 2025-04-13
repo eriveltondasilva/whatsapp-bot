@@ -15,16 +15,17 @@ export class ConversationManager {
   ) {}
 
   public async handle(phone: string, message: string): Promise<FlowResponse> {
-    this.logger.info('📌 Conversation Manager', { phone })
+    this.logger.info(`#️⃣ ${this.constructor.name}:`, { phone })
 
     try {
       const { context } = this.state.getState(phone)
-      this.logger.info(`🔄️ Handling flow: ((${context.flow}))`, { phone })
+      this.logger.info(`🔄️ Processando fluxo: ((${context.flow}))`, { phone })
 
       const flow = this.flowFactory.create(context.flow)
       return await flow.handle({ context, phone, message })
     } catch (error) {
-      this.state.resetState(phone)
+      this.logger.error('Erro durante o processamento do fluxo:', error)
+      this.state.deleteState(phone)
       throw error
     }
   }

@@ -10,24 +10,24 @@ const PROCESS_EVENTS = {
 
 export function setupProcessHandlers(bot: WhatsappBot, logger: LoggerProvider): void {
   const shutdownHandler = async (signal: string): Promise<void> => {
-    logger.info(`🔴 Shutting down bot due to ((${signal}))...`)
+    logger.info(`🔴 Desligando o bot devido ao sinal ((${signal}))...`)
 
     try {
       await bot.shutdown()
       process.exit(0)
     } catch (error) {
-      logger.error('Failed to shutdown bot\n', error)
+      logger.error('Falha ao desligar o bot\n', error)
       process.exit(1)
     }
   }
 
   process.on(PROCESS_EVENTS.UNCAUGHT_EXCEPTION, (error) => {
-    logger.error('Uncaught exception:', error)
-    process.exit(1)
+    logger.error('Exceção não capturada:', error);
+    shutdownHandler(PROCESS_EVENTS.UNCAUGHT_EXCEPTION);
   })
 
   process.on(PROCESS_EVENTS.UNHANDLED_REJECTION, (reason) => {
-    logger.error('Unhandled rejection:', reason)
+    logger.error('Rejeição não tratada:', reason);
   })
 
   //#
