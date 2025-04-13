@@ -6,6 +6,7 @@ import { ClientProvider } from '@/providers/client.provider.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { isValidMessage } from '@/utils/@index.js'
 import { MessageSenderFactory } from './services/sender/message-sender.factory.js'
+import { StateCleanup } from './core/state-cleanup.js'
 
 @injectable()
 export class WhatsappBot {
@@ -13,6 +14,7 @@ export class WhatsappBot {
     @inject(ClientProvider) private readonly client: ClientProvider,
     @inject(ConversationManager) private readonly conversation: ConversationManager,
     @inject(MessageSenderFactory) private readonly messageSenderFactory: MessageSenderFactory,
+    @inject(StateCleanup) private readonly stateCleanup: StateCleanup,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
 
@@ -21,6 +23,7 @@ export class WhatsappBot {
       const client = await this.client.getClient()
       // TODO: Remove onAnyMessage
       client.onAnyMessage((message) => this.processMessage(message))
+      this.stateCleanup.startPeriodicCleanup()
 
       this.logger.info('🤖 WhatsApp bot initialized successfully')
     } catch (error) {

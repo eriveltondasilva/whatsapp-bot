@@ -1,4 +1,3 @@
-// services/state/CartManager.ts
 import { inject, injectable } from 'tsyringe'
 
 import { StateManager } from '@/core/state-manager.js'
