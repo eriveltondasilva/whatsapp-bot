@@ -70,7 +70,7 @@ export class PizzaNoteFlow extends BaseFlow {
 
     return {
       flavorNames,
-      crustPrice: formatCurrency(crustPrice),
+      crustPrice: crustPrice === 0 ? 'grátis' : formatCurrency(crustPrice),
       pizzaPrice: formatCurrency(pizzaPrice),
       unitPrice: formatCurrency(unitPrice),
       total: formatCurrency(total),
