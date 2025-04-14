@@ -7,7 +7,7 @@ import { CustomerService } from '@/services/state/customer.service.js'
 
 import type { Flows } from '@/config/enums.js'
 import type { CartItem, Customer } from '@/types/entities.js'
-import type { FlowContext, FlowState, FlowData } from '@/types/flows.js'
+import type { FlowContext, FlowData, FlowState } from '@/types/flows.js'
 
 @singleton()
 export class StateFacade {

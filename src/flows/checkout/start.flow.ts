@@ -8,7 +8,7 @@ import { BaseFlow } from '../base.flow.js'
 import type { FlowParams } from '@/types/flows.js'
 
 @injectable()
-export class PaymentMenuFlow extends BaseFlow {
+export class CheckoutStartFlow extends BaseFlow {
   public async handle({ phone }: FlowParams) {
     const orderTotal = this.calculateOrderTotal()
 
@@ -26,7 +26,7 @@ export class PaymentMenuFlow extends BaseFlow {
     }
 
     //*>
-    this.state.updateFlow(phone, Flows.PAYMENT_METHOD)
+    this.state.updateFlow(phone, Flows.CHECKOUT_PAYMENT)
 
     return this.responseBuilder
       .addMono()

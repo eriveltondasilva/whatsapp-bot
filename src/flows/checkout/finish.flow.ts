@@ -8,7 +8,7 @@ import { BaseFlow } from '../base.flow.js'
 import type { FlowParams } from '@/types/flows.js'
 
 @injectable()
-export class PaymentConfirmFlow extends BaseFlow {
+export class CheckoutFinishFlow extends BaseFlow {
   public async handle({ phone, message }: FlowParams) {
     const isCanceled = message === '0'
 

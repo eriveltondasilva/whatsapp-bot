@@ -14,7 +14,7 @@ const PAYMENT_METHODS = {
 } as const
 
 @injectable()
-export class PaymentMethodFlow extends BaseFlow {
+export class CheckoutPaymentFlow extends BaseFlow {
   public async handle({ phone, message }: FlowParams) {
     const orderTotal = this.calculateOrderTotal()
 
@@ -42,7 +42,7 @@ export class PaymentMethodFlow extends BaseFlow {
     //*>
     this.state.updateContext(phone, {
       data: { paymentMethod },
-      flow: Flows.PAYMENT_CONFIRM,
+      flow: Flows.CHECKOUT_FINISH,
     })
 
     return this.responseBuilder

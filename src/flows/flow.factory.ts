@@ -28,9 +28,7 @@ import {
   DrinkStartFlow,
 } from './drink/@index.js'
 
-import { PaymentConfirmFlow } from './payment/confirm.flow.js'
-import { PaymentMenuFlow } from './payment/menu.flow.js'
-import { PaymentMethodFlow } from './payment/method.flow.js'
+import { CheckoutFinishFlow, CheckoutPaymentFlow, CheckoutStartFlow } from './checkout/@index.js'
 
 import type { BaseFlow } from './base.flow.js'
 
@@ -64,9 +62,9 @@ export class FlowFactory {
       [Flows.DRINK_QUANTITY, DrinkQuantityFlow],
       [Flows.DRINK_FINISH, DrinkFinishFlow],
       //* Payment flows
-      [Flows.PAYMENT_MENU, PaymentMenuFlow],
-      [Flows.PAYMENT_METHOD, PaymentMethodFlow],
-      [Flows.PAYMENT_CONFIRM, PaymentConfirmFlow],
+      [Flows.CHECKOUT_START, CheckoutStartFlow],
+      [Flows.CHECKOUT_PAYMENT, CheckoutPaymentFlow],
+      [Flows.CHECKOUT_FINISH, CheckoutFinishFlow],
       //* Other flows
     ])
   }

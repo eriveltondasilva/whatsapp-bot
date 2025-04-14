@@ -4,8 +4,8 @@ import { Flows, OrderOptions } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 
 import { BaseFlow } from '../base.flow.js'
+import { CheckoutStartFlow } from '../checkout/start.flow.js'
 import { DrinkStartFlow } from '../drink/start.flow.js'
-import { PaymentMenuFlow } from '../payment/menu.flow.js'
 import { PizzaStartFlow } from '../pizza/start.flow.js'
 
 import type { FlowParams, OrderActionMap } from '@/types/flows.js'
@@ -15,7 +15,7 @@ export class OrderFlow extends BaseFlow {
   constructor(
     @inject(DrinkStartFlow) private readonly drinkMenuFlow: DrinkStartFlow,
     @inject(PizzaStartFlow) private readonly pizzaMenuFlow: PizzaStartFlow,
-    @inject(PaymentMenuFlow) private readonly paymentMenuFlow: PaymentMenuFlow,
+    @inject(CheckoutStartFlow) private readonly paymentMenuFlow: CheckoutStartFlow,
   ) {
     super()
   }
@@ -45,7 +45,7 @@ export class OrderFlow extends BaseFlow {
   }
 
   private finalizeOrder(phone: string, message: string) {
-    const { context } = this.state.updateFlow(phone, Flows.PAYMENT_MENU)
+    const { context } = this.state.updateFlow(phone, Flows.CHECKOUT_START)
     return this.paymentMenuFlow.handle({ context, phone, message })
   }
 

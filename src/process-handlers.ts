@@ -22,12 +22,12 @@ export function setupProcessHandlers(bot: WhatsappBot, logger: LoggerProvider): 
   }
 
   process.on(PROCESS_EVENTS.UNCAUGHT_EXCEPTION, (error) => {
-    logger.error('Exceção não capturada:', error);
-    shutdownHandler(PROCESS_EVENTS.UNCAUGHT_EXCEPTION);
+    logger.error('Exceção não capturada:', error)
+    shutdownHandler(PROCESS_EVENTS.UNCAUGHT_EXCEPTION)
   })
 
   process.on(PROCESS_EVENTS.UNHANDLED_REJECTION, (reason) => {
-    logger.error('Rejeição não tratada:', reason);
+    logger.error('Rejeição não tratada:', reason)
   })
 
   //#

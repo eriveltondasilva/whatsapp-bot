@@ -56,8 +56,8 @@ export enum OrderOptions {
 export enum Flows {
   //* Fluxos de registro do usuário
   REGISTRATION_START = 'registration_start',
-  REGISTRATION_NAME = 'registration::name',
-  REGISTRATION_ADDRESS = 'registration::address',
+  REGISTRATION_NAME = 'registration_name',
+  REGISTRATION_ADDRESS = 'registration_address',
 
   //* Fluxos de navegação principal
   WELCOME = 'welcome',
@@ -79,7 +79,7 @@ export enum Flows {
   DRINK_FINISH = 'drink_finish',
 
   //* Fluxos de pagamento
-  PAYMENT_MENU = 'payment_menu',
-  PAYMENT_METHOD = 'payment_method',
-  PAYMENT_CONFIRM = 'payment_confirm',
+  CHECKOUT_START = 'checkout_start',
+  CHECKOUT_PAYMENT = 'checkout_payment',
+  CHECKOUT_FINISH = 'checkout_finish',
 }
