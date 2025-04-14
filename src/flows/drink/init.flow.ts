@@ -4,13 +4,12 @@ import { ListResponseBuilder } from '@/builder/response/list-response.builder.js
 import { Flows } from '@/config/enums.js'
 import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { buildDrinkList } from '@/templates/list-builders.js'
-import { parseIndex } from '@/utils/parse-index.js'
 import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
 
 @injectable()
-export class DrinkTypeFlow extends BaseFlow {
+export class DrinkInitFlow extends BaseFlow {
   constructor(
     @inject(DrinkRepository) private readonly drinkRepository: DrinkRepository,
     @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
@@ -18,29 +17,25 @@ export class DrinkTypeFlow extends BaseFlow {
     super()
   }
 
-  public async handle({ phone, message }: FlowParams) {
+  //#
+  public async handle({ phone }: FlowParams) {
     const drinks = await this.drinkRepository.getAllDrinks()
-    const selectedIndex = parseIndex(message)
 
-    if (!drinks[selectedIndex]) {
-      return this.listResponseBuilder
-        .addBold('❌ OPÇÃO INVÁLIDA!')
-        .addText('Por favor, escolha uma das opções disponíveis abaixo.')
-        .addList(buildDrinkList(drinks))
+    if (!drinks?.length) {
+      this.state.resetState(phone)
+      return this.responseBuilder
+        .addText('❌ Desculpe, não encontramos bebidas disponíveis no momento.')
         .build()
     }
 
-    const selectedDrink = drinks[selectedIndex]
+    this.state.updateFlow(phone, Flows.DRINK_SELECTION)
 
-    this.state.updateContext(phone, {
-      data: { selectedDrink },
-      flow: Flows.DRINK_QUANTITY,
-    })
-
-    return this.responseBuilder
-      .addCode('Etapa: 2/3')
+    return this.listResponseBuilder
+      .addCode('Etapa: 1/3')
       .addEmptyLine()
-      .addText('🔢 Digite a quantidade desejada (1-10):')
+      .addBold('🍹 ESCOLHA SUA BEBIDA')
+      .addQuote('Por favor, aperte o botão abaixo para escolher a sua bebida.')
+      .addList(buildDrinkList(drinks))
       .build()
   }
 }

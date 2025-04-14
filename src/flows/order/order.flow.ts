@@ -4,7 +4,7 @@ import { Flows, OrderOptions } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 
 import { BaseFlow } from '../base.flow.js'
-import { DrinkMenuFlow } from '../drink/menu.flow.js'
+import { DrinkInitFlow } from '../drink/init.flow.js'
 import { PaymentMenuFlow } from '../payment/menu.flow.js'
 import { PizzaMenuFlow } from '../pizza/menu.flow.js'
 
@@ -13,7 +13,7 @@ import type { FlowParams, OrderActionMap } from '@/types/flows.js'
 @injectable()
 export class OrderFlow extends BaseFlow {
   constructor(
-    @inject(DrinkMenuFlow) private readonly drinkMenuFlow: DrinkMenuFlow,
+    @inject(DrinkInitFlow) private readonly drinkMenuFlow: DrinkInitFlow,
     @inject(PizzaMenuFlow) private readonly pizzaMenuFlow: PizzaMenuFlow,
     @inject(PaymentMenuFlow) private readonly paymentMenuFlow: PaymentMenuFlow,
   ) {
@@ -40,7 +40,7 @@ export class OrderFlow extends BaseFlow {
   }
 
   private handleDrinkMenu(phone: string, message: string) {
-    const { context } = this.state.updateFlow(phone, Flows.DRINK_MENU)
+    const { context } = this.state.updateFlow(phone, Flows.DRINK_INIT)
     return this.drinkMenuFlow.handle({ context, phone, message })
   }
 

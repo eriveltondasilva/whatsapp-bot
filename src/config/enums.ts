@@ -73,10 +73,10 @@ export enum Flows {
   PIZZA_CONFIRM = 'pizza_confirm',
 
   //* Fluxos relacionados a pedidos de bebidas
-  DRINK_MENU = 'drink_menu',
-  DRINK_TYPE = 'drink_type',
+  DRINK_INIT = 'drink_init',
+  DRINK_SELECTION = 'drink_selection',
   DRINK_QUANTITY = 'drink_quantity',
-  DRINK_CONFIRM = 'drink_confirm',
+  DRINK_FINISH = 'drink_finish',
 
   //* Fluxos de pagamento
   PAYMENT_MENU = 'payment_menu',
