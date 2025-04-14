@@ -4,17 +4,17 @@ import { Flows, OrderOptions } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 
 import { BaseFlow } from '../base.flow.js'
-import { DrinkInitFlow } from '../drink/init.flow.js'
+import { DrinkStartFlow } from '../drink/start.flow.js'
 import { PaymentMenuFlow } from '../payment/menu.flow.js'
-import { PizzaMenuFlow } from '../pizza/menu.flow.js'
+import { PizzaStartFlow } from '../pizza/start.flow.js'
 
 import type { FlowParams, OrderActionMap } from '@/types/flows.js'
 
 @injectable()
 export class OrderFlow extends BaseFlow {
   constructor(
-    @inject(DrinkInitFlow) private readonly drinkMenuFlow: DrinkInitFlow,
-    @inject(PizzaMenuFlow) private readonly pizzaMenuFlow: PizzaMenuFlow,
+    @inject(DrinkStartFlow) private readonly drinkMenuFlow: DrinkStartFlow,
+    @inject(PizzaStartFlow) private readonly pizzaMenuFlow: PizzaStartFlow,
     @inject(PaymentMenuFlow) private readonly paymentMenuFlow: PaymentMenuFlow,
   ) {
     super()
@@ -35,12 +35,12 @@ export class OrderFlow extends BaseFlow {
   }
 
   private handlePizzaMenu(phone: string, message: string) {
-    const { context } = this.state.updateFlow(phone, Flows.PIZZA_MENU)
+    const { context } = this.state.updateFlow(phone, Flows.PIZZA_START)
     return this.pizzaMenuFlow.handle({ context, phone, message })
   }
 
   private handleDrinkMenu(phone: string, message: string) {
-    const { context } = this.state.updateFlow(phone, Flows.DRINK_INIT)
+    const { context } = this.state.updateFlow(phone, Flows.DRINK_START)
     return this.drinkMenuFlow.handle({ context, phone, message })
   }
 

@@ -12,7 +12,7 @@ const MESSAGES = {
 } as const
 
 @injectable()
-export class PizzaConfirmFlow extends BaseFlow {
+export class PizzaFinishFlow extends BaseFlow {
   public async handle({ message, phone }: FlowParams) {
     this.state.clearData(phone)
     this.state.updateFlow(phone, Flows.ORDER)

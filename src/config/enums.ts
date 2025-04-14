@@ -65,15 +65,15 @@ export enum Flows {
   ORDER = 'order',
 
   //* Fluxos relacionados a pedidos de pizza
-  PIZZA_MENU = 'pizza_menu',
+  PIZZA_START = 'pizza_start',
   PIZZA_FLAVOR = 'pizza_flavor',
   PIZZA_QUANTITY = 'pizza_quantity',
   PIZZA_CRUST = 'pizza_crust',
   PIZZA_NOTE = 'pizza_note',
-  PIZZA_CONFIRM = 'pizza_confirm',
+  PIZZA_FINISH = 'pizza_finish',
 
   //* Fluxos relacionados a pedidos de bebidas
-  DRINK_INIT = 'drink_init',
+  DRINK_START = 'drink_start',
   DRINK_SELECTION = 'drink_selection',
   DRINK_QUANTITY = 'drink_quantity',
   DRINK_FINISH = 'drink_finish',

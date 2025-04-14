@@ -10,22 +10,20 @@ import { MenuFlow } from './menu/menu.flow.js'
 import { OrderFlow } from './order/order.flow.js'
 import { WelcomeFlow } from './welcome/welcome.flow.js'
 
-import { PizzaConfirmFlow } from './pizza/confirm.flow.js'
-import { PizzaCrustFlow } from './pizza/crust.flow.js'
-import { PizzaFlavorFlow } from './pizza/flavor.flow.js'
-import { PizzaMenuFlow } from './pizza/menu.flow.js'
-import { PizzaNoteFlow } from './pizza/note.flow.js'
-import { PizzaQuantityFlow } from './pizza/quantity.flow.js'
+import {
+  PizzaCrustFlow,
+  PizzaFinishFlow,
+  PizzaFlavorFlow,
+  PizzaNoteFlow,
+  PizzaQuantityFlow,
+  PizzaStartFlow,
+} from './pizza/@index.js'
 
-// import { DrinkConfirmFlow } from './drink/confirm.flow.js'
-// import { DrinkMenuFlow } from './drink/menu.flow.js'
-// import { DrinkQuantityFlow } from './drink/quantity.flow.js'
-// import { DrinkSelectionFlow } from './drink/selection.flow.js'
 import {
   DrinkFinishFlow,
-  DrinkInitFlow,
   DrinkQuantityFlow,
   DrinkSelectionFlow,
+  DrinkStartFlow,
 } from './drink/@index.js'
 
 import { PaymentConfirmFlow } from './payment/confirm.flow.js'
@@ -52,14 +50,14 @@ export class FlowFactory {
       [Flows.MENU, MenuFlow],
       [Flows.ORDER, OrderFlow],
       //* Pizza flows
-      [Flows.PIZZA_MENU, PizzaMenuFlow],
+      [Flows.PIZZA_START, PizzaStartFlow],
       [Flows.PIZZA_FLAVOR, PizzaFlavorFlow],
       [Flows.PIZZA_QUANTITY, PizzaQuantityFlow],
       [Flows.PIZZA_CRUST, PizzaCrustFlow],
       [Flows.PIZZA_NOTE, PizzaNoteFlow],
-      [Flows.PIZZA_CONFIRM, PizzaConfirmFlow],
+      [Flows.PIZZA_FINISH, PizzaFinishFlow],
       //* Drink flows
-      [Flows.DRINK_INIT, DrinkInitFlow],
+      [Flows.DRINK_START, DrinkStartFlow],
       [Flows.DRINK_SELECTION, DrinkSelectionFlow],
       [Flows.DRINK_QUANTITY, DrinkQuantityFlow],
       [Flows.DRINK_FINISH, DrinkFinishFlow],

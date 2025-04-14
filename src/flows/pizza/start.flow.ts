@@ -9,7 +9,7 @@ import { BaseFlow } from '../base.flow.js'
 import type { FlowParams } from '@/types/flows.js'
 
 @injectable()
-export class PizzaMenuFlow extends BaseFlow {
+export class PizzaStartFlow extends BaseFlow {
   constructor(
     @inject(FlavorRepository) private readonly flavorRepository: FlavorRepository,
     @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,

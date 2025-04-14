@@ -22,7 +22,7 @@ export class PizzaNoteFlow extends BaseFlow {
 
     const { context: newContext } = this.state.updateContext(phone, {
       data: { note },
-      flow: Flows.PIZZA_CONFIRM,
+      flow: Flows.PIZZA_FINISH,
     })
 
     const summary = this.getSummary(newContext.data as ContextData)

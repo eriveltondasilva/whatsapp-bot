@@ -9,7 +9,7 @@ import { BaseFlow } from '../base.flow.js'
 import type { FlowParams } from '@/types/flows.js'
 
 @injectable()
-export class DrinkInitFlow extends BaseFlow {
+export class DrinkStartFlow extends BaseFlow {
   constructor(
     @inject(DrinkRepository) private readonly drinkRepository: DrinkRepository,
     @inject(ListResponseBuilder) private readonly listResponseBuilder: ListResponseBuilder,
@@ -17,7 +17,6 @@ export class DrinkInitFlow extends BaseFlow {
     super()
   }
 
-  //#
   public async handle({ phone }: FlowParams) {
     const drinks = await this.drinkRepository.getAllDrinks()
 
