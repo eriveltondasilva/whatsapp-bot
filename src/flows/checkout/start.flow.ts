@@ -9,7 +9,7 @@ import type { FlowParams } from '@/types/flows.js'
 
 @injectable()
 export class CheckoutStartFlow extends BaseFlow {
-  public async handle({ phone }: FlowParams) {
+  public async handle({ phone, context }: FlowParams) {
     const orderTotal = this.calculateOrderTotal()
 
     if (orderTotal <= 0) {

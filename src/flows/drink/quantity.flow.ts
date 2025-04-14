@@ -20,12 +20,12 @@ export class DrinkQuantityFlow extends BaseFlow {
         .build()
     }
 
-    const { context: newContext } = this.state.updateContext(phone, {
+    const { context } = this.state.updateContext(phone, {
       data: { quantity },
-      flow: Flows.PIZZA_FINISH,
+      flow: Flows.DRINK_FINISH,
     })
 
-    const summary = this.getSummary(newContext.data as ContextData)
+    const summary = this.getSummary(context.data as ContextData)
 
     return this.responseBuilder
       .addCode('Etapa: 3/3')
@@ -45,9 +45,7 @@ export class DrinkQuantityFlow extends BaseFlow {
       .build()
   }
 
-  private getSummary(data: ContextData) {
-    const { selectedDrink, quantity } = data
-
+  private getSummary({ quantity, selectedDrink }: ContextData) {
     const drinkName = selectedDrink.name
     const unitPrice = Number(selectedDrink.price)
     const total = unitPrice * quantity
