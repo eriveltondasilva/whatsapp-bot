@@ -55,7 +55,7 @@ export enum OrderOptions {
 // ###
 export enum Flows {
   //* Fluxos de registro do usuário
-  REGISTRATION_INITIAL = 'registration_initial',
+  REGISTRATION_START = 'registration_start',
   REGISTRATION_NAME = 'registration::name',
   REGISTRATION_ADDRESS = 'registration::address',
 

@@ -2,13 +2,15 @@ import { container, injectable } from 'tsyringe'
 
 import { Flows } from '@/config/enums.js'
 
-import { RegistrationAddressFlow } from './registration/address.flow.js'
-import { RegistrationInitialFlow } from './registration/initial.flow.js'
-import { RegistrationNameFlow } from './registration/name.flow.js'
-
 import { MenuFlow } from './menu/menu.flow.js'
 import { OrderFlow } from './order/order.flow.js'
 import { WelcomeFlow } from './welcome/welcome.flow.js'
+
+import {
+  RegistrationAddressFlow,
+  RegistrationNameFlow,
+  RegistrationStartFlow,
+} from './registration/@index.js'
 
 import {
   PizzaCrustFlow,
@@ -42,7 +44,7 @@ export class FlowFactory {
   constructor() {
     this.flowMap = new Map<Flows, FlowConstructor>([
       //* Registration flows
-      [Flows.REGISTRATION_INITIAL, RegistrationInitialFlow],
+      [Flows.REGISTRATION_START, RegistrationStartFlow],
       [Flows.REGISTRATION_NAME, RegistrationNameFlow],
       [Flows.REGISTRATION_ADDRESS, RegistrationAddressFlow],
       //* Core flows

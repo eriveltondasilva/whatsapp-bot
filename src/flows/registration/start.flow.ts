@@ -6,7 +6,7 @@ import { BaseFlow } from '../base.flow.js'
 import type { FlowParams } from '@/types/flows.js'
 
 @injectable()
-export class RegistrationInitialFlow extends BaseFlow {
+export class RegistrationStartFlow extends BaseFlow {
   public async handle({ phone }: FlowParams) {
     this.state.updateFlow(phone, Flows.REGISTRATION_NAME)
 

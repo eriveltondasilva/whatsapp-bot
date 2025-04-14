@@ -4,7 +4,7 @@ import { Flows } from '@/config/enums.js'
 import { CustomerRepository } from '@/repositories/customer.repository.js'
 import { mainMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
-import { RegistrationInitialFlow } from '../registration/initial.flow.js'
+import { RegistrationStartFlow } from '../registration/start.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
 
@@ -12,8 +12,8 @@ import type { FlowParams } from '@/types/flows.js'
 export class WelcomeFlow extends BaseFlow {
   constructor(
     @inject(CustomerRepository) private readonly customerRepository: CustomerRepository,
-    @inject(RegistrationInitialFlow)
-    private readonly registrationInitialFlow: RegistrationInitialFlow,
+    @inject(RegistrationStartFlow)
+    private readonly registrationInitialFlow: RegistrationStartFlow,
   ) {
     super()
   }
@@ -23,7 +23,7 @@ export class WelcomeFlow extends BaseFlow {
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {
-      const { context } = this.state.updateFlow(phone, Flows.REGISTRATION_INITIAL)
+      const { context } = this.state.updateFlow(phone, Flows.REGISTRATION_START)
       return this.registrationInitialFlow.handle({ context, phone, message })
     }
 
