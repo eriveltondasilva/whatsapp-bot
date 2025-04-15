@@ -9,5 +9,5 @@
   "facebook": "facebook.com/PizzariaBellaNapoli",
   "deliveryTax": 5.0,
   "minOrderValue": 30.0,
-  "active": true
+  "is_active": true
 }

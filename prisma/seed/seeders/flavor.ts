@@ -4,13 +4,7 @@ import flavors from '../data/flavors-seed.json'
 export async function seedFlavor(prisma: PrismaClient) {
   console.log('🔄 Seeding flavors...')
   return await prisma.flavor.createMany({
-    data: flavors.map(({ name, description, price, category, active }) => ({
-      name,
-      description,
-      price,
-      category,
-      active,
-    })),
+    data: flavors,
     skipDuplicates: true,
   })
 }

@@ -3,18 +3,18 @@
     "name": "coca-cola 2l",
     "description": "refrigerante coca-cola 2 litros",
     "price": 12.9,
-    "active": true
+    "is_active": true
   },
   {
     "name": "guaraná antárctica 2l",
     "description": "refrigerante guaraná antárctica 2 litros",
     "price": 11.9,
-    "active": true
+    "is_active": true
   },
   {
     "name": "água mineral 500ml",
     "description": "água mineral sem gás 500ml",
     "price": 3.5,
-    "active": true
+    "is_active": true
   }
 ]

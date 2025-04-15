@@ -4,153 +4,153 @@
     "description": "mussarela, milho verde, orégano",
     "category": "salgada",
     "price": 34.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "calabresa",
     "description": "mussarela, calabresa, cebola, orégano",
     "category": "salgada",
     "price": 34.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "presunto",
     "description": "mussarela, presunto, orégano",
     "category": "salgada",
     "price": 34.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "frango caipira",
     "description": "mussarela, frango, milho verde, orégano",
     "category": "salgada",
     "price": 36.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "dois queijos",
     "description": "mussarela, catupiri, orégano",
     "category": "salgada",
     "price": 34.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "lombo",
     "description": "mussarela, lombo, cebola, orégano",
     "category": "salgada",
     "price": 36.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "catupirela",
     "description": "mussarela, calabresa, catupiri, orégano",
     "category": "salgada",
     "price": 38.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "portuguesa",
     "description": "mussarela, presunto, tomate, cebola, pimentão, milho verde, ovos, orégano",
     "category": "salgada",
     "price": 40.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "à moda",
     "description": "mussarela, calabresa, presunto, cebola",
     "category": "salgada",
     "price": 40.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "frango catupiri",
     "description": "mussarela, frango, catupiri, orégano",
     "category": "salgada",
     "price": 40.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "quatro queijos",
     "description": "mussarela, prato, provolone, catupiri, orégano",
     "category": "salgada",
     "price": 40.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "palharina",
     "description": "mussarela, frango, batata desfiada, orégano",
     "category": "salgada",
     "price": 40.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "peperoni",
     "description": "mussarela, peperoni, cebola, orégano",
     "category": "salgada",
     "price": 42.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "americana",
     "description": "mussarela, bacon, ovos, presunto, cebola, orégano",
     "category": "salgada",
     "price": 42.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "mussarela",
     "description": "mussarela, tomate, orégano",
     "category": "salgada",
     "price": 40.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "atum",
     "description": "mussarela, atum, cebola, orégano",
     "category": "salgada",
     "price": 42.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "marguerita",
     "description": "mussarela, manjericão, tomate, orégano",
     "category": "salgada",
     "price": 42.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "carne de sol",
     "description": "mussarela, carne de sol, cebola, orégano",
     "category": "salgada",
     "price": 44.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "queijo do reino",
     "description": "mussarela, queijo do reino, orégano",
     "category": "salgada",
     "price": 46.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "nordestina",
     "description": "mussarela, carne de sol, queijo coalho, cebola, orégano",
     "category": "salgada",
     "price": 50.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "brigadeiro",
     "description": "chocolate, chocolate granulado",
     "category": "doce",
     "price": 38.0,
-    "active": true
+    "is_active": true
   },
   {
     "name": "cartola",
     "description": "mussarela, banana, açúcar, canela em pó",
     "category": "doce",
     "price": 38.0,
-    "active": true
+    "is_active": true
   }
 ]

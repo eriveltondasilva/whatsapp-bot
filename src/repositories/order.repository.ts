@@ -8,5 +8,5 @@ export class OrderRepository {
     })
   }
 
-  // outros métodos...
+  //
 }
