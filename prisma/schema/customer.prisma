@@ -1,0 +1,15 @@
+model Customer {
+  id Int @id @default(autoincrement())
+
+  name     String  @db.VarChar(100)
+  phone    String  @unique @db.VarChar(20)
+  address  String  @db.VarChar(255)
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orders Order[]
+
+  @@map("customers")
+}

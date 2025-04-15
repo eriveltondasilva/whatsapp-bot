@@ -17,10 +17,8 @@ export class DrinkFinishFlow extends BaseFlow {
   public async handle({ message, phone }: FlowParams) {
     const isCanceled = message === '0'
 
-    
     this.state.clearData(phone)
     this.state.updateFlow(phone, Flows.ORDER)
-
 
     return this.responseBuilder
       .addText(isCanceled ? MESSAGES.CANCELED : MESSAGES.SUCCESS)

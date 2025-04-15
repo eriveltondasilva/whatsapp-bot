@@ -1,0 +1,66 @@
+model Order {
+  id         Int @id @default(autoincrement())
+  customerId Int @map("customer_id")
+
+  deliveryAddress String  @map("delivery_address") @db.VarChar(255)
+  status          String  @db.VarChar(100)
+  totalAmount     Decimal @default(0.00) @map("total_amount") @db.Decimal(10, 2)
+  paymentMethod   String  @map("payment_method") @db.VarChar(100)
+  deliveryTax     Decimal @default(0.00) @map("delivery_tax") @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  customer Customer    @relation(fields: [customerId], references: [id])
+  items    OrderItem[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id      Int @id @default(autoincrement())
+
+  itemType  String  @map("item_type") @db.VarChar(100) // The type of item (e.g., pizza, drink)
+  quantity  Int     @default(1) @db.SmallInt
+  unitPrice Decimal @default(0.00) @map("unit_price") @db.Decimal(10, 2)
+  subtotal  Decimal @default(0.00) @db.Decimal(10, 2)
+  notes     String? @db.VarChar(255)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orderId Int @map("order_id")
+  order   Order       @relation(fields: [orderId], references: [id])
+
+  pizza   OrderPizza?
+
+  drinkId Int?
+  drink   Drink?      @relation(fields: [drinkId], references: [id])
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model OrderPizza {
+  id Int @id @default(autoincrement())
+
+  orderItemId Int       @unique @map("order_item_id")
+  orderItem   OrderItem @relation(fields: [orderItemId], references: [id])
+
+  firstFlavorId Int    @map("first_flavor_id")
+  firstFlavor   Flavor @relation("FirstFlavor", fields: [firstFlavorId], references: [id])
+
+  secondFlavorId Int?    @map("second_flavor_id")
+  secondFlavor   Flavor? @relation("SecondFlavor", fields: [secondFlavorId], references: [id])
+
+  crustId Int   @map("crust_id")
+  crust   Crust @relation(fields: [crustId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("order_pizzas")
+}

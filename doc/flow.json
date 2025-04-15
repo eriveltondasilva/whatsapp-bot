@@ -1,119 +1,110 @@
 {
-    "start": "boas_vindas",
-    "flows": {
-        "boas_vindas": {
-            "message": "Olá! 👋 Bem-vindo à Pizzaria X! Como posso te ajudar hoje?",
-            "options": {
-                "fazer_pedido": "Fazer um pedido 🍕",
-                "ver_cardapio": "Ver cardápio 📋",
-                "falar_atendente": "Falar com um atendente 👤",
-                "acompanhar_pedido": "Acompanhar pedido ⏱",
-                "ver_promocoes": "Ver promoções 🎉",
-                "feedback": "Dar feedback ⭐",
-                "cancelar_pedido": "Cancelar pedido ❌"
-            }
+  "start": "boas_vindas",
+  "flows": {
+    "boas_vindas": {
+      "message": "Olá! 👋 Bem-vindo à Pizzaria X! Como posso te ajudar hoje?",
+      "options": {
+        "fazer_pedido": "Fazer um pedido 🍕",
+        "ver_cardapio": "Ver cardápio 📋",
+        "falar_atendente": "Falar com um atendente 👤",
+        "acompanhar_pedido": "Acompanhar pedido ⏱",
+        "ver_promocoes": "Ver promoções 🎉",
+        "feedback": "Dar feedback ⭐",
+        "cancelar_pedido": "Cancelar pedido ❌"
+      }
+    },
+    "fazer_pedido": {
+      "steps": [
+        {
+          "message": "Escolha uma categoria:",
+          "options": {
+            "pizzas": "🍕 Pizzas",
+            "bebidas": "🥤 Bebidas",
+            "sobremesas": "🍰 Sobremesas"
+          }
         },
-        "fazer_pedido": {
-            "steps": [
-                {
-                    "message": "Escolha uma categoria:",
-                    "options": {
-                        "pizzas": "🍕 Pizzas",
-                        "bebidas": "🥤 Bebidas",
-                        "sobremesas": "🍰 Sobremesas"
-                    }
-                },
-                {
-                    "message": "Deseja montar a pizza?",
-                    "options": {
-                        "inteira": "Pizza inteira",
-                        "meio_meio": "Meio a meio",
-                        "voltar": "Voltar"
-                    }
-                },
-                {
-                    "message": "Deseja adicionar borda recheada ou adicionais?",
-                    "options": {
-                        "sim": "Sim",
-                        "nao": "Não"
-                    }
-                },
-                {
-                    "message": "Confirme os dados de entrega.",
-                    "fields": [
-                        "nome",
-                        "endereco",
-                        "telefone"
-                    ]
-                },
-                {
-                    "message": "Escolha a forma de pagamento:",
-                    "options": {
-                        "dinheiro": "Dinheiro",
-                        "cartao": "Cartão (crédito/débito)",
-                        "pix": "Pix"
-                    }
-                },
-                {
-                    "message": "Deseja confirmar o pedido?",
-                    "options": {
-                        "confirmar": "Sim, confirmar",
-                        "editar": "Não, quero editar"
-                    }
-                }
-            ]
+        {
+          "message": "Deseja montar a pizza?",
+          "options": {
+            "inteira": "Pizza inteira",
+            "meio_meio": "Meio a meio",
+            "voltar": "Voltar"
+          }
         },
-        "ver_cardapio": {
-            "categories": [
-                "Pizzas tradicionais",
-                "Pizzas especiais",
-                "Bebidas",
-                "Sobremesas"
-            ]
+        {
+          "message": "Deseja adicionar borda recheada ou adicionais?",
+          "options": {
+            "sim": "Sim",
+            "nao": "Não"
+          }
         },
-        "falar_atendente": {
-            "message": "Um atendente humano irá te responder em breve... ⏳"
+        {
+          "message": "Confirme os dados de entrega.",
+          "fields": ["nome", "endereco", "telefone"]
         },
-        "acompanhar_pedido": {
-            "message": "Informe o número do pedido ou telefone:",
-            "response": "Status atual: 📦 Em preparação / Saiu para entrega / Entregue"
+        {
+          "message": "Escolha a forma de pagamento:",
+          "options": {
+            "dinheiro": "Dinheiro",
+            "cartao": "Cartão (crédito/débito)",
+            "pix": "Pix"
+          }
         },
-        "ver_promocoes": {
-            "message": "Confira nossas promoções:",
-            "promotions": [
-                {
-                    "titulo": "Segunda Maluca",
-                    "descricao": "Na compra de 2 pizzas grandes, a terceira é grátis!"
-                },
-                {
-                    "titulo": "Combo Família",
-                    "descricao": "1 pizza gigante + 2 refrigerantes por R$59,90"
-                }
-            ],
-            "options": {
-                "usar": "Quero usar uma promoção",
-                "voltar": "Voltar ao menu"
-            }
-        },
-        "feedback": {
-            "message": "Como foi sua experiência?",
-            "options": {
-                "1": "⭐",
-                "2": "⭐⭐",
-                "3": "⭐⭐⭐",
-                "4": "⭐⭐⭐⭐",
-                "5": "⭐⭐⭐⭐⭐"
-            },
-            "followup": "Deseja deixar um comentário? (opcional)"
-        },
-        "cancelar_pedido": {
-            "message": "Para cancelar, informe o número do pedido:",
-            "confirm": "Tem certeza que deseja cancelar?",
-            "policy": "Cancelamentos são aceitos até 5 minutos após a confirmação. Após esse tempo, fale com um atendente.",
-            "options": {
-                "sim": "Sim, cancelar",
-                "nao": "Não, voltar ao menu"
-            }
+        {
+          "message": "Deseja confirmar o pedido?",
+          "options": {
+            "confirmar": "Sim, confirmar",
+            "editar": "Não, quero editar"
+          }
         }
+      ]
+    },
+    "ver_cardapio": {
+      "categories": ["Pizzas tradicionais", "Pizzas especiais", "Bebidas", "Sobremesas"]
+    },
+    "falar_atendente": {
+      "message": "Um atendente humano irá te responder em breve... ⏳"
+    },
+    "acompanhar_pedido": {
+      "message": "Informe o número do pedido ou telefone:",
+      "response": "Status atual: 📦 Em preparação / Saiu para entrega / Entregue"
+    },
+    "ver_promocoes": {
+      "message": "Confira nossas promoções:",
+      "promotions": [
+        {
+          "titulo": "Segunda Maluca",
+          "descricao": "Na compra de 2 pizzas grandes, a terceira é grátis!"
+        },
+        {
+          "titulo": "Combo Família",
+          "descricao": "1 pizza gigante + 2 refrigerantes por R$59,90"
+        }
+      ],
+      "options": {
+        "usar": "Quero usar uma promoção",
+        "voltar": "Voltar ao menu"
+      }
+    },
+    "feedback": {
+      "message": "Como foi sua experiência?",
+      "options": {
+        "1": "⭐",
+        "2": "⭐⭐",
+        "3": "⭐⭐⭐",
+        "4": "⭐⭐⭐⭐",
+        "5": "⭐⭐⭐⭐⭐"
+      },
+      "followup": "Deseja deixar um comentário? (opcional)"
+    },
+    "cancelar_pedido": {
+      "message": "Para cancelar, informe o número do pedido:",
+      "confirm": "Tem certeza que deseja cancelar?",
+      "policy": "Cancelamentos são aceitos até 5 minutos após a confirmação. Após esse tempo, fale com um atendente.",
+      "options": {
+        "sim": "Sim, cancelar",
+        "nao": "Não, voltar ao menu"
+      }
     }
+  }
 }
