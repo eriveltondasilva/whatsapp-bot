@@ -25,4 +25,5 @@ export type CartItem = {
     crust: Crust
     flavors: Flavor[]
   }
+  drink?: Drink
 }

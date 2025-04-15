@@ -1,16 +1,16 @@
 import { injectable } from 'tsyringe'
 
 import { Flows } from '@/config/enums.js'
-import { formatCurrency } from '@/utils/format-currency.js'
 import { isValidQuantity } from '@/utils/validations.js'
 import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
+import { formatCurrency } from '@/utils/format-currency.js'
 import type { ContextData } from './types.js'
 
 @injectable()
 export class DrinkQuantityFlow extends BaseFlow {
-  public async handle({ phone, message }: FlowParams) {
+  public async handle({ phone, message, context }: FlowParams) {
     const quantity = Number.parseInt(message, 10)
 
     if (!isValidQuantity(quantity)) {
@@ -20,23 +20,28 @@ export class DrinkQuantityFlow extends BaseFlow {
         .build()
     }
 
-    const { context } = this.state.updateContext(phone, {
-      data: { quantity },
+    const { selectedDrink } = context.data as ContextData
+    const summary = this.getSummary(context.data as ContextData)
+
+    this.state.updateContext(phone, {
+      data: {
+        unitPrice: summary.unitPrice,
+        subtotal: summary.subtotal,
+        quantity,
+      },
       flow: Flows.DRINK_FINISH,
     })
-
-    const summary = this.getSummary(context.data as ContextData)
 
     return this.responseBuilder
       .addCode('Etapa: 3/3')
       .addMono()
       .addText('# RESUMO DO PEDIDO')
       .addLine()
-      .addText('Bebida:', summary.drinkName)
+      .addText('Bebida:', selectedDrink.name)
       .addEmptyLine()
-      .addText('Quantidade:', summary.quantity)
-      .addText('Preço Unit.:', summary.unitPrice)
-      .addText('Total:', summary.total)
+      .addText('Quantidade:', quantity.toString())
+      .addText('Preço Unit.:', formatCurrency(summary.unitPrice))
+      .addText('Total:', formatCurrency(summary.subtotal))
       .addLine()
       .addMono()
       .addText('Deseja confirmar seu pedido?')
@@ -46,15 +51,12 @@ export class DrinkQuantityFlow extends BaseFlow {
   }
 
   private getSummary({ quantity, selectedDrink }: ContextData) {
-    const drinkName = selectedDrink.name
     const unitPrice = Number(selectedDrink.price)
-    const total = unitPrice * quantity
+    const subtotal = unitPrice * quantity
 
     return {
-      drinkName,
-      quantity: quantity.toString(),
-      unitPrice: formatCurrency(unitPrice),
-      total: formatCurrency(total),
+      unitPrice,
+      subtotal,
     }
   }
 }
