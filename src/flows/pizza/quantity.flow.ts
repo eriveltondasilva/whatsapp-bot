@@ -18,7 +18,6 @@ export class PizzaQuantityFlow extends BaseFlow {
     super()
   }
 
-  //#
   public async handle({ phone, message }: FlowParams) {
     const quantity = Number.parseInt(message, 10)
 

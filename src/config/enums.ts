@@ -48,7 +48,7 @@ export enum OrderOptions {
   ONE_PIZZA = '1',
   TWO_PIZZA = '2',
   DRINK = '3',
-  COMPLETE = '4',
+  CHECKOUT = '4',
   CANCEL = '0',
 }
 

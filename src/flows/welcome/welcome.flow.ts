@@ -12,19 +12,17 @@ import type { FlowParams } from '@/types/flows.js'
 export class WelcomeFlow extends BaseFlow {
   constructor(
     @inject(CustomerRepository) private readonly customerRepository: CustomerRepository,
-    @inject(RegistrationStartFlow)
-    private readonly registrationInitialFlow: RegistrationStartFlow,
+    @inject(RegistrationStartFlow) private readonly registrationStartFlow: RegistrationStartFlow,
   ) {
     super()
   }
 
-  //#
   public async handle({ phone, message }: FlowParams) {
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {
       const { context } = this.state.updateFlow(phone, Flows.REGISTRATION_START)
-      return this.registrationInitialFlow.handle({ context, phone, message })
+      return this.registrationStartFlow.handle({ context, phone, message })
     }
 
     this.state.updateFlow(phone, Flows.MENU)

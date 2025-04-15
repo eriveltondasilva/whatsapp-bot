@@ -20,7 +20,6 @@ export class PizzaFlavorFlow extends BaseFlow {
     super()
   }
 
-  //#
   public async handle({ context, phone, message }: FlowParams) {
     const { data } = context as unknown as { data: ContextData }
     const flavors = await this.flavorRepository.getAllFlavors()

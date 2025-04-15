@@ -17,7 +17,6 @@ export class PizzaStartFlow extends BaseFlow {
     super()
   }
 
-  //#
   public async handle({ phone, message }: FlowParams) {
     const isSingleFlavor = message === '1'
     const flavors = await this.flavorRepository.getAllFlavors()

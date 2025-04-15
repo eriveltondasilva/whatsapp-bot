@@ -13,11 +13,11 @@ const MESSAGES = {
 
 @injectable()
 export class PizzaFinishFlow extends BaseFlow {
-  public async handle({ message, phone }: FlowParams) {
-    this.state.clearData(phone)
-    this.state.updateFlow(phone, Flows.ORDER)
-
+  public async handle({ message, phone, context }: FlowParams) {
     const isCanceled = message === '0'
+
+    this.state.updateFlow(phone, Flows.ORDER)
+    this.state.clearData(phone)
 
     return this.responseBuilder
       .addText(isCanceled ? MESSAGES.CANCELED : MESSAGES.SUCCESS)

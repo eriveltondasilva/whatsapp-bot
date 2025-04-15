@@ -59,9 +59,7 @@ export class PizzaNoteFlow extends BaseFlow {
     return totalPrice / flavors.length
   }
 
-  private getSummary(data: ContextData) {
-    const { selectedFlavors, selectedCrust, quantity } = data
-
+  private getSummary({ selectedFlavors, selectedCrust, quantity }: ContextData) {
     const flavorNames = this.getFlavorNames(selectedFlavors)
     const crustPrice = Number(selectedCrust.price)
     const pizzaPrice = this.calculateAverageFlavorsPrice(selectedFlavors)

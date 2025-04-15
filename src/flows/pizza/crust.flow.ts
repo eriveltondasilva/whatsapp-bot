@@ -18,7 +18,6 @@ export class PizzaCrustFlow extends BaseFlow {
     super()
   }
 
-  //#
   public async handle({ phone, message }: FlowParams) {
     const crusts = await this.crustRepository.getAllCrusts()
     const selectedIndex = parseIndex(message)
@@ -45,7 +44,6 @@ export class PizzaCrustFlow extends BaseFlow {
       .addQuote('Exemplo: retirar cebola, mais queijo, etc.')
       .addEmptyLine()
       .addText('0️⃣ - Não desejo adicionar observações')
-      .addText('✍️ - Ou digite sua observação')
       .build()
   }
 }

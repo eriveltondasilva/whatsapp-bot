@@ -7,13 +7,7 @@ export type Customer = {
   address: string
 }
 
-export type CartItem = {
-  id: string
-  type: ItemType
-  name: string
-  price: number
-  quantity: number
-}
+export type CartItem = any
 
 export type Flavor = Omit<FlavorPrisma, 'createdAt' | 'updatedAt' | 'active'>
 export type Drink = Omit<DrinkPrisma, 'createdAt' | 'updatedAt' | 'active'>

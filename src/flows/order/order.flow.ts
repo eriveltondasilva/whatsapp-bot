@@ -13,9 +13,9 @@ import type { FlowParams, OrderActionMap } from '@/types/flows.js'
 @injectable()
 export class OrderFlow extends BaseFlow {
   constructor(
-    @inject(DrinkStartFlow) private readonly drinkMenuFlow: DrinkStartFlow,
-    @inject(PizzaStartFlow) private readonly pizzaMenuFlow: PizzaStartFlow,
-    @inject(CheckoutStartFlow) private readonly paymentMenuFlow: CheckoutStartFlow,
+    @inject(DrinkStartFlow) private readonly drinkStartFlow: DrinkStartFlow,
+    @inject(PizzaStartFlow) private readonly pizzaStartFlow: PizzaStartFlow,
+    @inject(CheckoutStartFlow) private readonly checkoutStartFlow: CheckoutStartFlow,
   ) {
     super()
   }
@@ -26,7 +26,7 @@ export class OrderFlow extends BaseFlow {
       [OrderOptions.ONE_PIZZA]: () => this.handlePizzaMenu(phone, message),
       [OrderOptions.TWO_PIZZA]: () => this.handlePizzaMenu(phone, message),
       [OrderOptions.DRINK]: () => this.handleDrinkMenu(phone, message),
-      [OrderOptions.COMPLETE]: () => this.finalizeOrder(phone, message),
+      [OrderOptions.CHECKOUT]: () => this.checkoutOrder(phone, message),
       [OrderOptions.CANCEL]: () => this.cancelOrder(phone),
     } as const
 
@@ -36,17 +36,17 @@ export class OrderFlow extends BaseFlow {
 
   private handlePizzaMenu(phone: string, message: string) {
     const { context } = this.state.updateFlow(phone, Flows.PIZZA_START)
-    return this.pizzaMenuFlow.handle({ context, phone, message })
+    return this.pizzaStartFlow.handle({ context, phone, message })
   }
 
   private handleDrinkMenu(phone: string, message: string) {
     const { context } = this.state.updateFlow(phone, Flows.DRINK_START)
-    return this.drinkMenuFlow.handle({ context, phone, message })
+    return this.drinkStartFlow.handle({ context, phone, message })
   }
 
-  private finalizeOrder(phone: string, message: string) {
+  private checkoutOrder(phone: string, message: string) {
     const { context } = this.state.updateFlow(phone, Flows.CHECKOUT_START)
-    return this.paymentMenuFlow.handle({ context, phone, message })
+    return this.checkoutStartFlow.handle({ context, phone, message })
   }
 
   private cancelOrder(phone: string) {
