@@ -6,31 +6,29 @@
   "type": "module",
   "license": "MIT",
   "private": true,
-  "engines": { "node": ">=22.0.0" },
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "author": "Erivelton Silva <eriveltondasilva13@gmail.com> (https://github.com/eriveltondasilva)",
   "scripts": {
     "build": "tsup",
     "start": "node --env-file=.env ./dist/index.js",
     "dev": "tsx --env-file=.env -r tsconfig-paths/register ./src/index.ts",
-
     "fmt": "biome format --verbose .",
     "fmt:fix": "biome format --fix --verbose .",
-
     "lint": "biome lint --unsafe --verbose .",
     "lint:fix": "biome lint --fix --unsafe --verbose .",
-
     "check": "biome check --unsafe --verbose .",
     "check:fix": "biome check --fix --unsafe --verbose .",
-
     "type:check": "tsc --noEmit",
-
     "db:reset": "npx prisma migrate reset",
-
     "clean": "rm -rf dist",
     "test": "vitest run tests"
   },
   "prisma": {
-    "seed": "tsx prisma/seed/index.ts"
+    "seed": "tsx prisma/seed/index.ts",
+    "schema": "./prisma/schema",
+    "output": "./prisma/dbml"
   },
   "dependencies": {
     "@prisma/client": "^6.3.1",

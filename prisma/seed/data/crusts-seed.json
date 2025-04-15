@@ -2,21 +2,21 @@
   {
     "name": "tradicional",
     "price": 0,
-    "is_active": true
+    "isActive": true
   },
   {
     "name": "catupiri",
     "price": 5.0,
-    "is_active": true
+    "isActive": true
   },
   {
     "name": "cheddar",
     "price": 5.5,
-    "is_active": true
+    "isActive": true
   },
   {
     "name": "chocolate",
     "price": 7.0,
-    "is_active": true
+    "isActive": true
   }
 ]

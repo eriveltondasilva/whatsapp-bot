@@ -3,12 +3,12 @@
     "name": "Ingrid Alves",
     "phone": "558298350441@c.us",
     "address": "123 Main St, Springfield",
-    "is_active": true
+    "isActive": true
   },
   {
     "name": "Erivelton",
     "phone": "558299723607@c.us",
     "address": "789 Oak St, Los Angeles",
-    "is_active": true
+    "isActive": true
   }
 ]

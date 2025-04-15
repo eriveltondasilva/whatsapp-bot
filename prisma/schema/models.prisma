@@ -13,7 +13,7 @@ model WorkingHour {
   // relationships
   pizzeria Pizzeria @relation(fields: [pizzeriaId], references: [id])
 
-  @@unique([dayOfWeek, pizzeriaId])
+  @@unique([dayOfWeek])
   @@map("working_hours")
 }
 

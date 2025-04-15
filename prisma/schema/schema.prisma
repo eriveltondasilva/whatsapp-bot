@@ -1,6 +1,7 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["strictUndefinedChecks", "prismaSchemaFolder", "multiSchema"]
+  output          = "../src/generated/prisma"
 }
 
 generator dbml {

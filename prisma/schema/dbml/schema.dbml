@@ -7,10 +7,84 @@ Table customers {
   name String [not null]
   phone String [unique, not null]
   address String [not null]
-  active Boolean [not null, default: true]
+  isActive Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   orders orders [not null]
+}
+
+Table working_hours {
+  id Int [pk, increment]
+  pizzeriaId Int [not null]
+  dayOfWeek Int [unique, not null]
+  openingTime String [not null]
+  closingTime String [not null]
+  isActive Boolean [not null, default: true]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  pizzeria pizzerias [not null]
+}
+
+Table pizzerias {
+  id Int [pk, increment]
+  name String [not null]
+  description String
+  cnpj String [unique]
+  address String
+  phone String [unique]
+  isActive Boolean [not null, default: true]
+  deliveryTax Decimal [not null, default: 0]
+  minOrderValue Decimal [not null, default: 0]
+  website String
+  instagram String
+  facebook String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  workingHours working_hours [not null]
+}
+
+Table orders {
+  id Int [pk, increment]
+  customerId Int [not null]
+  deliveryAddress String [not null]
+  status String [not null]
+  totalAmount Decimal [not null, default: 0]
+  paymentMethod String [not null]
+  deliveryTax Decimal [not null, default: 0]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  customer customers [not null]
+  items order_items [not null]
+}
+
+Table order_items {
+  id Int [pk, increment]
+  orderId Int [not null]
+  drinkId Int
+  itemType String [not null]
+  quantity Int [not null, default: 1]
+  unitPrice Decimal [not null, default: 0]
+  subtotal Decimal [not null, default: 0]
+  notes String
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  pizza order_pizzas
+  order orders [not null]
+  drink drinks
+}
+
+Table order_pizzas {
+  id Int [pk, increment]
+  orderItemId Int [unique, not null]
+  firstFlavorId Int [not null]
+  secondFlavorId Int
+  crustId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [not null]
+  orderItem order_items [not null]
+  firstFlavor flavors [not null]
+  secondFlavor flavors
+  crust crusts [not null]
 }
 
 Table flavors {
@@ -19,7 +93,8 @@ Table flavors {
   description String [not null]
   category String [not null]
   price Decimal [not null, default: 0]
-  active Boolean [not null, default: true]
+  imageUrl String
+  isActive Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   firstPizzas order_pizzas [not null]
@@ -30,7 +105,7 @@ Table crusts {
   id Int [pk, increment]
   name String [unique, not null]
   price Decimal [not null, default: 0]
-  active Boolean [not null, default: true]
+  isActive Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
   pizzas order_pizzas [not null]
@@ -41,95 +116,19 @@ Table drinks {
   name String [unique, not null]
   description String [not null]
   price Decimal [not null, default: 0]
-  active Boolean [not null, default: true]
+  isActive Boolean [not null, default: true]
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [not null]
-  orderDrinks order_drinks [not null]
+  order order_items [not null]
 }
 
-Table orders {
-  id Int [pk, increment]
-  customerId Int [not null]
-  deliveryAddress String [not null]
-  status String [not null]
-  totalAmount Decimal [not null, default: 0]
-  paymentMethod String [not null]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-  customer customers [not null]
-  items order_items [not null]
-}
-
-Table order_items {
-  id Int [pk, increment]
-  orderId Int [not null]
-  itemType String [not null]
-  quantity Int [not null, default: 1]
-  unitPrice Decimal [not null, default: 0]
-  subtotal Decimal [not null, default: 0]
-  notes String
-  createdAt DateTime [default: `now()`, not null]
-  order orders [not null]
-  pizza order_pizzas
-  drink order_drinks
-}
-
-Table order_pizzas {
-  id Int [pk, increment]
-  orderItemId Int [unique, not null]
-  firstFlavorId Int [not null]
-  secondFlavorId Int
-  crustId Int [not null]
-  createdAt DateTime [default: `now()`, not null]
-  orderItem order_items [not null]
-  firstFlavor flavors [not null]
-  secondFlavor flavors
-  crust crusts [not null]
-}
-
-Table order_drinks {
-  id Int [pk, increment]
-  orderItemId Int [unique, not null]
-  drinkId Int [not null]
-  createdAt DateTime [default: `now()`, not null]
-  orderItem order_items [not null]
-  drink drinks [not null]
-}
-
-Table working_hours {
-  id Int [pk, increment]
-  dayOfWeek Int [not null]
-  openingTime String [not null]
-  closingTime String [not null]
-  active Boolean [not null, default: true]
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-
-  indexes {
-    (dayOfWeek, active) [unique]
-  }
-}
-
-Table pizzerias {
-  id Int [pk, increment]
-  name String [not null]
-  description String
-  cnpj String [unique]
-  address String
-  phone String [unique]
-  active Boolean [not null, default: true]
-  deliveryTax Decimal [default: 0]
-  minOrderValue Decimal [default: 0]
-  website String
-  instagram String
-  facebook String
-  createdAt DateTime [default: `now()`, not null]
-  updatedAt DateTime [not null]
-}
+Ref: working_hours.pizzeriaId > pizzerias.id
 
 Ref: orders.customerId > customers.id
 
 Ref: order_items.orderId > orders.id
+
+Ref: order_items.drinkId > drinks.id
 
 Ref: order_pizzas.orderItemId - order_items.id [delete: Cascade]
 
@@ -138,7 +137,3 @@ Ref: order_pizzas.firstFlavorId > flavors.id
 Ref: order_pizzas.secondFlavorId > flavors.id
 
 Ref: order_pizzas.crustId > crusts.id
-
-Ref: order_drinks.orderItemId - order_items.id [delete: Cascade]
-
-Ref: order_drinks.drinkId > drinks.id

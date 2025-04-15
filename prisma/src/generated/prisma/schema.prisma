@@ -1,0 +1,197 @@
+model Customer {
+  id Int @id @default(autoincrement())
+
+  name     String  @db.VarChar(100)
+  phone    String  @unique @db.VarChar(20)
+  address  String  @db.VarChar(255)
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationships
+  orders Order[]
+
+  @@index([phone])
+  @@map("customers")
+}
+
+model WorkingHour {
+  id         Int @id @default(autoincrement())
+  pizzeriaId Int @map("pizzeria_id")
+
+  dayOfWeek   Int     @map("day_of_week") @db.SmallInt
+  openingTime String  @map("opening_time") @db.VarChar(8)
+  closingTime String  @map("closing_time") @db.VarChar(8)
+  isActive    Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationships
+  pizzeria Pizzeria @relation(fields: [pizzeriaId], references: [id])
+
+  @@unique([dayOfWeek])
+  @@map("working_hours")
+}
+
+model Pizzeria {
+  id Int @id @default(autoincrement())
+
+  name        String  @db.VarChar(100)
+  description String? @db.VarChar(255)
+  cnpj        String? @unique @db.VarChar(20)
+  address     String? @db.VarChar(255)
+  phone       String? @unique @db.VarChar(20)
+  isActive    Boolean @default(true) @map("is_active")
+
+  deliveryTax   Decimal @default(0.00) @map("delivery_tax") @db.Decimal(10, 2)
+  minOrderValue Decimal @default(0.00) @map("min_order_value") @db.Decimal(10, 2)
+
+  website   String? @db.VarChar(100)
+  instagram String? @db.VarChar(100)
+  facebook  String? @db.VarChar(100)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationship
+  workingHours WorkingHour[]
+
+  @@map("pizzerias")
+}
+
+model Order {
+  id         Int @id @default(autoincrement())
+  customerId Int @map("customer_id")
+
+  deliveryAddress String  @map("delivery_address") @db.VarChar(255)
+  status          String  @db.VarChar(100)
+  totalAmount     Decimal @default(0.00) @map("total_amount") @db.Decimal(10, 2)
+  paymentMethod   String  @map("payment_method") @db.VarChar(100)
+  deliveryTax     Decimal @default(0.00) @map("delivery_tax") @db.Decimal(10, 2)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationships
+  customer Customer    @relation(fields: [customerId], references: [id])
+  items    OrderItem[]
+
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id Int @id @default(autoincrement())
+
+  orderId Int  @map("order_id")
+  drinkId Int? @map("drink_id")
+
+  itemType  String  @map("item_type") @db.VarChar(100) // The type of item (e.g., pizza, drink)
+  quantity  Int     @default(1) @db.SmallInt
+  unitPrice Decimal @default(0.00) @map("unit_price") @db.Decimal(10, 2)
+  subtotal  Decimal @default(0.00) @db.Decimal(10, 2)
+  notes     String? @db.VarChar(255)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationships
+  pizza OrderPizza?
+  order Order       @relation(fields: [orderId], references: [id])
+  drink Drink?      @relation(fields: [drinkId], references: [id])
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model OrderPizza {
+  id Int @id @default(autoincrement())
+
+  orderItemId    Int  @unique @map("order_item_id")
+  firstFlavorId  Int  @map("first_flavor_id")
+  secondFlavorId Int? @map("second_flavor_id")
+  crustId        Int  @map("crust_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationships
+  orderItem    OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  firstFlavor  Flavor    @relation("FirstFlavor", fields: [firstFlavorId], references: [id])
+  secondFlavor Flavor?   @relation("SecondFlavor", fields: [secondFlavorId], references: [id])
+  crust        Crust     @relation(fields: [crustId], references: [id])
+
+  @@map("order_pizzas")
+}
+
+model Flavor {
+  id Int @id @default(autoincrement())
+
+  name        String  @unique @db.VarChar(100)
+  description String  @db.VarChar(255)
+  category    String  @db.VarChar(100)
+  price       Decimal @default(0.00) @db.Decimal(10, 2)
+  imageUrl    String? @map("image_url") @db.VarChar(255)
+  isActive    Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationships
+  firstPizzas  OrderPizza[] @relation("FirstFlavor")
+  secondPizzas OrderPizza[] @relation("SecondFlavor")
+
+  @@map("flavors")
+}
+
+model Crust {
+  id Int @id @default(autoincrement())
+
+  name     String  @unique @db.VarChar(100)
+  price    Decimal @default(0.00) @db.Decimal(10, 2)
+  isActive Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationships
+  pizzas OrderPizza[]
+
+  @@map("crusts")
+}
+
+model Drink {
+  id Int @id @default(autoincrement())
+
+  name        String  @unique @db.VarChar(100)
+  description String  @db.VarChar(255)
+  price       Decimal @default(0.00) @db.Decimal(10, 2)
+  isActive    Boolean @default(true) @map("is_active")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationships
+  order OrderItem[]
+
+  @@map("drinks")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["strictUndefinedChecks", "prismaSchemaFolder", "multiSchema"]
+  output          = "../src/generated/prisma"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}

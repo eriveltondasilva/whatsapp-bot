@@ -3,42 +3,49 @@
     "dayOfWeek": 0,
     "openingTime": "00:00:00",
     "closingTime": "00:00:00",
-    "is_active": false
+    "isActive": false,
+    "pizzeriaId": 1
   },
   {
     "dayOfWeek": 1,
     "openingTime": "18:00:00",
     "closingTime": "23:59:00",
-    "is_active": true
+    "isActive": true,
+    "pizzeriaId": 1
   },
   {
     "dayOfWeek": 2,
     "openingTime": "18:00:00",
     "closingTime": "23:59:00",
-    "is_active": true
+    "isActive": true,
+    "pizzeriaId": 1
   },
   {
     "dayOfWeek": 3,
     "openingTime": "18:00:00",
     "closingTime": "23:59:00",
-    "is_active": true
+    "isActive": true,
+    "pizzeriaId": 1
   },
   {
     "dayOfWeek": 4,
     "openingTime": "18:00:00",
     "closingTime": "23:59:00",
-    "is_active": true
+    "isActive": true,
+    "pizzeriaId": 1
   },
   {
     "dayOfWeek": 5,
     "openingTime": "18:00:00",
     "closingTime": "23:59:00",
-    "is_active": true
+    "isActive": true,
+    "pizzeriaId": 1
   },
   {
     "dayOfWeek": 6,
     "openingTime": "18:00:00",
     "closingTime": "23:59:00",
-    "is_active": true
+    "isActive": true,
+    "pizzeriaId": 1
   }
 ]

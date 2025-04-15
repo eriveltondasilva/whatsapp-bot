@@ -12,14 +12,37 @@ const prisma = new PrismaClient({ errorFormat: 'pretty' })
 async function seedDatabase() {
   console.log('\n🚀 Starting database seeding:\n')
 
-  await Promise.all([
-    seedPizzeria(prisma),
-    seedWorkingHour(prisma),
-    seedCrust(prisma),
-    seedCustomer(prisma),
-    seedDrink(prisma),
-    seedFlavor(prisma),
-  ])
+  const actions = [
+    {
+      name: 'Pizzeria',
+      action: seedPizzeria,
+    },
+    {
+      name: 'Working Hour',
+      action: seedWorkingHour,
+    },
+    {
+      name: 'Crust',
+      action: seedCrust,
+    },
+    {
+      name: 'Customer',
+      action: seedCustomer,
+    },
+    {
+      name: 'Drink',
+      action: seedDrink,
+    },
+    {
+      name: 'Flavor',
+      action: seedFlavor,
+    },
+  ]
+
+  for await (const seed of actions) {
+    console.log(`🌱 Seeding ${seed.name}...`)
+    seed.action(prisma)
+  }
 
   console.log('\n✅ Seeding completed successfully!')
 }
