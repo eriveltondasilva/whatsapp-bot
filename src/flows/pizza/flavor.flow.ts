@@ -21,7 +21,7 @@ export class PizzaFlavorFlow extends BaseFlow {
   }
 
   public async handle({ context, phone, message }: FlowParams) {
-    const { data } = context as unknown as { data: ContextData }
+    const data = context.data as ContextData
     const flavors = await this.flavorRepository.getAllFlavors()
     const selectedIndex = parseIndex(message)
 

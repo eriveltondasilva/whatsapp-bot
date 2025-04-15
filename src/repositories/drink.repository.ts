@@ -4,7 +4,7 @@ import type { Prisma } from '@prisma/client'
 export class DrinkRepository {
   async getAllDrinks() {
     return await prisma.drink.findMany({
-      where: { active: true },
+      where: { isActive: true },
       select: {
         id: true,
         name: true,

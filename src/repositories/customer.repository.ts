@@ -4,7 +4,7 @@ import type { Prisma } from '@prisma/client'
 export class CustomerRepository {
   async findByPhone(phone: string) {
     return await prisma.customer.findUnique({
-      where: { phone },
+      where: { phone, isActive: true },
       select: {
         id: true,
         name: true,

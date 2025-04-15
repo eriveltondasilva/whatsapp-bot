@@ -3,7 +3,7 @@ import { prisma } from '@/providers/prisma.js'
 export class FlavorRepository {
   async getAllFlavors() {
     return await prisma.flavor.findMany({
-      where: { active: true },
+      where: { isActive: true },
       select: {
         id: true,
         name: true,

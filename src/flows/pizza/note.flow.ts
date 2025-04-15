@@ -20,24 +20,30 @@ export class PizzaNoteFlow extends BaseFlow {
 
     const note = message === '0' ? undefined : message
 
-    const { context: newContext } = this.state.updateContext(phone, {
-      data: { note },
+    const summary = this.getSummary(context.data as ContextData)
+
+    this.state.updateContext(phone, {
+      data: {
+        unitPrice: summary.unitPrice,
+        subtotal: summary.subtotal,
+        note,
+      },
       flow: Flows.PIZZA_FINISH,
     })
 
-    const summary = this.getSummary(newContext.data as ContextData)
+    const crustPrice = summary.pizzaPrice === 0 ? 'grátis' : formatCurrency(summary.pizzaPrice)
 
     return this.responseBuilder
       .addCode('Etapa: 5/5')
       .addMono()
       .addText('# RESUMO DO PEDIDO')
       .addLine()
-      .addText('Sabor:', summary.flavorNames, `(${summary.pizzaPrice})`)
-      .addText('Borda:', selectedCrust.name, `(${summary.crustPrice})`)
+      .addText('Sabor:', this.getFlavorNames(selectedFlavors), `(${summary.pizzaPrice})`)
+      .addText('Borda:', selectedCrust.name, `(${crustPrice})`)
       .addEmptyLine()
-      .addText('Quantidade:', summary.quantity)
-      .addText('Preço Unit.:', summary.unitPrice)
-      .addText('Total:', summary.total)
+      .addText('Quantidade:', quantity.toString())
+      .addText('Preço Unit.:', formatCurrency(summary.unitPrice))
+      .addText('Total:', formatCurrency(summary.subtotal))
       .addEmptyLine()
       .addText('Observação:', note || 'nenhuma')
       .addLine()
@@ -60,19 +66,16 @@ export class PizzaNoteFlow extends BaseFlow {
   }
 
   private getSummary({ selectedFlavors, selectedCrust, quantity }: ContextData) {
-    const flavorNames = this.getFlavorNames(selectedFlavors)
     const crustPrice = Number(selectedCrust.price)
     const pizzaPrice = this.calculateAverageFlavorsPrice(selectedFlavors)
     const unitPrice = pizzaPrice + crustPrice
-    const total = unitPrice * quantity
+    const subtotal = unitPrice * quantity
 
     return {
-      flavorNames,
-      crustPrice: crustPrice === 0 ? 'grátis' : formatCurrency(crustPrice),
-      pizzaPrice: formatCurrency(pizzaPrice),
-      unitPrice: formatCurrency(unitPrice),
-      total: formatCurrency(total),
-      quantity: quantity.toString(),
+      crustPrice,
+      pizzaPrice,
+      unitPrice,
+      subtotal,
     }
   }
 }

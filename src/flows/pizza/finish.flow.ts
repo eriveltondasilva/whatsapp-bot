@@ -1,10 +1,13 @@
+import { ItemType } from '@/config/enums.js'
 import { injectable } from 'tsyringe'
 
 import { Flows } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
 
+import type { CartItem } from '@/types/entities.js'
 import type { FlowParams } from '@/types/flows.js'
+import type { ContextData } from './types.js'
 
 const MESSAGES = {
   CANCELED: '❌ PEDIDO CANCELADO',
@@ -15,6 +18,25 @@ const MESSAGES = {
 export class PizzaFinishFlow extends BaseFlow {
   public async handle({ message, phone, context }: FlowParams) {
     const isCanceled = message === '0'
+
+    if (!isCanceled) {
+      const { selectedFlavors, selectedCrust, quantity, note, unitPrice, subtotal } =
+        context.data as ContextData
+
+      const cartItem: CartItem = {
+        type: ItemType.PIZZA,
+        quantity: quantity || 1,
+        unitPrice,
+        subtotal,
+        note: note || '',
+        pizza: {
+          crust: selectedCrust,
+          flavors: selectedFlavors,
+        },
+      }
+
+      this.state.addToCart(phone, cartItem)
+    }
 
     this.state.updateFlow(phone, Flows.ORDER)
     this.state.clearData(phone)

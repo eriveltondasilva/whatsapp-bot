@@ -1,11 +1,11 @@
-import type { Flavor } from '@/types/entities.js'
-import type { Prisma } from '@prisma/client'
+import type { Crust, Flavor } from '@/types/entities.js'
 
 export type ContextData = {
-  data: ContextData
   selectedFlavors: Flavor[]
-  selectedCrust: Prisma.CrustCreateInput
+  selectedCrust: Crust
   isSingleFlavor: boolean
   quantity: number
   note?: string
+  unitPrice: number
+  subtotal: number
 }

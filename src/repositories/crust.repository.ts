@@ -3,7 +3,7 @@ import { prisma } from '@/providers/prisma.js'
 export class CrustRepository {
   async getAllCrusts() {
     return await prisma.crust.findMany({
-      where: { active: true },
+      where: { isActive: true },
       select: {
         id: true,
         name: true,

@@ -9,10 +9,11 @@ import type { FlowParams } from '@/types/flows.js'
 
 @injectable()
 export class CheckoutStartFlow extends BaseFlow {
-  public async handle({ phone, context }: FlowParams) {
+  public async handle({ phone }: FlowParams) {
+    const { customer, cart } = this.state.getState(phone)
     const orderTotal = this.calculateOrderTotal()
 
-    if (orderTotal <= 0) {
+    if (!cart || cart.length === 0) {
       this.state.updateFlow(phone, Flows.ORDER)
       return this.responseBuilder
         .addBold('❌ CARRINHO VAZIO')
@@ -25,13 +26,28 @@ export class CheckoutStartFlow extends BaseFlow {
         .build()
     }
 
+    if (!customer.address) {
+      this.state.updateFlow(phone, Flows.ORDER)
+      return this.responseBuilder
+        .addText('📍 Precisamos do seu endereço para entrega.')
+        .addEmptyLine()
+        .addText('Por favor, digite seu endereço completo:')
+        .build()
+    }
+
     //*>
     this.state.updateFlow(phone, Flows.CHECKOUT_PAYMENT)
 
     return this.responseBuilder
       .addMono()
-      .addText('# DETALHES DO PAGAMENTO')
+      .addText('# RESUMO DO PEDIDO')
       .addLine()
+      .addText('Itens do pedido:')
+      .addText('- item 1')
+      .addText('- item 2')
+      .addText('- item 3')
+      .addEmptyLine()
+      .addText('Endereço:', customer.address)
       .addText('Total:', formatCurrency(orderTotal))
       .addLine()
       .addMono()
