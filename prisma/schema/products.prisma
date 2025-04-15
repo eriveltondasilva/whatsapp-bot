@@ -10,6 +10,7 @@ model Flavor {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  // relationships
   firstPizzas  OrderPizza[] @relation("FirstFlavor")
   secondPizzas OrderPizza[] @relation("SecondFlavor")
 
@@ -26,6 +27,7 @@ model Crust {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  // relationships
   pizzas OrderPizza[]
 
   @@map("crusts")
@@ -42,6 +44,7 @@ model Drink {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
+  // relationships
   order OrderItem[]
 
   @@map("drinks")

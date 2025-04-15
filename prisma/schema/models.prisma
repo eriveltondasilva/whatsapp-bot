@@ -1,5 +1,6 @@
 model WorkingHour {
-  id Int @id @default(autoincrement())
+  id         Int @id @default(autoincrement())
+  pizzeriaId Int @map("pizzeria_id")
 
   dayOfWeek   Int     @map("day_of_week") @db.SmallInt
   openingTime String  @map("opening_time") @db.VarChar(8)
@@ -9,7 +10,10 @@ model WorkingHour {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@unique([dayOfWeek])
+  // relationships
+  pizzeria Pizzeria @relation(fields: [pizzeriaId], references: [id])
+
+  @@unique([dayOfWeek, pizzeriaId])
   @@map("working_hours")
 }
 
@@ -23,8 +27,8 @@ model Pizzeria {
   phone       String? @unique @db.VarChar(20)
   isActive    Boolean @default(true) @map("is_active")
 
-  deliveryTax   Decimal? @default(0.00) @map("delivery_tax") @db.Decimal(10, 2)
-  minOrderValue Decimal? @default(0.00) @map("min_order_value") @db.Decimal(10, 2)
+  deliveryTax   Decimal @default(0.00) @map("delivery_tax") @db.Decimal(10, 2)
+  minOrderValue Decimal @default(0.00) @map("min_order_value") @db.Decimal(10, 2)
 
   website   String? @db.VarChar(100)
   instagram String? @db.VarChar(100)
@@ -32,6 +36,9 @@ model Pizzeria {
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  // relationship
+  WorkingHour WorkingHour[]
 
   @@map("pizzerias")
 }
