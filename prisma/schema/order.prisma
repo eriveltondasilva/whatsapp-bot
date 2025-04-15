@@ -23,9 +23,9 @@ model Order {
 
 model OrderItem {
   id      Int  @id @default(autoincrement())
-  
+
   orderId Int  @map("order_id")
-  drinkId Int?
+  drinkId Int? @map("drink_id")
 
   itemType  String  @map("item_type") @db.VarChar(100) // The type of item (e.g., pizza, drink)
   quantity  Int     @default(1) @db.SmallInt

@@ -12,5 +12,6 @@ model Customer {
   // relationships
   orders Order[]
 
+  @@index([phone])
   @@map("customers")
 }
