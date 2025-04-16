@@ -20,21 +20,7 @@ export class PizzaFinishFlow extends BaseFlow {
     const isCanceled = message === '0'
 
     if (!isCanceled) {
-      const { selectedFlavors, selectedCrust, quantity, note, unitPrice, subtotal } =
-        context.data as ContextData
-
-      const cartItem: CartItem = {
-        type: ItemType.PIZZA,
-        quantity: quantity || 1,
-        unitPrice,
-        subtotal,
-        note: note || '',
-        pizza: {
-          crust: selectedCrust,
-          flavors: selectedFlavors,
-        },
-      }
-
+      const cartItem = this.createCartItem(context.data as ContextData)
       this.state.addToCart(phone, cartItem)
     }
 
@@ -46,5 +32,27 @@ export class PizzaFinishFlow extends BaseFlow {
       .addEmptyLine()
       .addMenu(orderMenu)
       .build()
+  }
+
+  //#
+  private createCartItem({
+    selectedFlavors,
+    selectedCrust,
+    quantity,
+    note,
+    unitPrice,
+    subtotal,
+  }: ContextData): CartItem {
+    return {
+      type: ItemType.PIZZA,
+      quantity: quantity || 1,
+      unitPrice,
+      subtotal,
+      note: note || '',
+      pizza: {
+        crust: selectedCrust,
+        flavors: selectedFlavors,
+      },
+    }
   }
 }

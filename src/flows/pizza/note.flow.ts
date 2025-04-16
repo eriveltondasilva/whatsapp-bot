@@ -13,37 +13,39 @@ export class PizzaNoteFlow extends BaseFlow {
   public async handle({ phone, message, context }: FlowParams) {
     const { selectedFlavors, selectedCrust, quantity } = context.data as ContextData
 
-    if (!selectedFlavors?.length || !selectedCrust || !quantity || quantity < 1) {
+    if (!this.validateOrderData(context.data as ContextData)) {
       this.state.resetState(phone)
       return this.responseBuilder.addText('❌ Não foi possível processar seu pedido.').build()
     }
 
+    const order = this.calculateOrder(context.data as ContextData)
     const note = message === '0' ? undefined : message
 
-    const summary = this.getSummary(context.data as ContextData)
+    const crustPrice = order.pizzaPrice === 0 ? 'grátis' : formatCurrency(order.pizzaPrice)
+    const pizzaPrice = formatCurrency(order.pizzaPrice)
+    const unitPrice = formatCurrency(order.unitPrice)
+    const subtotalPrice = formatCurrency(order.subtotal)
 
     this.state.updateContext(phone, {
       data: {
-        unitPrice: summary.unitPrice,
-        subtotal: summary.subtotal,
+        unitPrice: order.unitPrice,
+        subtotal: order.subtotal,
         note,
       },
       flow: Flows.PIZZA_FINISH,
     })
-
-    const crustPrice = summary.pizzaPrice === 0 ? 'grátis' : formatCurrency(summary.pizzaPrice)
 
     return this.responseBuilder
       .addCode('Etapa: 5/5')
       .addMono()
       .addText('# RESUMO DO PEDIDO')
       .addLine()
-      .addText('Sabor:', this.getFlavorNames(selectedFlavors), `(${summary.pizzaPrice})`)
+      .addText('Sabor:', this.getFlavorNames(selectedFlavors), `(${pizzaPrice})`)
       .addText('Borda:', selectedCrust.name, `(${crustPrice})`)
       .addEmptyLine()
       .addText('Quantidade:', quantity.toString())
-      .addText('Preço Unit.:', formatCurrency(summary.unitPrice))
-      .addText('Total:', formatCurrency(summary.subtotal))
+      .addText('Preço Unit.:', unitPrice)
+      .addText('Total:', subtotalPrice)
       .addEmptyLine()
       .addText('Observação:', note || 'nenhuma')
       .addLine()
@@ -54,28 +56,27 @@ export class PizzaNoteFlow extends BaseFlow {
       .build()
   }
 
+  //#
   private getFlavorNames(flavors: Prisma.FlavorCreateInput[]) {
     return flavors.map((flavor) => flavor.name).join(' + ')
   }
 
-  private calculateAverageFlavorsPrice(flavors: Prisma.FlavorCreateInput[]) {
-    if (!flavors.length) return 0
-    const totalPrice = flavors.reduce((acc, flavor) => acc + Number(flavor.price || 0), 0)
+  private validateOrderData({ selectedFlavors, selectedCrust, quantity }: ContextData): boolean {
+    return Boolean(selectedFlavors?.length > 0 && selectedCrust && quantity && quantity > 0)
+  }
 
+  private calculateAverageFlavorsPrice(flavors: Prisma.FlavorCreateInput[]) {
+    if (flavors.length === 0) return 0
+    const totalPrice = flavors.reduce((acc, flavor) => acc + Number(flavor.price || 0), 0)
     return totalPrice / flavors.length
   }
 
-  private getSummary({ selectedFlavors, selectedCrust, quantity }: ContextData) {
-    const crustPrice = Number(selectedCrust.price)
+  private calculateOrder({ selectedFlavors, selectedCrust, quantity }: ContextData) {
     const pizzaPrice = this.calculateAverageFlavorsPrice(selectedFlavors)
+    const crustPrice = Number(selectedCrust.price)
     const unitPrice = pizzaPrice + crustPrice
     const subtotal = unitPrice * quantity
 
-    return {
-      crustPrice,
-      pizzaPrice,
-      unitPrice,
-      subtotal,
-    }
+    return { crustPrice, pizzaPrice, unitPrice, subtotal }
   }
 }

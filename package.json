@@ -13,6 +13,7 @@
   "scripts": {
     "build": "tsup",
     "clean": "rm -rf dist",
+
     "start": "node --env-file=.env dist/index.js",
     "dev": "tsx --env-file=.env -r tsconfig-paths/register src/index.ts",
     "dev:watch": "tsx --env-file=.env -r tsconfig-paths/register -w src/index.ts",
@@ -28,9 +29,9 @@
 
     "type:check": "tsc --noEmit",
 
+    "db:migrate": "npx prisma migrate dev --name",
     "db:reset": "npx prisma migrate reset",
     "db:generate": "npx prisma generate",
-    "db:migrate": "npx prisma migrate dev --name",
     "db:push": "npx prisma db push",
     "db:seed": "npx prisma db seed",
 
@@ -38,8 +39,7 @@
   },
   "prisma": {
     "seed": "tsx prisma/seed/index.ts",
-    "schema": "./prisma/schema",
-    "output": "./prisma/dbml"
+    "schema": "./prisma/schema"
   },
   "dependencies": {
     "@prisma/client": "^6.3.1",
