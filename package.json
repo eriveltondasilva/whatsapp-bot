@@ -12,17 +12,28 @@
   "author": "Erivelton Silva <eriveltondasilva13@gmail.com> (https://github.com/eriveltondasilva)",
   "scripts": {
     "build": "tsup",
-    "start": "node --env-file=.env ./dist/index.js",
-    "dev": "tsx --env-file=.env -r tsconfig-paths/register ./src/index.ts",
+    "clean": "rm -rf dist",
+    "start": "node --env-file=.env dist/index.js",
+    "dev": "tsx --env-file=.env -r tsconfig-paths/register src/index.ts",
+    "dev:watch": "tsx --env-file=.env -r tsconfig-paths/register -w src/index.ts",
+
     "fmt": "biome format --verbose .",
     "fmt:fix": "biome format --fix --verbose .",
+
     "lint": "biome lint --unsafe --verbose .",
     "lint:fix": "biome lint --fix --unsafe --verbose .",
+
     "check": "biome check --unsafe --verbose .",
     "check:fix": "biome check --fix --unsafe --verbose .",
+
     "type:check": "tsc --noEmit",
+
     "db:reset": "npx prisma migrate reset",
-    "clean": "rm -rf dist",
+    "db:generate": "npx prisma generate",
+    "db:migrate": "npx prisma migrate dev --name",
+    "db:push": "npx prisma db push",
+    "db:seed": "npx prisma db seed",
+
     "test": "vitest run tests"
   },
   "prisma": {
