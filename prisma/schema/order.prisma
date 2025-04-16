@@ -22,7 +22,7 @@ model Order {
 }
 
 model OrderItem {
-  id      Int  @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
   orderId Int  @map("order_id")
   drinkId Int? @map("drink_id")
