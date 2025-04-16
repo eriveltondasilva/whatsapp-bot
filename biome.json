@@ -7,7 +7,7 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "ignore": ["package-lock.json"]
+    "ignore": ["package-lock.json", "./src/generated"]
   },
   "organizeImports": {
     "enabled": true

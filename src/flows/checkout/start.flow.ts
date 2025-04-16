@@ -11,7 +11,6 @@ import type { FlowParams } from '@/types/flows.js'
 export class CheckoutStartFlow extends BaseFlow {
   public async handle({ phone }: FlowParams) {
     const { customer, cart } = this.state.getState(phone)
-    const orderTotal = this.calculateOrderTotal()
 
     if (!cart || cart.length === 0) {
       this.state.updateFlow(phone, Flows.ORDER)
@@ -48,7 +47,7 @@ export class CheckoutStartFlow extends BaseFlow {
       .addText('- item 3')
       .addEmptyLine()
       .addText('Endereço:', customer.address)
-      .addText('Total:', formatCurrency(orderTotal))
+      .addText('Total:')
       .addLine()
       .addMono()
       .addMenu(paymentMenu)

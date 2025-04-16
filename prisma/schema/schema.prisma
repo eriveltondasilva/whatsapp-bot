@@ -1,11 +1,14 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["strictUndefinedChecks", "prismaSchemaFolder", "multiSchema"]
-  output          = "../src/generated/prisma"
+  output          = "../../src/generated/client"
 }
 
 generator dbml {
-  provider = "prisma-dbml-generator"
+  provider            = "prisma-dbml-generator"
+  projectName         = "whatsapp bot"
+  projectNote         = "Test project description"
+  projectDatabaseType = "PostgreSQL"
 }
 
 datasource db {
