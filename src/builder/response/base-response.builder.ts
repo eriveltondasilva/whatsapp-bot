@@ -1,11 +1,14 @@
 import type { FlowResponse } from '@/types/flows.js'
-import type { BuilderState } from './type.js'
 
-export abstract class BaseResponseBuilder {
-  protected state: BuilderState
+export type BuilderState = {
+  text: string[]
+}
+
+export abstract class BaseResponseBuilder<T extends BuilderState = BuilderState> {
+  protected state: T
 
   constructor() {
-    this.state = this.createInitialState()
+    this.state = this.createInitialState() as T
   }
 
   //#
@@ -33,7 +36,7 @@ export abstract class BaseResponseBuilder {
     return text ? this.setText(`\`${text}\``) : this
   }
 
-  //
+  //*
   public addEmptyLine(): this {
     return this.setText('')
   }
@@ -45,10 +48,10 @@ export abstract class BaseResponseBuilder {
   }
 
   protected reset(): void {
-    this.state = this.createInitialState()
+    this.state = this.createInitialState() as T
   }
 
-  protected createInitialState() {
+  protected createInitialState(): BuilderState {
     return { text: [] }
   }
 

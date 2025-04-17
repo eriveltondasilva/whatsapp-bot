@@ -4,7 +4,9 @@ import { FLOWS } from '@/config/enums.js'
 import { orderMenu, paymentMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
 
+import type { CartItem } from '@/types/entities.js'
 import type { FlowParams } from '@/types/flows.js'
+import { formatCurrency } from '@/utils/format-currency.js'
 
 @injectable()
 export class CheckoutStartFlow extends BaseFlow {
@@ -24,6 +26,7 @@ export class CheckoutStartFlow extends BaseFlow {
         .build()
     }
 
+    const totalAmount = this.calculateTotal(cart)
     this.state.updateFlow(phone, FLOWS.CHECKOUT_PAYMENT)
 
     return this.responseBuilder
@@ -31,15 +34,25 @@ export class CheckoutStartFlow extends BaseFlow {
       .addText('# RESUMO DO PEDIDO')
       .addLine()
       .addText('Itens do pedido:')
-      .addText('- item 1')
-      .addText('- item 2')
-      .addText('- item 3')
+      .addMenu(this.formatCartItems(cart))
       .addEmptyLine()
       .addText('Endereço:', customer.address)
-      .addText('Total:')
+      .addText('Total:', formatCurrency(totalAmount))
       .addLine()
       .addMono()
       .addMenu(paymentMenu)
       .build()
+  }
+
+  private calculateTotal(cart: CartItem[]): number {
+    return cart.reduce((total, item) => {
+      return total + item.subtotal
+    }, 0)
+  }
+
+  private formatCartItems(cart: CartItem[]): string[] {
+    return cart.map((item) => {
+      return `- ${item.quantity}x ${item.name} = ${formatCurrency(item.subtotal)}`
+    })
   }
 }

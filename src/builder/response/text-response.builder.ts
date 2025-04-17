@@ -1,23 +1,42 @@
 import { MessageType } from '@/config/enums.js'
-import { BaseResponseBuilder } from './base.builder.js'
+import { BaseResponseBuilder } from './base-response.builder.js'
 
 import type { FlowResponse } from '@/types/flows.js'
 
 export class TextResponseBuilder extends BaseResponseBuilder {
-  public addMono(): this {
-    return this.setText('```')
+  public addMono(text?: string): this {
+    const delimiter = '`'.repeat(3)
+    return this.setText(text ? delimiter + text + delimiter : delimiter)
   }
 
-  public addLine(): this {
-    return this.setText('--------------------')
+  public addLine(char = '-', length = 20): this {
+    return this.setText(char.repeat(length))
   }
 
-  public addMenu(menu: string[]): this {
-    return menu.length ? this.setText(menu.join('\n')) : this
+  //
+  public addMenu(items: string[]): this {
+    if (items?.length === 0) return this
+    return this.setText(items.join('\n'))
+  }
+
+  public addBulletList(items: string[]): this {
+    if (items?.length === 0) return this
+
+    const formattedItems = items.map((item) => `- ${item}`)
+    return this.setText(formattedItems.join('\n'))
+  }
+
+  public addNumberedList(items: string[], startIndex = 1): this {
+    if (items?.length === 0) return this
+
+    const formattedItems = items.map((item, index) => `${index + startIndex}. ${item}`)
+    return this.setText(formattedItems.join('\n'))
   }
 
   //#
   public build(): FlowResponse {
+    if (this.state.text.length === 0) this.setText('Nenhuma mensagem disponível');
+
     const response = {
       type: MessageType.TEXT,
       content: { text: this.state.text.join('\n') },
