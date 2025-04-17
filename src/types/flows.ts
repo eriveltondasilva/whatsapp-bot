@@ -1,9 +1,9 @@
-import type { FLOWS, MenuOptions, MessageType, OrderOptions } from '@/config/enums.js'
+import type { FLOWS, MENU_OPTIONS, MESSAGE_TYPES, ORDER_OPTIONS } from '@/config/enums.js'
 import type { CartItem, Customer } from './entities.js'
 import type { ResponseContent } from './responses.js'
 
 export type FlowResponse = {
-  type: MessageType
+  type: MESSAGE_TYPES
   content: ResponseContent
 }
 
@@ -30,5 +30,5 @@ export type FlowParams = {
 
 export type FlowActionMap<T extends string> = Record<T, () => FlowResponse | Promise<FlowResponse>>
 
-export type OrderActionMap = FlowActionMap<OrderOptions>
-export type MenuActionMap = FlowActionMap<MenuOptions>
+export type OrderActionMap = FlowActionMap<ORDER_OPTIONS>
+export type MenuActionMap = FlowActionMap<MENU_OPTIONS>

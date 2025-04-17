@@ -1,25 +1,25 @@
-export enum MessageType {
+export enum MESSAGE_TYPES {
   TEXT = 'text',
   LIST = 'list',
 }
 
-export enum PizzaType {
+export enum PIZZA_TYPES {
   FULL = 'full',
   HALF = 'half',
 }
 
-export enum ItemType {
+export enum ITEM_TYPES {
   PIZZA = 'pizza',
   DRINK = 'bebida',
 }
 
-export enum PaymentMethods {
+export enum PAYMENT_METHODS {
   CREDIT = 'cartão de crédito',
   DEBIT = 'cartão de débito',
   CASH = 'dinheiro',
 }
 
-export enum OrderStatus {
+export enum ORDER_STATUS {
   PENDING = 'pendente',
   PREPARING = 'preparando',
   DELIVERING = 'entregando',
@@ -27,7 +27,7 @@ export enum OrderStatus {
   CANCELLED = 'cancelado',
 }
 
-export enum Validation {
+export enum VALIDATION {
   MIN_LENGTH = 1,
   MAX_LENGTH = 100,
   QUANTITY_MIN = 1,
@@ -35,7 +35,7 @@ export enum Validation {
 }
 
 // ###
-export enum MenuOptions {
+export enum MENU_OPTIONS {
   ORDER_MENU = '1',
   ORDER_TRACKING = '2',
   ORDER_HISTORY = '3',
@@ -44,7 +44,7 @@ export enum MenuOptions {
   EXIT = '0',
 }
 
-export enum OrderOptions {
+export enum ORDER_OPTIONS {
   ONE_PIZZA = '1',
   TWO_PIZZA = '2',
   DRINK = '3',

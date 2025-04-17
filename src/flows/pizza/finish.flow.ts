@@ -1,4 +1,4 @@
-import { ItemType } from '@/config/enums.js'
+import { ITEM_TYPES } from '@/config/enums.js'
 import { injectable } from 'tsyringe'
 
 import { FLOWS } from '@/config/enums.js'
@@ -35,7 +35,7 @@ export class PizzaFinishFlow extends BaseFlow {
   private createCartItem(name: string, item: ContextData): CartItem {
     const { selectedFlavors, selectedCrust, quantity, note, unitPrice, subtotal } = item
     return {
-      type: ItemType.PIZZA,
+      type: ITEM_TYPES.PIZZA,
       name,
       quantity,
       unitPrice,

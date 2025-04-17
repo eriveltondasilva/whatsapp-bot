@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe'
 
-import { FLOWS, PaymentMethods } from '@/config/enums.js'
+import { FLOWS, PAYMENT_METHODS } from '@/config/enums.js'
 import { orderMenu, paymentMenu } from '@/templates/menus.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 import { BaseFlow } from '../base.flow.js'
@@ -8,9 +8,9 @@ import { BaseFlow } from '../base.flow.js'
 import type { FlowParams } from '@/types/flows.js'
 
 const PAYMENT_METHODS = {
-  '1': PaymentMethods.CREDIT,
-  '2': PaymentMethods.DEBIT,
-  '3': PaymentMethods.CASH,
+  '1': PAYMENT_METHODS.CREDIT,
+  '2': PAYMENT_METHODS.DEBIT,
+  '3': PAYMENT_METHODS.CASH,
 } as const
 
 @injectable()

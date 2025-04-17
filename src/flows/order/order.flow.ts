@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { FLOWS, OrderOptions } from '@/config/enums.js'
+import { FLOWS, ORDER_OPTIONS } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 
 import { BaseFlow } from '../base.flow.js'
@@ -23,14 +23,14 @@ export class OrderFlow extends BaseFlow {
   //#
   public handle({ phone, message }: FlowParams) {
     const actionMap: OrderActionMap = {
-      [OrderOptions.ONE_PIZZA]: () => this.handlePizzaMenu(phone, message),
-      [OrderOptions.TWO_PIZZA]: () => this.handlePizzaMenu(phone, message),
-      [OrderOptions.DRINK]: () => this.handleDrinkMenu(phone, message),
-      [OrderOptions.CHECKOUT]: () => this.checkoutOrder(phone, message),
-      [OrderOptions.CANCEL]: () => this.cancelOrder(phone),
+      [ORDER_OPTIONS.ONE_PIZZA]: () => this.handlePizzaMenu(phone, message),
+      [ORDER_OPTIONS.TWO_PIZZA]: () => this.handlePizzaMenu(phone, message),
+      [ORDER_OPTIONS.DRINK]: () => this.handleDrinkMenu(phone, message),
+      [ORDER_OPTIONS.CHECKOUT]: () => this.checkoutOrder(phone, message),
+      [ORDER_OPTIONS.CANCEL]: () => this.cancelOrder(phone),
     } as const
 
-    const action = actionMap[message as OrderOptions]
+    const action = actionMap[message as ORDER_OPTIONS]
     return action ? action() : this.handleInvalidOption()
   }
 

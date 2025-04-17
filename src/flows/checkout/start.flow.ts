@@ -34,7 +34,7 @@ export class CheckoutStartFlow extends BaseFlow {
       .addText('# RESUMO DO PEDIDO')
       .addLine()
       .addText('Itens do pedido:')
-      .addMenu(this.formatCartItems(cart))
+      .addBulletList(this.formatCartItems(cart))
       .addEmptyLine()
       .addText('Endereço:', customer.address)
       .addText('Total:', formatCurrency(totalAmount))
@@ -52,7 +52,7 @@ export class CheckoutStartFlow extends BaseFlow {
 
   private formatCartItems(cart: CartItem[]): string[] {
     return cart.map((item) => {
-      return `- ${item.quantity}x ${item.name} = ${formatCurrency(item.subtotal)}`
+      return `${item.quantity}x ${item.name} = ${formatCurrency(item.subtotal)}`
     })
   }
 }

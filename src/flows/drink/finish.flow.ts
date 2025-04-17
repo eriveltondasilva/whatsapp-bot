@@ -1,7 +1,7 @@
 // TODO: Implement drink confirm flow
 import { injectable } from 'tsyringe'
 
-import { FLOWS, ItemType } from '@/config/enums.js'
+import { FLOWS, ITEM_TYPES } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
 
@@ -23,7 +23,7 @@ export class DrinkFinishFlow extends BaseFlow {
       const { quantity, selectedDrink, subtotal, unitPrice } = context.data as ContextData
 
       const cartItem: CartItem = {
-        type: ItemType.DRINK,
+        type: ITEM_TYPES.DRINK,
         quantity,
         unitPrice,
         subtotal,

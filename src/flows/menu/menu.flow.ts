@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe'
 
-import { FLOWS, MenuOptions } from '@/config/enums.js'
+import { FLOWS, MENU_OPTIONS } from '@/config/enums.js'
 import { mainMenu, orderMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
 
@@ -16,15 +16,15 @@ export class MenuFlow extends BaseFlow {
   //#
   public handle({ phone, message }: FlowParams) {
     const actionMap: MenuActionMap = {
-      [MenuOptions.ORDER_MENU]: () => this.showOrderMenu(phone),
-      [MenuOptions.ORDER_TRACKING]: () => this.showOrderTracking(),
-      [MenuOptions.ORDER_HISTORY]: () => this.showOrderHistory(),
-      [MenuOptions.PROFILE]: () => this.updateProfile(),
-      [MenuOptions.SUPPORT]: () => this.contactSupport(),
-      [MenuOptions.EXIT]: () => this.exitFlow(phone),
+      [MENU_OPTIONS.ORDER_MENU]: () => this.showOrderMenu(phone),
+      [MENU_OPTIONS.ORDER_TRACKING]: () => this.showOrderTracking(),
+      [MENU_OPTIONS.ORDER_HISTORY]: () => this.showOrderHistory(),
+      [MENU_OPTIONS.PROFILE]: () => this.updateProfile(),
+      [MENU_OPTIONS.SUPPORT]: () => this.contactSupport(),
+      [MENU_OPTIONS.EXIT]: () => this.exitFlow(phone),
     } as const
 
-    const action = actionMap[message as MenuOptions]
+    const action = actionMap[message as MENU_OPTIONS]
     return action ? action() : this.handleInvalidOption()
   }
 

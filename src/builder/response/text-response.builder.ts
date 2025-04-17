@@ -1,4 +1,4 @@
-import { MessageType } from '@/config/enums.js'
+import { MESSAGE_TYPES } from '@/config/enums.js'
 import { BaseResponseBuilder } from './base-response.builder.js'
 
 import type { FlowResponse } from '@/types/flows.js'
@@ -35,10 +35,10 @@ export class TextResponseBuilder extends BaseResponseBuilder {
 
   //#
   public build(): FlowResponse {
-    if (this.state.text.length === 0) this.setText('Nenhuma mensagem disponível');
+    if (this.state.text.length === 0) this.setText('Nenhuma mensagem disponível')
 
     const response = {
-      type: MessageType.TEXT,
+      type: MESSAGE_TYPES.TEXT,
       content: { text: this.state.text.join('\n') },
     }
     this.reset()

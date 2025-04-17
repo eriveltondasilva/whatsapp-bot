@@ -1,4 +1,4 @@
-import { MessageType } from '@/config/enums.js'
+import { MESSAGE_TYPES } from '@/config/enums.js'
 import { BaseResponseBuilder, type BuilderState } from './base-response.builder.js'
 
 import type { ResponseList } from '@/types/responses.js'
@@ -29,7 +29,7 @@ export class ListResponseBuilder extends BaseResponseBuilder<ListBuilderState> {
     }
 
     const response = {
-      type: MessageType.LIST,
+      type: MESSAGE_TYPES.LIST,
       content: {
         text: this.state.text.join('\n'),
         list: [...this.state.list],

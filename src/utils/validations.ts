@@ -2,15 +2,15 @@ import { type Message, MessageType } from '@wppconnect-team/wppconnect'
 import { container } from 'tsyringe'
 
 import { ERIVELTON_NUMBER } from '@/config/constants.js'
-import { Validation } from '@/config/enums.js'
+import { VALIDATION } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
 const logger = container.resolve(LoggerProvider)
 
 export function isValidName(name: string): boolean {
-  if (name.length < Validation.MIN_LENGTH || name.length > Validation.MAX_LENGTH) {
+  if (name.length < VALIDATION.MIN_LENGTH || name.length > VALIDATION.MAX_LENGTH) {
     logger.warn(
-      `Name validation failed: name is missing (${Validation.MIN_LENGTH} - ${Validation.MAX_LENGTH})`,
+      `Name validation failed: name is missing (${VALIDATION.MIN_LENGTH} - ${VALIDATION.MAX_LENGTH})`,
       { name },
     )
     return false
@@ -20,9 +20,9 @@ export function isValidName(name: string): boolean {
 }
 
 export function isValidAddress(address: string): boolean {
-  if (address.length < Validation.MIN_LENGTH || address.length > Validation.MAX_LENGTH) {
+  if (address.length < VALIDATION.MIN_LENGTH || address.length > VALIDATION.MAX_LENGTH) {
     logger.warn(
-      `Address validation failed: address is missing (${Validation.MIN_LENGTH} - ${Validation.MAX_LENGTH})`,
+      `Address validation failed: address is missing (${VALIDATION.MIN_LENGTH} - ${VALIDATION.MAX_LENGTH})`,
       { address },
     )
     return false
@@ -37,9 +37,9 @@ export function isValidQuantity(quantity: number): boolean {
     return false
   }
 
-  if (quantity < Validation.QUANTITY_MIN || quantity > Validation.QUANTITY_MAX) {
+  if (quantity < VALIDATION.QUANTITY_MIN || quantity > VALIDATION.QUANTITY_MAX) {
     logger.warn(
-      `Quantity validation failed: quantity must be between (${Validation.QUANTITY_MIN} - ${Validation.QUANTITY_MAX})`,
+      `Quantity validation failed: quantity must be between (${VALIDATION.QUANTITY_MIN} - ${VALIDATION.QUANTITY_MAX})`,
       { quantity },
     )
     return false
@@ -107,9 +107,9 @@ export function isValidMessage(message: Message): boolean {
   }
 
   const messageLength = message.body?.length || 0
-  if (messageLength < Validation.MIN_LENGTH || messageLength > Validation.MAX_LENGTH) {
+  if (messageLength < VALIDATION.MIN_LENGTH || messageLength > VALIDATION.MAX_LENGTH) {
     logger.warn(
-      `Message validation failed: message length must be between (${Validation.MIN_LENGTH} - ${Validation.MAX_LENGTH})`,
+      `Message validation failed: message length must be between (${VALIDATION.MIN_LENGTH} - ${VALIDATION.MAX_LENGTH})`,
       {
         from: message.from,
         message: message.body?.slice(0, 50),

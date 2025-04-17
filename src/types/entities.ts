@@ -1,4 +1,4 @@
-import type { ItemType } from '@/config/enums.js'
+import type { ITEM_TYPES } from '@/config/enums.js'
 import type {
   Crust as CrustPrisma,
   Drink as DrinkPrisma,
@@ -17,7 +17,7 @@ export type Customer = {
 }
 
 export type CartItem = {
-  type: ItemType
+  type: ITEM_TYPES
   name: string
   quantity: number
   unitPrice: number
