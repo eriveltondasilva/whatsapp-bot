@@ -4,27 +4,31 @@ import { injectable } from 'tsyringe'
 import { Flows } from '@/config/enums.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 import { BaseFlow } from '../base.flow.js'
+import { type ContextData, STEP_INDICATORS } from './@pizza.js'
 
 import type { FlowParams } from '@/types/flows.js'
-import type { ContextData } from './types.js'
 
 @injectable()
 export class PizzaNoteFlow extends BaseFlow {
   public async handle({ phone, message, context }: FlowParams) {
-    const { selectedFlavors, selectedCrust, quantity } = context.data as ContextData
+    const data = context.data as ContextData
 
-    if (!this.validateOrderData(context.data as ContextData)) {
+    if (!this.validateOrderData(data)) {
       this.state.resetState(phone)
-      return this.responseBuilder.addText('❌ Não foi possível processar seu pedido.').build()
+      return this.responseBuilder
+        .addBold('❌ ERRO NO PEDIDO')
+        .addText('Não foi possível processar seu pedido devido a dados incompletos.')
+        .addText('Por favor, inicie seu pedido novamente.')
+        .build()
     }
 
-    const order = this.calculateOrder(context.data as ContextData)
     const note = message === '0' ? undefined : message
+    const order = this.calculateOrder(data)
 
-    const crustPrice = order.pizzaPrice === 0 ? 'grátis' : formatCurrency(order.pizzaPrice)
-    const pizzaPrice = formatCurrency(order.pizzaPrice)
-    const unitPrice = formatCurrency(order.unitPrice)
-    const subtotalPrice = formatCurrency(order.subtotal)
+    const crustPriceFormatted = order.pizzaPrice === 0 ? 'grátis' : formatCurrency(order.pizzaPrice)
+    const pizzaPriceFormatted = formatCurrency(order.pizzaPrice)
+    const unitPriceFormatted = formatCurrency(order.unitPrice)
+    const subtotalPriceFormatted = formatCurrency(order.subtotal)
 
     this.state.updateContext(phone, {
       data: {
@@ -36,16 +40,16 @@ export class PizzaNoteFlow extends BaseFlow {
     })
 
     return this.responseBuilder
-      .addCode('Etapa: 5/5')
+      .addCode(STEP_INDICATORS.FINISH)
       .addMono()
       .addText('# RESUMO DO PEDIDO')
       .addLine()
-      .addText('Sabor:', this.getFlavorNames(selectedFlavors), `(${pizzaPrice})`)
-      .addText('Borda:', selectedCrust.name, `(${crustPrice})`)
+      .addText('Sabor:', this.getFlavorNames(data.selectedFlavors), `(${pizzaPriceFormatted})`)
+      .addText('Borda:', data.selectedCrust.name, `(${crustPriceFormatted})`)
       .addEmptyLine()
-      .addText('Quantidade:', quantity.toString())
-      .addText('Preço Unit.:', unitPrice)
-      .addText('Total:', subtotalPrice)
+      .addText('Quantidade:', data.quantity.toString())
+      .addText('Preço Unit.:', unitPriceFormatted)
+      .addText('Total:', subtotalPriceFormatted)
       .addEmptyLine()
       .addText('Observação:', note || 'nenhuma')
       .addLine()
@@ -73,10 +77,9 @@ export class PizzaNoteFlow extends BaseFlow {
 
   private calculateOrder({ selectedFlavors, selectedCrust, quantity }: ContextData) {
     const pizzaPrice = this.calculateAverageFlavorsPrice(selectedFlavors)
-    const crustPrice = Number(selectedCrust.price)
+    const crustPrice = Number(selectedCrust.price || 0)
     const unitPrice = pizzaPrice + crustPrice
     const subtotal = unitPrice * quantity
-
     return { crustPrice, pizzaPrice, unitPrice, subtotal }
   }
 }

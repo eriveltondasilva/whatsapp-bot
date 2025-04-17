@@ -7,7 +7,7 @@ import { BaseFlow } from '../base.flow.js'
 
 import type { CartItem } from '@/types/entities.js'
 import type { FlowParams } from '@/types/flows.js'
-import type { ContextData } from './types.js'
+import type { ContextData } from './@pizza.js'
 
 const MESSAGES = {
   CANCELED: '❌ PEDIDO CANCELADO',
@@ -45,10 +45,10 @@ export class PizzaFinishFlow extends BaseFlow {
   }: ContextData): CartItem {
     return {
       type: ItemType.PIZZA,
-      quantity: quantity || 1,
+      quantity,
       unitPrice,
       subtotal,
-      note: note || '',
+      note,
       pizza: {
         crust: selectedCrust,
         flavors: selectedFlavors,

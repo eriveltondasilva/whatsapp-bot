@@ -5,6 +5,7 @@ import { Flows } from '@/config/enums.js'
 import { FlavorRepository } from '@/repositories/flavor.repository.js'
 import { buildFlavorList } from '@/templates/list-builders.js'
 import { BaseFlow } from '../base.flow.js'
+import { STEP_INDICATORS } from './@pizza.js'
 
 import type { FlowParams } from '@/types/flows.js'
 
@@ -18,8 +19,8 @@ export class PizzaStartFlow extends BaseFlow {
   }
 
   public async handle({ phone, message }: FlowParams) {
-    const isSingleFlavor = message === '1'
     const flavors = await this.flavorRepository.getAllFlavors()
+    const isSingleFlavor = message === '1'
 
     if (!flavors?.length) {
       this.state.deleteState(phone)
@@ -38,7 +39,7 @@ export class PizzaStartFlow extends BaseFlow {
       : '🍕 ESCOLHA O 1° SABOR DA SUA PIZZA'
 
     return this.listResponseBuilder
-      .addCode('Etapa: 1/5')
+      .addCode(STEP_INDICATORS.FLAVOR)
       .addEmptyLine()
       .addBold(title)
       .addQuote('Por favor, aperte o botão abaixo para escolher o sabor da sua pizza.')

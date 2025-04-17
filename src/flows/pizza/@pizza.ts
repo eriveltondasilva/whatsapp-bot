@@ -5,7 +5,15 @@ export type ContextData = {
   selectedCrust: Crust
   isSingleFlavor: boolean
   quantity: number
-  note?: string
   unitPrice: number
   subtotal: number
+  note?: string
 }
+
+export const STEP_INDICATORS = {
+  FLAVOR: 'Etapa: 1/5',
+  QUANTITY: 'Etapa: 2/5',
+  CRUST: 'Etapa: 3/5',
+  NOTE: 'Etapa: 4/5',
+  FINISH: 'Etapa: 5/5',
+} as const

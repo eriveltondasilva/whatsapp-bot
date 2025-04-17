@@ -6,6 +6,7 @@ import { CrustRepository } from '@/repositories/crust.repository.js'
 import { buildCrustList } from '@/templates/list-builders.js'
 import { parseIndex } from '@/utils/parse-index.js'
 import { BaseFlow } from '../base.flow.js'
+import { STEP_INDICATORS } from './@pizza.js'
 
 import type { FlowParams } from '@/types/flows.js'
 
@@ -38,7 +39,7 @@ export class PizzaCrustFlow extends BaseFlow {
     })
 
     return this.responseBuilder
-      .addCode('Etapa: 4/5')
+      .addCode(STEP_INDICATORS.NOTE)
       .addEmptyLine()
       .addText('Deseja adicionar alguma observação ao seu pedido?')
       .addQuote('Exemplo: retirar cebola, mais queijo, etc.')

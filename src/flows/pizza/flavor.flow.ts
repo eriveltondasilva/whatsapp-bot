@@ -7,9 +7,9 @@ import { buildFlavorList } from '@/templates/list-builders.js'
 import { deduplicateFlavor } from '@/utils/deduplicate-flavor.js'
 import { parseIndex } from '@/utils/parse-index.js'
 import { BaseFlow } from '../base.flow.js'
+import { type ContextData, STEP_INDICATORS } from './@pizza.js'
 
 import type { FlowParams } from '@/types/flows.js'
-import type { ContextData } from './types.js'
 
 @injectable()
 export class PizzaFlavorFlow extends BaseFlow {
@@ -21,9 +21,9 @@ export class PizzaFlavorFlow extends BaseFlow {
   }
 
   public async handle({ context, phone, message }: FlowParams) {
-    const data = context.data as ContextData
     const flavors = await this.flavorRepository.getAllFlavors()
     const selectedIndex = parseIndex(message)
+    const data = context.data as ContextData
 
     if (!flavors[selectedIndex]) {
       return this.listResponseBuilder
@@ -39,7 +39,7 @@ export class PizzaFlavorFlow extends BaseFlow {
       this.state.updateData(phone, { selectedFlavors })
 
       return this.listResponseBuilder
-        .addCode('Etapa: 1/5')
+        .addCode(STEP_INDICATORS.FLAVOR)
         .addEmptyLine()
         .addBold('🍕 ESCOLHA O 2° SABOR DA SUA PIZZA')
         .addQuote('Por favor, aperte o botão abaixo para escolher o sabor da sua pizza.')
@@ -53,7 +53,7 @@ export class PizzaFlavorFlow extends BaseFlow {
     })
 
     return this.responseBuilder
-      .addCode('Etapa: 2/5')
+      .addCode(STEP_INDICATORS.QUANTITY)
       .addEmptyLine()
       .addText('🔢 Digite a quantidade de pizza desejada (1-10):')
       .build()

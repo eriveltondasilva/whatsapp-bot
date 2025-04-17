@@ -6,6 +6,7 @@ import { CrustRepository } from '@/repositories/crust.repository.js'
 import { buildCrustList } from '@/templates/list-builders.js'
 import { isValidQuantity } from '@/utils/@index.js'
 import { BaseFlow } from '../base.flow.js'
+import { STEP_INDICATORS } from './@pizza.js'
 
 import type { FlowParams } from '@/types/flows.js'
 
@@ -36,10 +37,10 @@ export class PizzaQuantityFlow extends BaseFlow {
     const crusts = await this.crustRepository.getAllCrusts()
 
     return this.listResponseBuilder
-      .addCode('Etapa: 3/5')
+      .addCode(STEP_INDICATORS.CRUST)
       .addEmptyLine()
       .addBold('🍕 ESCOLHA A BORDA DA SUA PIZZA')
-      .addQuote('Por favor, aperte o botão abaixo para escolher o sabor da sua pizza.')
+      .addQuote('Por favor, aperte o botão abaixo para escolher a borda da sua pizza.')
       .addList(buildCrustList(crusts))
       .build()
   }
