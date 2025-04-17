@@ -16,10 +16,10 @@ export class PizzaNoteFlow extends BaseFlow {
     if (!this.validateOrderData(data)) {
       this.state.resetState(phone)
       return this.responseBuilder
-        .addBold('❌ ERRO NO PEDIDO')
-        .addText('Não foi possível processar seu pedido devido a dados incompletos.')
-        .addText('Por favor, inicie seu pedido novamente.')
-        .build()
+      .addBold('❌ ERRO NO PEDIDO')
+      .addText('Não foi possível processar seu pedido devido a dados incompletos.')
+      .addText('Por favor, inicie seu pedido novamente.')
+      .build()
     }
 
     const note = message === '0' ? undefined : message
@@ -80,6 +80,7 @@ export class PizzaNoteFlow extends BaseFlow {
     const crustPrice = Number(selectedCrust.price || 0)
     const unitPrice = pizzaPrice + crustPrice
     const subtotal = unitPrice * quantity
+
     return { crustPrice, pizzaPrice, unitPrice, subtotal }
   }
 }

@@ -16,13 +16,15 @@ export class PizzaFinishFlow extends BaseFlow {
 
     if (!isCanceled) {
       const contextData = context.data as ContextData
+      
       const itemName = this.createItemName(contextData)
       const cartItem = this.createCartItem(itemName, contextData)
+
       this.state.addToCart(phone, cartItem)
     }
 
-    this.state.updateFlow(phone, FLOWS.ORDER)
     this.state.clearData(phone)
+    this.state.updateFlow(phone, FLOWS.ORDER)
 
     return this.responseBuilder
       .addText(isCanceled ? MESSAGES.CANCELED : MESSAGES.SUCCESS)

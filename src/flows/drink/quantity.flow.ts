@@ -1,12 +1,12 @@
 import { injectable } from 'tsyringe'
 
 import { FLOWS } from '@/config/enums.js'
+import { formatCurrency } from '@/utils/format-currency.js'
 import { isValidQuantity } from '@/utils/validations.js'
 import { BaseFlow } from '../base.flow.js'
+import  {type ContextData,STEP_INDICATORS } from './@drink.js'
 
 import type { FlowParams } from '@/types/flows.js'
-import { formatCurrency } from '@/utils/format-currency.js'
-import type { ContextData } from './types.js'
 
 @injectable()
 export class DrinkQuantityFlow extends BaseFlow {
@@ -20,28 +20,31 @@ export class DrinkQuantityFlow extends BaseFlow {
         .build()
     }
 
-    const { selectedDrink } = context.data as ContextData
-    const summary = this.getSummary(context.data as ContextData)
+    const data = context.data as ContextData
+    const order = this.calculateOrder(data)
+
+    const unitPriceFormatted = formatCurrency(order.unitPrice)
+    const subtotalPriceFormatted = formatCurrency(order.subtotal)
 
     this.state.updateContext(phone, {
       data: {
-        unitPrice: summary.unitPrice,
-        subtotal: summary.subtotal,
+        unitPrice: order.unitPrice,
+        subtotal: order.subtotal,
         quantity,
       },
       flow: FLOWS.DRINK_FINISH,
     })
 
     return this.responseBuilder
-      .addCode('Etapa: 3/3')
+      .addCode(STEP_INDICATORS.FINISH)
       .addMono()
       .addText('# RESUMO DO PEDIDO')
       .addLine()
-      .addText('Bebida:', selectedDrink.name)
+      .addText('Bebida:', data.selectedDrink.name)
       .addEmptyLine()
       .addText('Quantidade:', quantity.toString())
-      .addText('Preço Unit.:', formatCurrency(summary.unitPrice))
-      .addText('Total:', formatCurrency(summary.subtotal))
+      .addText('Preço Unit.:', unitPriceFormatted)
+      .addText('Total:', subtotalPriceFormatted)
       .addLine()
       .addMono()
       .addText('Deseja confirmar seu pedido?')
@@ -50,13 +53,10 @@ export class DrinkQuantityFlow extends BaseFlow {
       .build()
   }
 
-  private getSummary({ quantity, selectedDrink }: ContextData) {
-    const unitPrice = Number(selectedDrink.price)
+  //#
+  private calculateOrder({ selectedDrink, quantity }: ContextData) {
+    const unitPrice = Number(selectedDrink.price || 0)
     const subtotal = unitPrice * quantity
-
-    return {
-      unitPrice,
-      subtotal,
-    }
+    return { unitPrice, subtotal }
   }
 }

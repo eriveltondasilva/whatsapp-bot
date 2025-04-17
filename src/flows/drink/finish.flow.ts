@@ -4,15 +4,10 @@ import { injectable } from 'tsyringe'
 import { FLOWS, ITEM_TYPES } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
+import { type ContextData, MESSAGES } from './@drink.js'
 
 import type { CartItem } from '@/types/entities.js'
 import type { FlowParams } from '@/types/flows.js'
-import type { ContextData } from './types.js'
-
-const MESSAGES = {
-  CANCELED: '❌ PEDIDO CANCELADO',
-  SUCCESS: '✅ Bebida adicionada ao carrinho com sucesso.',
-} as const
 
 @injectable()
 export class DrinkFinishFlow extends BaseFlow {
@@ -20,15 +15,8 @@ export class DrinkFinishFlow extends BaseFlow {
     const isCanceled = message === '0'
 
     if (!isCanceled) {
-      const { quantity, selectedDrink, subtotal, unitPrice } = context.data as ContextData
-
-      const cartItem: CartItem = {
-        type: ITEM_TYPES.DRINK,
-        quantity,
-        unitPrice,
-        subtotal,
-        drink: selectedDrink,
-      }
+      const data = context.data as ContextData
+      const cartItem = this.createCartItem(data)
 
       this.state.addToCart(phone, cartItem)
     }
@@ -41,5 +29,20 @@ export class DrinkFinishFlow extends BaseFlow {
       .addEmptyLine()
       .addMenu(orderMenu)
       .build()
+  }
+
+  //#
+  private createCartItem(item: ContextData): CartItem {
+    const { selectedDrink, quantity, unitPrice, subtotal } = item
+    return {
+      type: ITEM_TYPES.DRINK,
+      name: selectedDrink.name,
+      quantity,
+      unitPrice,
+      subtotal,
+      details: {
+        drink: selectedDrink,
+      },
+    }
   }
 }
