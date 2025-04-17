@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { CustomerRepository } from '@/repositories/customer.repository.js'
 import { mainMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
@@ -21,11 +21,11 @@ export class WelcomeFlow extends BaseFlow {
     const customer = await this.customerRepository.findByPhone(phone)
 
     if (!customer) {
-      const { context } = this.state.updateFlow(phone, Flows.REGISTRATION_START)
+      const { context } = this.state.updateFlow(phone, FLOWS.REGISTRATION_START)
       return this.registrationStartFlow.handle({ context, phone, message })
     }
 
-    this.state.updateFlow(phone, Flows.MENU)
+    this.state.updateFlow(phone, FLOWS.MENU)
 
     return this.responseBuilder
       .addText('Olá,', customer.name)

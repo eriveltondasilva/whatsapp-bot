@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe'
 
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
@@ -8,7 +8,7 @@ import type { FlowParams } from '@/types/flows.js'
 @injectable()
 export class RegistrationStartFlow extends BaseFlow {
   public async handle({ phone }: FlowParams) {
-    this.state.updateFlow(phone, Flows.REGISTRATION_NAME)
+    this.state.updateFlow(phone, FLOWS.REGISTRATION_NAME)
 
     return this.responseBuilder
       .addText('🍕 Olá! Bem-vindo(a) à *Pizzaria Bella Pizza*!')

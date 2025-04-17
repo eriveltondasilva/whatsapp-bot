@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { CrustRepository } from '@/repositories/crust.repository.js'
 import { buildCrustList } from '@/templates/list-builders.js'
 import { parseIndex } from '@/utils/parse-index.js'
@@ -35,7 +35,7 @@ export class PizzaCrustFlow extends BaseFlow {
 
     this.state.updateContext(phone, {
       data: { selectedCrust },
-      flow: Flows.PIZZA_NOTE,
+      flow: FLOWS.PIZZA_NOTE,
     })
 
     return this.responseBuilder

@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { CustomerRepository } from '@/repositories/customer.repository.js'
 import { mainMenu } from '@/templates/menus.js'
@@ -44,7 +44,7 @@ export class RegistrationAddressFlow extends BaseFlow {
     this.logger.ok('New customer registered', { newCustomer })
 
     this.state.resetState(phone)
-    this.state.updateFlow(phone, Flows.MENU)
+    this.state.updateFlow(phone, FLOWS.MENU)
 
     return this.responseBuilder
       .addText('🎉 Cadastro concluído com sucesso,', name.split(' ', 1)[0])

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { buildDrinkList } from '@/templates/list-builders.js'
 import { BaseFlow } from '../base.flow.js'
@@ -27,7 +27,7 @@ export class DrinkStartFlow extends BaseFlow {
         .build()
     }
 
-    this.state.updateFlow(phone, Flows.DRINK_SELECTION)
+    this.state.updateFlow(phone, FLOWS.DRINK_SELECTION)
 
     return this.listResponseBuilder
       .addCode('Etapa: 1/3')

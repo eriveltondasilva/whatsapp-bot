@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { CrustRepository } from '@/repositories/crust.repository.js'
 import { buildCrustList } from '@/templates/list-builders.js'
 import { isValidQuantity } from '@/utils/@index.js'
@@ -31,7 +31,7 @@ export class PizzaQuantityFlow extends BaseFlow {
 
     this.state.updateContext(phone, {
       data: { quantity },
-      flow: Flows.PIZZA_CRUST,
+      flow: FLOWS.PIZZA_CRUST,
     })
 
     const crusts = await this.crustRepository.getAllCrusts()

@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { injectable } from 'tsyringe'
 
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { mainMenu, orderMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
 
@@ -23,7 +23,7 @@ export class CheckoutFinishFlow extends BaseFlow {
         .build()
     }
 
-    this.state.updateFlow(phone, Flows.MENU)
+    this.state.updateFlow(phone, FLOWS.MENU)
 
     return this.responseBuilder
       .addBold('✅ PEDIDO REGISTRADO!')

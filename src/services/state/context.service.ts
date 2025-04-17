@@ -3,7 +3,7 @@ import { inject, injectable } from 'tsyringe'
 import { StateManager } from '@/core/state-manager.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 
-import type { Flows } from '@/config/enums.js'
+import type { FLOWS } from '@/config/enums.js'
 import type { FlowContext, FlowState } from '@/types/flows.js'
 
 @injectable()
@@ -41,7 +41,7 @@ export class ContextService {
     return updatedState
   }
 
-  public updateFlow(phone: string, currentState: FlowState, flow: Flows): FlowState {
+  public updateFlow(phone: string, currentState: FlowState, flow: FLOWS): FlowState {
     return this.updateContext(phone, currentState, { flow })
   }
 

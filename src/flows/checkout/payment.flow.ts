@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe'
 
-import { Flows, PaymentMethods } from '@/config/enums.js'
+import { FLOWS, PaymentMethods } from '@/config/enums.js'
 import { orderMenu, paymentMenu } from '@/templates/menus.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 import { BaseFlow } from '../base.flow.js'
@@ -19,7 +19,7 @@ export class CheckoutPaymentFlow extends BaseFlow {
     const orderTotal = this.calculateOrderTotal()
 
     if (orderTotal <= 0) {
-      this.state.updateFlow(phone, Flows.ORDER)
+      this.state.updateFlow(phone, FLOWS.ORDER)
       return this.responseBuilder
         .addBold('❌ CARRINHO VAZIO')
         .addText('Seu carrinho está vazio. Por favor, adicione itens antes de finalizar o pedido.')
@@ -42,7 +42,7 @@ export class CheckoutPaymentFlow extends BaseFlow {
     //*>
     this.state.updateContext(phone, {
       data: { paymentMethod },
-      flow: Flows.CHECKOUT_FINISH,
+      flow: FLOWS.CHECKOUT_FINISH,
     })
 
     return this.responseBuilder

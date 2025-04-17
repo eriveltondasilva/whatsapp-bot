@@ -5,7 +5,7 @@ import { CartService } from '@/services/state/cart.service.js'
 import { ContextService } from '@/services/state/context.service.js'
 import { CustomerService } from '@/services/state/customer.service.js'
 
-import type { Flows } from '@/config/enums.js'
+import type { FLOWS } from '@/config/enums.js'
 import type { CartItem, Customer } from '@/types/entities.js'
 import type { FlowContext, FlowData, FlowState } from '@/types/flows.js'
 
@@ -28,7 +28,7 @@ export class StateFacade {
     return this.contextService.updateContext(phone, state, context)
   }
 
-  public updateFlow(phone: string, flow: Flows): FlowState {
+  public updateFlow(phone: string, flow: FLOWS): FlowState {
     const state = this.getState(phone)
     return this.contextService.updateFlow(phone, state, flow)
   }

@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe'
 
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { isValidQuantity } from '@/utils/validations.js'
 import { BaseFlow } from '../base.flow.js'
 
@@ -29,7 +29,7 @@ export class DrinkQuantityFlow extends BaseFlow {
         subtotal: summary.subtotal,
         quantity,
       },
-      flow: Flows.DRINK_FINISH,
+      flow: FLOWS.DRINK_FINISH,
     })
 
     return this.responseBuilder

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { buildDrinkList } from '@/templates/list-builders.js'
 import { parseIndex } from '@/utils/parse-index.js'
@@ -34,7 +34,7 @@ export class DrinkSelectionFlow extends BaseFlow {
 
     this.state.updateContext(phone, {
       data: { selectedDrink },
-      flow: Flows.DRINK_QUANTITY,
+      flow: FLOWS.DRINK_QUANTITY,
     })
 
     return this.responseBuilder

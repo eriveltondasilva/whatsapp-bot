@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe'
 
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { isValidName } from '@/utils/validations.js'
 import { BaseFlow } from '../base.flow.js'
 
@@ -20,7 +20,7 @@ export class RegistrationNameFlow extends BaseFlow {
 
     this.state.updateContext(phone, {
       data: { name },
-      flow: Flows.REGISTRATION_ADDRESS,
+      flow: FLOWS.REGISTRATION_ADDRESS,
     })
 
     return this.responseBuilder

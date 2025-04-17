@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe'
 
-import { Flows, OrderOptions } from '@/config/enums.js'
+import { FLOWS, OrderOptions } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 
 import { BaseFlow } from '../base.flow.js'
@@ -35,17 +35,17 @@ export class OrderFlow extends BaseFlow {
   }
 
   private handlePizzaMenu(phone: string, message: string) {
-    const { context } = this.state.updateFlow(phone, Flows.PIZZA_START)
+    const { context } = this.state.updateFlow(phone, FLOWS.PIZZA_START)
     return this.pizzaStartFlow.handle({ context, phone, message })
   }
 
   private handleDrinkMenu(phone: string, message: string) {
-    const { context } = this.state.updateFlow(phone, Flows.DRINK_START)
+    const { context } = this.state.updateFlow(phone, FLOWS.DRINK_START)
     return this.drinkStartFlow.handle({ context, phone, message })
   }
 
   private checkoutOrder(phone: string, message: string) {
-    const { context } = this.state.updateFlow(phone, Flows.CHECKOUT_START)
+    const { context } = this.state.updateFlow(phone, FLOWS.CHECKOUT_START)
     return this.checkoutStartFlow.handle({ context, phone, message })
   }
 

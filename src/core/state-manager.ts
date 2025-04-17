@@ -1,7 +1,7 @@
 import { inject, singleton } from 'tsyringe'
 
 import { STATE_EXPIRATION_TIME } from '@/config/constants.js'
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
 import { StateStore } from '@/services/state/state-store.service.js'
 
@@ -80,7 +80,7 @@ export class StateManager {
   private initializeState(phone: string): FlowState {
     const initialState: FlowState = {
       context: {
-        flow: Flows.WELCOME,
+        flow: FLOWS.WELCOME,
         data: {},
         history: [],
       },

@@ -1,7 +1,7 @@
 // TODO: Implement drink confirm flow
 import { injectable } from 'tsyringe'
 
-import { Flows, ItemType } from '@/config/enums.js'
+import { FLOWS, ItemType } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
 
@@ -34,7 +34,7 @@ export class DrinkFinishFlow extends BaseFlow {
     }
 
     this.state.clearData(phone)
-    this.state.updateFlow(phone, Flows.ORDER)
+    this.state.updateFlow(phone, FLOWS.ORDER)
 
     return this.responseBuilder
       .addText(isCanceled ? MESSAGES.CANCELED : MESSAGES.SUCCESS)

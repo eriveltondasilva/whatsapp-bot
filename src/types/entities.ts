@@ -5,9 +5,10 @@ import type {
   Flavor as FlavorPrisma,
 } from '@prisma/client'
 
-export type Flavor = Omit<FlavorPrisma, 'createdAt' | 'updatedAt' | 'isActive'>
-export type Drink = Omit<DrinkPrisma, 'createdAt' | 'updatedAt' | 'isActive'>
-export type Crust = Omit<CrustPrisma, 'createdAt' | 'updatedAt' | 'isActive'>
+type OmitType = 'createdAt' | 'updatedAt' | 'isActive'
+export type Flavor = Omit<FlavorPrisma, OmitType>
+export type Drink = Omit<DrinkPrisma, OmitType>
+export type Crust = Omit<CrustPrisma, OmitType>
 
 export type Customer = {
   name: string
@@ -17,13 +18,17 @@ export type Customer = {
 
 export type CartItem = {
   type: ItemType
+  name: string
   quantity: number
   unitPrice: number
   subtotal: number
-  note?: string
-  pizza?: {
-    crust: Crust
-    flavors: Flavor[]
+  details: {
+    //* Pizza
+    flavors?: Flavor[]
+    crust?: Crust
+    note?: string
+    //* Drink
+    drink?: Drink
   }
   drink?: Drink
 }

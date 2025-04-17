@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { FlavorRepository } from '@/repositories/flavor.repository.js'
 import { buildFlavorList } from '@/templates/list-builders.js'
 import { BaseFlow } from '../base.flow.js'
@@ -31,7 +31,7 @@ export class PizzaStartFlow extends BaseFlow {
 
     this.state.updateContext(phone, {
       data: { isSingleFlavor },
-      flow: Flows.PIZZA_FLAVOR,
+      flow: FLOWS.PIZZA_FLAVOR,
     })
 
     const title = isSingleFlavor

@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe'
 
-import { Flows, MenuOptions } from '@/config/enums.js'
+import { FLOWS, MenuOptions } from '@/config/enums.js'
 import { mainMenu, orderMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
 
@@ -30,7 +30,7 @@ export class MenuFlow extends BaseFlow {
 
   //#
   private showOrderMenu(phone: string) {
-    this.state.updateFlow(phone, Flows.ORDER)
+    this.state.updateFlow(phone, FLOWS.ORDER)
     return this.responseBuilder.addMenu(orderMenu).build()
   }
 

@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe'
 
 import { ListResponseBuilder } from '@/builder/response/list-response.builder.js'
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { FlavorRepository } from '@/repositories/flavor.repository.js'
 import { buildFlavorList } from '@/templates/list-builders.js'
 import { deduplicateFlavor } from '@/utils/deduplicate-flavor.js'
@@ -49,7 +49,7 @@ export class PizzaFlavorFlow extends BaseFlow {
 
     this.state.updateContext(phone, {
       data: { selectedFlavors: deduplicateFlavor(selectedFlavors) },
-      flow: Flows.PIZZA_QUANTITY,
+      flow: FLOWS.PIZZA_QUANTITY,
     })
 
     return this.responseBuilder

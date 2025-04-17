@@ -1,18 +1,13 @@
 import { ItemType } from '@/config/enums.js'
 import { injectable } from 'tsyringe'
 
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { orderMenu } from '@/templates/menus.js'
 import { BaseFlow } from '../base.flow.js'
+import { type ContextData, MESSAGES } from './@pizza.js'
 
 import type { CartItem } from '@/types/entities.js'
 import type { FlowParams } from '@/types/flows.js'
-import type { ContextData } from './@pizza.js'
-
-const MESSAGES = {
-  CANCELED: '❌ PEDIDO CANCELADO',
-  SUCCESS: '✅ Pizza adicionada ao carrinho com sucesso.',
-} as const
 
 @injectable()
 export class PizzaFinishFlow extends BaseFlow {
@@ -20,11 +15,13 @@ export class PizzaFinishFlow extends BaseFlow {
     const isCanceled = message === '0'
 
     if (!isCanceled) {
-      const cartItem = this.createCartItem(context.data as ContextData)
+      const contextData = context.data as ContextData
+      const itemName = this.createItemName(contextData)
+      const cartItem = this.createCartItem(itemName, contextData)
       this.state.addToCart(phone, cartItem)
     }
 
-    this.state.updateFlow(phone, Flows.ORDER)
+    this.state.updateFlow(phone, FLOWS.ORDER)
     this.state.clearData(phone)
 
     return this.responseBuilder
@@ -34,25 +31,25 @@ export class PizzaFinishFlow extends BaseFlow {
       .build()
   }
 
-  //#
-  private createCartItem({
-    selectedFlavors,
-    selectedCrust,
-    quantity,
-    note,
-    unitPrice,
-    subtotal,
-  }: ContextData): CartItem {
+  //# region Private Methods
+  private createCartItem(name: string, item: ContextData): CartItem {
+    const { selectedFlavors, selectedCrust, quantity, note, unitPrice, subtotal } = item
     return {
       type: ItemType.PIZZA,
+      name,
       quantity,
       unitPrice,
       subtotal,
-      note,
-      pizza: {
+      details: {
         crust: selectedCrust,
         flavors: selectedFlavors,
+        note,
       },
     }
+  }
+
+  private createItemName({ selectedFlavors, selectedCrust }: ContextData): string {
+    const flavorNames = selectedFlavors.map((flavor) => flavor.name).join(' + ')
+    return `Pizza ${flavorNames} (${selectedCrust.name})`
   }
 }

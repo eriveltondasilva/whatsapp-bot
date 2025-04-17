@@ -1,7 +1,7 @@
 import type { Prisma } from '@prisma/client'
 import { injectable } from 'tsyringe'
 
-import { Flows } from '@/config/enums.js'
+import { FLOWS } from '@/config/enums.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 import { BaseFlow } from '../base.flow.js'
 import { type ContextData, STEP_INDICATORS } from './@pizza.js'
@@ -36,7 +36,7 @@ export class PizzaNoteFlow extends BaseFlow {
         subtotal: order.subtotal,
         note,
       },
-      flow: Flows.PIZZA_FINISH,
+      flow: FLOWS.PIZZA_FINISH,
     })
 
     return this.responseBuilder

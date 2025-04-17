@@ -53,7 +53,7 @@ export enum OrderOptions {
 }
 
 // ###
-export enum Flows {
+export enum FLOWS {
   //* Fluxos de registro do usuário
   REGISTRATION_START = 'registration_start',
   REGISTRATION_NAME = 'registration_name',
