@@ -23,8 +23,9 @@ export class DrinkQuantityFlow extends BaseFlow {
     const data = context.data as ContextData
     const order = this.calculateOrder(data)
 
-    const unitPriceFormatted = formatCurrency(order.unitPrice)
-    const subtotalPriceFormatted = formatCurrency(order.subtotal)
+    const formattedQuantity = quantity.toString()
+    const formattedUnitPrice = formatCurrency(order.unitPrice)
+    const formattedSubtotalPrice = formatCurrency(order.subtotal)
 
     this.state.updateContext(phone, {
       data: {
@@ -42,9 +43,9 @@ export class DrinkQuantityFlow extends BaseFlow {
       .addLine()
       .addText('Bebida:', data.selectedDrink.name)
       .addEmptyLine()
-      .addText('Quantidade:', quantity.toString())
-      .addText('Preço Unit.:', unitPriceFormatted)
-      .addText('Total:', subtotalPriceFormatted)
+      .addText('Quantidade:', formattedQuantity)
+      .addText('Preço Unit.:', formattedUnitPrice)
+      .addText('Total:', formattedSubtotalPrice)
       .addLine()
       .addMono()
       .addText('Deseja confirmar seu pedido?')

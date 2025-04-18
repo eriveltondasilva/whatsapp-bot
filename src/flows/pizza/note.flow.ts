@@ -25,10 +25,11 @@ export class PizzaNoteFlow extends BaseFlow {
     const note = message === '0' ? undefined : message
     const order = this.calculateOrder(data)
 
-    const crustPriceFormatted = order.pizzaPrice === 0 ? 'grátis' : formatCurrency(order.pizzaPrice)
-    const pizzaPriceFormatted = formatCurrency(order.pizzaPrice)
-    const unitPriceFormatted = formatCurrency(order.unitPrice)
-    const subtotalPriceFormatted = formatCurrency(order.subtotal)
+    const formattedCrustPrice = order.pizzaPrice === 0 ? 'grátis' : formatCurrency(order.pizzaPrice)
+    const formattedPizzaPrice = formatCurrency(order.pizzaPrice)
+    const formattedUnitPrice = formatCurrency(order.unitPrice)
+    const formattedSubtotalPrice = formatCurrency(order.subtotal)
+    const formattedQuantity = data.quantity.toString()
 
     this.state.updateContext(phone, {
       data: {
@@ -44,12 +45,12 @@ export class PizzaNoteFlow extends BaseFlow {
       .addMono()
       .addText('# RESUMO DO PEDIDO')
       .addLine()
-      .addText('Sabor:', this.getFlavorNames(data.selectedFlavors), `(${pizzaPriceFormatted})`)
-      .addText('Borda:', data.selectedCrust.name, `(${crustPriceFormatted})`)
+      .addText('Sabor:', this.getFlavorNames(data.selectedFlavors), `(${formattedPizzaPrice})`)
+      .addText('Borda:', data.selectedCrust.name, `(${formattedCrustPrice})`)
       .addEmptyLine()
-      .addText('Quantidade:', data.quantity.toString())
-      .addText('Preço Unit.:', unitPriceFormatted)
-      .addText('Total:', subtotalPriceFormatted)
+      .addText('Quantidade:', formattedQuantity)
+      .addText('Preço Unit.:', formattedUnitPrice)
+      .addText('Total:', formattedSubtotalPrice)
       .addEmptyLine()
       .addText('Observação:', note || 'nenhuma')
       .addLine()
@@ -72,6 +73,7 @@ export class PizzaNoteFlow extends BaseFlow {
   private calculateAverageFlavorsPrice(flavors: Prisma.FlavorCreateInput[]) {
     if (flavors.length === 0) return 0
     const totalPrice = flavors.reduce((acc, flavor) => acc + Number(flavor.price || 0), 0)
+    
     return totalPrice / flavors.length
   }
 

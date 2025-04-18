@@ -41,6 +41,9 @@ export const paymentMenu = [
   '1️⃣ - Cartão de Crédito',
   '2️⃣ - Cartão de Débito',
   '3️⃣ - Dinheiro',
+  '4️⃣ - Pix',
+  '5️⃣ - Atualizar Endereço 📝',
+  '0️⃣ - Cancelar Pedido ❌',
   '',
   menuFooter,
 ]

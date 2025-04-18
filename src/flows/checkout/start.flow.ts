@@ -2,11 +2,11 @@ import { injectable } from 'tsyringe'
 
 import { FLOWS } from '@/config/enums.js'
 import { orderMenu, paymentMenu } from '@/templates/menus.js'
+import { formatCurrency } from '@/utils/format-currency.js'
 import { BaseFlow } from '../base.flow.js'
 
 import type { CartItem } from '@/types/entities.js'
 import type { FlowParams } from '@/types/flows.js'
-import { formatCurrency } from '@/utils/format-currency.js'
 
 @injectable()
 export class CheckoutStartFlow extends BaseFlow {
@@ -27,7 +27,12 @@ export class CheckoutStartFlow extends BaseFlow {
     }
 
     const totalAmount = this.calculateTotal(cart)
-    this.state.updateFlow(phone, FLOWS.CHECKOUT_PAYMENT)
+    const formattedTotalAmount = formatCurrency(totalAmount)
+
+    this.state.updateContext(phone, {
+      data: { totalAmount },
+      flow: FLOWS.CHECKOUT_PAYMENT,
+    })
 
     return this.responseBuilder
       .addMono()
@@ -37,7 +42,7 @@ export class CheckoutStartFlow extends BaseFlow {
       .addBulletList(this.formatCartItems(cart))
       .addEmptyLine()
       .addText('Endereço:', customer.address)
-      .addText('Total:', formatCurrency(totalAmount))
+      .addText('Total:')
       .addLine()
       .addMono()
       .addMenu(paymentMenu)

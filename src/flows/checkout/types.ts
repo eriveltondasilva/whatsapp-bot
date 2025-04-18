@@ -1,12 +1,16 @@
 import type { PAYMENT_METHODS } from '@/config/enums.js'
 
-export type PaymentContextData = {
+export type ContextData = {
   paymentMethod: PAYMENT_METHODS
-  orderTotal: number
-  orderItems?: Array<{
-    id: string
-    name: string
-    quantity: number
-    price: number
-  }>
+  totalAmount: number
+  orderId?: string
+  needsChange?: boolean
+  changeAmount?: number
 }
+
+// totalAmount: number
+// orderId?: string
+// paymentMethod?: string
+// changeNeeded?: boolean
+// changeAmount?: number
+// changeFor?: number
