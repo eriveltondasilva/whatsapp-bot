@@ -5,6 +5,7 @@ import { FLOWS } from '@/config/enums.js'
 import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { buildDrinkList } from '@/templates/list-builders.js'
 import { BaseFlow } from '../base.flow.js'
+import { STEP_INDICATORS } from './@drink.js'
 
 import type { FlowParams } from '@/types/flows.js'
 
@@ -30,7 +31,7 @@ export class DrinkStartFlow extends BaseFlow {
     this.state.updateFlow(phone, FLOWS.DRINK_SELECTION)
 
     return this.listResponseBuilder
-      .addCode('Etapa: 1/3')
+      .addCode(STEP_INDICATORS.DRINK)
       .addEmptyLine()
       .addBold('🍹 ESCOLHA SUA BEBIDA')
       .addQuote('Por favor, aperte o botão abaixo para escolher a sua bebida.')

@@ -6,6 +6,7 @@ import { DrinkRepository } from '@/repositories/drink.repository.js'
 import { buildDrinkList } from '@/templates/list-builders.js'
 import { parseIndex } from '@/utils/parse-index.js'
 import { BaseFlow } from '../base.flow.js'
+import { STEP_INDICATORS } from './@drink.js'
 
 import type { FlowParams } from '@/types/flows.js'
 
@@ -38,7 +39,7 @@ export class DrinkSelectionFlow extends BaseFlow {
     })
 
     return this.responseBuilder
-      .addCode('Etapa: 2/3')
+      .addCode(STEP_INDICATORS.QUANTITY)
       .addEmptyLine()
       .addText('🔢 Digite a quantidade desejada (1-10):')
       .build()
