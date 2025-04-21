@@ -1,34 +1,29 @@
 import { injectable } from 'tsyringe'
 
 import { FLOWS, PAYMENT_METHODS } from '@/config/enums.js'
-import { orderMenu, paymentMenu } from '@/templates/menus.js'
+import { paymentMenu } from '@/templates/menus.js'
 import { formatCurrency } from '@/utils/format-currency.js'
 import { BaseFlow } from '../base.flow.js'
 
 import type { FlowParams } from '@/types/flows.js'
 
-const PAYMENT_METHODS = {
-  '1': PAYMENT_METHODS.CREDIT,
-  '2': PAYMENT_METHODS.DEBIT,
-  '3': PAYMENT_METHODS.CASH,
+const METHODS_MAP = {
+  1: PAYMENT_METHODS.CREDIT,
+  2: PAYMENT_METHODS.DEBIT,
+  3: PAYMENT_METHODS.CASH,
+  4: PAYMENT_METHODS.PIX,
 } as const
 
 @injectable()
 export class CheckoutPaymentFlow extends BaseFlow {
-  public async handle({ phone, message }: FlowParams) {
-    const orderTotal = this.calculateOrderTotal()
-
-    if (orderTotal <= 0) {
-      this.state.updateFlow(phone, FLOWS.ORDER)
-      return this.responseBuilder
-        .addBold('❌ CARRINHO VAZIO')
-        .addText('Seu carrinho está vazio. Por favor, adicione itens antes de finalizar o pedido.')
-        .addEmptyLine()
-        .addMenu(orderMenu)
-        .build()
+  public async handle({ phone, message, context }: FlowParams) {
+    if (message === '0') {
+      this.state.resetState(phone)
+      return this.responseBuilder.addText('❌ Pedido cancelado!').build()
     }
 
-    const paymentMethod = PAYMENT_METHODS[message as keyof typeof PAYMENT_METHODS]
+    const selectedIndex = Number.parseInt(message, 10)
+    const paymentMethod = METHODS_MAP[selectedIndex as keyof typeof METHODS_MAP]
 
     if (!paymentMethod) {
       return this.responseBuilder
@@ -39,7 +34,8 @@ export class CheckoutPaymentFlow extends BaseFlow {
         .build()
     }
 
-    //*>
+    const { totalAmount } = context.data as { totalAmount: number }
+
     this.state.updateContext(phone, {
       data: { paymentMethod },
       flow: FLOWS.CHECKOUT_FINISH,
@@ -50,18 +46,12 @@ export class CheckoutPaymentFlow extends BaseFlow {
       .addText('# DETALHES DO PAGAMENTO')
       .addLine()
       .addText('Método:', paymentMethod)
-      .addText('Total:', formatCurrency(orderTotal))
+      .addText('Total:', formatCurrency(totalAmount))
       .addLine()
       .addMono()
       .addText('Deseja confirmar o pagamento?')
       .addText('1️⃣ - Confirmar ✅')
       .addText('0️⃣ - Cancelar ❌')
       .build()
-  }
-
-  private calculateOrderTotal(): number {
-    // Simulação - em uma implementação real, você teria uma lógica para calcular o total
-    // com base nos itens no carrinho
-    return 39.9 // Valor simulado
   }
 }

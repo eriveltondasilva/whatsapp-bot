@@ -17,6 +17,7 @@ export enum PAYMENT_METHODS {
   CREDIT = 'cartão de crédito',
   DEBIT = 'cartão de débito',
   CASH = 'dinheiro',
+  PIX = 'pix',
 }
 
 export enum ORDER_STATUS {

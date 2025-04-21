@@ -4,7 +4,7 @@ import { inject, injectable } from 'tsyringe'
 import { ConversationManager } from '@/core/conversation-manager.js'
 import { ClientProvider } from '@/providers/client.provider.js'
 import { LoggerProvider } from '@/providers/logger.provider.js'
-import { MessageSenderFactory } from '@/services/sender/message-sender.factory.js'
+import { ListMessageService } from '@/services/sender/list-message.service.js'
 import { isValidMessage } from '@/utils/@index.js'
 import { StateCleanup } from './core/state-cleanup.js'
 
@@ -15,7 +15,7 @@ export class WhatsappBot {
   constructor(
     @inject(ClientProvider) private readonly client: ClientProvider,
     @inject(ConversationManager) private readonly conversation: ConversationManager,
-    @inject(MessageSenderFactory) private readonly messageSender: MessageSenderFactory,
+    @inject(ListMessageService) private readonly messageSender: ListMessageService,
     @inject(StateCleanup) private readonly stateCleanup: StateCleanup,
     @inject(LoggerProvider) private readonly logger: LoggerProvider,
   ) {}
@@ -41,12 +41,12 @@ export class WhatsappBot {
   public async shutdown(): Promise<void> {
     if (!this.initialized) return
 
-    this.logger.info('🤖 WhatsApp bot shutdown successfully')
-
     try {
       this.initialized = false
       this.stateCleanup.stopPeriodicCleanup()
-      await this.client.closeClient()
+
+      this.logger.info('🤖 WhatsApp bot shutdown successfully')
+      this.client.closeClient()
     } catch (error) {
       this.logger.error('Failed to shutdown bot', error)
       throw error
@@ -60,14 +60,39 @@ export class WhatsappBot {
     const { from, body } = message
     this.logger.info(`#️⃣ ${this.constructor.name}`, { from, body })
 
-    try {
-      const { type, content } = await this.conversation.handle(from, body)
-      const messageSender = this.messageSender.create(type)
-      await messageSender.send(from, content)
-    } catch (error) {
-      this.logger.error('Erro no processamento da mensagem:', error)
-      const messageSender = this.messageSender.createDefault()
-      await messageSender.sendErrorMessage(from)
-    }
+    const client = await this.client.getClient()
+    await client.sendText(from, '[BOT] Olá, eu sou o Bot do Erivelton. Como posso te ajudar?')
+    await client.sendListMessage(from, {
+      buttonText: 'Click here',
+      description: '[BOT] Choose one option',
+      sections: [
+        {
+          title: 'Section 1',
+          rows: [
+            {
+              rowId: 'my_custom_id',
+              title: 'Test 1',
+              description: 'Description 1',
+            },
+            {
+              rowId: '2',
+              title: 'Test 2',
+              description: 'Description 2',
+            },
+          ],
+        },
+      ],
+    })
+
+    // try {
+    //   this.logger.info('💬 Message sent:', { type })
+    //   const { type, content } = await this.conversation.handle(from, body)
+    //   const messageSender = this.messageSender.create(type)
+    //   await this.messageSender.send(from, content)
+    // } catch (error) {
+    //   this.logger.error('Erro no processamento da mensagem:', error)
+    //   const messageSender = this.messageSender.createDefault()
+    //   await messageSender.sendErrorMessage(from)
+    // }
   }
 }

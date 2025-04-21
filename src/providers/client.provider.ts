@@ -15,6 +15,7 @@ export class ClientProvider implements ClientProviderI {
   private readonly clientOptions: CreateOptions = {
     session: SESSION_NAME,
     phoneNumber: ERIVELTON_NUMBER,
+    disableWelcome: true,
   }
 
   constructor(@inject(LoggerProvider) private logger: LoggerProvider) {}

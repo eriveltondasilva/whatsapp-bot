@@ -12,7 +12,7 @@ export class CheckoutFinishFlow extends BaseFlow {
   public async handle({ phone, message }: FlowParams) {
     const isCanceled = message === '0'
 
-    this.state.resetState(phone)
+    this.state.deleteState(phone)
 
     if (isCanceled) {
       return this.responseBuilder

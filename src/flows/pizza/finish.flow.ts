@@ -16,7 +16,7 @@ export class PizzaFinishFlow extends BaseFlow {
 
     if (!isCanceled) {
       const contextData = context.data as ContextData
-      
+
       const itemName = this.createItemName(contextData)
       const cartItem = this.createCartItem(itemName, contextData)
 
@@ -52,6 +52,6 @@ export class PizzaFinishFlow extends BaseFlow {
 
   private createItemName({ selectedFlavors, selectedCrust }: ContextData): string {
     const flavorNames = selectedFlavors.map((flavor) => flavor.name).join(' + ')
-    return `Pizza ${flavorNames} (${selectedCrust.name})`
+    return `Pizza ${flavorNames} (borda ${selectedCrust.name})`
   }
 }

@@ -42,7 +42,7 @@ export class CheckoutStartFlow extends BaseFlow {
       .addBulletList(this.formatCartItems(cart))
       .addEmptyLine()
       .addText('Endereço:', customer.address)
-      .addText('Total:')
+      .addText('Total:', formattedTotalAmount)
       .addLine()
       .addMono()
       .addMenu(paymentMenu)
